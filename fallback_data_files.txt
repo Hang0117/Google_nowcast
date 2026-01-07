@@ -1,0 +1,66 @@
+Found 9 files with fallback_data
+====================================================================================================
+
+File: nowcast_K21D_20251231_123038.json
+  City: Lake Elmo Airport (K21D)
+  Type: nowcast
+  div1_text: Snow expected tomorrow morning
+  div2_text: Light snow from 7:00 AM to 9:00 AM
+----------------------------------------------------------------------------------------------------
+
+File: nowcast_KAGC_20251231_122716.json
+  City: Pittsburgh, Allegheny County Airport (KAGC)
+  Type: nowcast
+  div1_text: Snow expected tomorrow morning
+  div2_text: Light snow from 7:24 AM to 10:00 AM
+----------------------------------------------------------------------------------------------------
+
+File: nowcast_KFFO_20251231_123152.json
+  City: Dayton / Wright-Patterson Air Force Base (KFFO)
+  Type: nowcast
+  div1_text: Snow starting soon
+  div2_text: Light snow from 12:00 AM to 2:26 AM
+----------------------------------------------------------------------------------------------------
+
+File: nowcast_KLGB_20251231_123159.json
+  City: Long Beach, Long Beach Airport (KLGB)
+  Type: nowcast
+  div1_text: Rain expected tomorrow morning
+  div2_text: Light rain from 6:36 AM to 7:00 AM
+----------------------------------------------------------------------------------------------------
+
+File: nowcast_KLVN_20251231_124232.json
+  City: Minneapolis, Airlake Airport (KLVN)
+  Type: nowcast
+  div1_text: Snow expected tomorrow morning
+  div2_text: Light snow from 7:36 AM to 9:00 AM
+----------------------------------------------------------------------------------------------------
+
+File: nowcast_KMSP_20251231_122616.json
+  City: Minneapolis, Minneapolis-St. Paul International Airport (KMSP)
+  Type: nowcast
+  div1_text: Snow expected tomorrow morning
+  div2_text: Light snow from 6:48 AM to 9:00 AM
+----------------------------------------------------------------------------------------------------
+
+File: nowcast_KNZY_20251231_122348.json
+  City: San Diego, North Island, Naval Air Station (KNZY)
+  Type: nowcast
+  div1_text: Rain expected tomorrow morning
+  div2_text: Light rain from 6:36 AM continuing beyond 7:00 AM
+----------------------------------------------------------------------------------------------------
+
+File: nowcast_KSAN_20251231_122349.json
+  City: San Diego, San Diego International-Lindbergh Field (KSAN)
+  Type: nowcast
+  div1_text: Rain expected tomorrow morning
+  div2_text: Light rain from 6:24 AM continuing beyond 7:00 AM
+----------------------------------------------------------------------------------------------------
+
+File: nowcast_KTOA_20251231_123206.json
+  City: Torrance, Zamperini Field Airport (KTOA)
+  Type: nowcast
+  div1_text: Rain expected tomorrow morning
+  div2_text: Light rain from 6:24 AM to 7:00 AM
+----------------------------------------------------------------------------------------------------
+
