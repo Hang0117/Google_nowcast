@@ -579,7 +579,7 @@ if __name__ == "__main__":
             rest_duration_minutes=REST_MINUTES
         ), 
         'cron', 
-        hour='0'
+        hour='18'
     )
     scheduler.start()
     
@@ -588,7 +588,7 @@ if __name__ == "__main__":
     print(f"✓ CSV 文件: {CSV_FILE}")
     print(f"✓ 工作模式: {WORK_MINUTES}分钟工作 / {REST_MINUTES}分钟休息")
     print(f"✓ 将在每天 UTC 时间 00:00, 06:00, 12:00, 18:00 执行爬取任务")
-    print(f"✓ 并发线程数: {MAX_WORKERS}")
+    print(f"✓ 并发线程数: {MAX_WORKERS}") 
     print(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
     print("✓ 按 Ctrl+C 停止程序\n")

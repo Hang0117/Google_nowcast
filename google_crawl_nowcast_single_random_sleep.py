@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """Concurrent Google nowcast scraper with multi-threading.
 
@@ -5,18 +6,87 @@ Uses ThreadPoolExecutor to scrape multiple cities in parallel.
 """
 import os
 import sys
+import subprocess
+import platform
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import json
 import time
-from apscheduler.schedulers.background import BackgroundScheduler
-import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 
 
+def _install_dependencies():
+    """Auto-install system and Python dependencies on Linux."""
+    system = platform.system()
+    
+    if system != "Linux":
+        # Skip on non-Linux systems (Windows, macOS)
+        try:
+            import selenium
+            import pandas
+            from apscheduler.schedulers.background import BackgroundScheduler
+        except ImportError:
+            print("⚠️  Warning: Some Python packages not installed. Please install manually:")
+            print("   pip install selenium webdriver-manager pandas apscheduler pytz")
+        return
+    
+    # Linux: Install Chrome and Python dependencies
+    print("🔧 Checking and installing dependencies on Linux...")
+    
+    # Check if Chrome is installed
+    chrome_check = subprocess.run(
+        ["which", "google-chrome"], 
+        capture_output=True
+    )
+    
+    if chrome_check.returncode != 0:
+        print("📦 Installing Google Chrome...")
+        try:
+            subprocess.run(["sudo", "apt-get", "update"], check=True, capture_output=True)
+            subprocess.run(
+                ["sudo", "bash", "-c", 
+                 "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && "
+                 "echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list"],
+                check=True, capture_output=True
+            )
+            subprocess.run(["sudo", "apt-get", "update"], check=True, capture_output=True)
+            subprocess.run(
+                ["sudo", "apt-get", "install", "-y", "google-chrome-stable"],
+                check=True, capture_output=True
+            )
+            print("✅ Google Chrome installed")
+        except subprocess.CalledProcessError as e:
+            print(f"⚠️  Could not install Chrome: {e}")
+            print("   Please install manually: sudo apt-get install -y google-chrome-stable")
+    else:
+        print("✅ Google Chrome already installed")
+    
+    # Install Python packages
+    print("📦 Installing Python packages...")
+    packages = ["selenium", "webdriver-manager", "pandas", "apscheduler", "pytz"]
+    try:
+        subprocess.run(
+            ["pip", "install", "-q"] + packages,
+            check=True
+        )
+        print("✅ Python packages installed")
+    except subprocess.CalledProcessError as e:
+        print(f"⚠️  Could not install Python packages: {e}")
+        raise
+
+
+# Auto-install dependencies when imported
+_install_dependencies()
+
+# Now import the required packages
+from apscheduler.schedulers.background import BackgroundScheduler
+import pandas as pd
+
+
 def _chrome_driver(headless: bool = True):
     from selenium import webdriver
+    from webdriver_manager.chrome import ChromeDriverManager
     from selenium.webdriver.chrome.service import Service
 
     options = webdriver.ChromeOptions()
@@ -33,8 +103,8 @@ def _chrome_driver(headless: bool = True):
         "user-agent=Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
     )
 
-    # Selenium 4.6+ automatically manages ChromeDriver - no webdriver-manager needed
-    return webdriver.Chrome(options=options)
+    service = Service(ChromeDriverManager().install())
+    return webdriver.Chrome(service=service, options=options)
 
 
 def _accept_consent(driver):
@@ -67,6 +137,8 @@ def scrape_nowcast_svg(
     first_scrape_date: str | None = None,
 ):
     """Scrape rect heights from the SVG whose viewBox includes 1440 and 48."""
+    start_time = time.time()
+    
     try:
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import WebDriverWait
@@ -88,6 +160,8 @@ def scrape_nowcast_svg(
 
     driver = _chrome_driver(headless=headless)
     try:
+        # start crawling timer
+        crawl_start = time.time()
         driver.get("https://www.google.com/ncr?hl=en&gl=us")
         _accept_consent(driver)
 
@@ -110,6 +184,12 @@ def scrape_nowcast_svg(
         except Exception as e:
             print(f"[{city}] Warning: Could not save HTML: {e}")
         
+        crawl_time = time.time() - crawl_start
+        print(f"[{city_id}] 爬取耗时（含保存HTML）: {crawl_time:.2f}秒")
+        
+        # start parsing timer
+        parse_start = time.time()
+        
         # Check for reCAPTCHA robot verification
         check_robot_js = """
         const pageText = document.body.innerText;
@@ -125,13 +205,6 @@ def scrape_nowcast_svg(
                 file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
                 outdir = base_dir / "Crawled" / folder_date
                 outdir.mkdir(parents=True, exist_ok=True)
-                # 删除该城市之前的文件
-                for old_file in outdir.glob(f"nowcast_{city_id}_*.json"):
-                    try:
-                        old_file.unlink()
-                        print(f"[{city}] Deleted old file: {old_file.name}")
-                    except Exception as e:
-                        print(f"[{city}] Could not delete old file {old_file.name}: {e}")
                 fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
                 fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
                 print("Saved:", fname)
@@ -237,13 +310,6 @@ def scrape_nowcast_svg(
                         file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
                         outdir = base_dir / "Crawled" / folder_date
                         outdir.mkdir(parents=True, exist_ok=True)
-                        # 删除该城市之前的文件
-                        for old_file in outdir.glob(f"nowcast_{city_id}_*.json"):
-                            try:
-                                old_file.unlink()
-                                print(f"[{city}] Deleted old file: {old_file.name}")
-                            except Exception as e:
-                                print(f"[{city}] Could not delete old file {old_file.name}: {e}")
                         fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
                         fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
                     return out
@@ -295,10 +361,16 @@ def scrape_nowcast_svg(
             fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
             print(f"[{city}] Saved: {fname.name}")
 
+        parse_time = time.time() - parse_start
+        total_time = time.time() - start_time
+        print(f"[{city_id}] ⏱️ 解析耗时: {parse_time:.2f}秒")
+        print(f"[{city_id}] ⏱️ 总耗时: {total_time:.2f}秒")
+        
         return out
 
     except Exception as e:
-        print(f"ERR [{city}]:", e)
+        total_time = time.time() - start_time
+        print(f"ERR [{city}] (总耗时 {total_time:.2f}秒):", e)
         return None
     finally:
         try:
@@ -337,152 +409,228 @@ def scrape_city_wrapper(city, city_id, headless, output_root, tracker, first_scr
     return city, result
 
 
-def scrape_all_cities_concurrent(max_workers=5, batch_size=250, sleep_between_batches=3600):
-    """并发爬取所有城市的气象数据，按批次运行
+def scrape_single_city(city, city_id, base_dir):
+    """单个城市的爬取任务（用于定时调度）"""
+    print(f"\n[{datetime.now().strftime('%H:%M:%S')}] 开始爬取 {city_id}")
+    result = scrape_nowcast_svg(
+        city=city,
+        city_id=city_id,
+        headless=False,  # 显示浏览器窗口
+        save_json=True,
+        output_dir=base_dir
+    )
+    if result:
+        if result.get("points"):
+            print(f"✓ {city_id} 完成: {len(result['points'])} 个数据点")
+        elif result.get("type") == "robot":
+            print(f"⚠️ {city_id} reCAPTCHA")
+        else:
+            print(f"✓ {city_id} 完成")
+    else:
+        print(f"✗ {city_id} 失败")
+    return result
+
+
+def generate_random_schedule(total_stations, duration_hours=12, avg_scrape_time=15):
+    """生成随机化的调度时间表（考虑实际爬取耗时）
     
     Args:
-        max_workers: 最大并发线程数，默认5个
-        batch_size: 每批城市数量，默认80；None/0 表示不分批
-        sleep_between_batches: 批次间休眠秒数，默认3600秒（1小时）
+        total_stations: 总站点数
+        duration_hours: 持续时间（小时）
+        avg_scrape_time: 平均每个站点的爬取时间（秒），默认15秒
+        
+    Returns:
+        list: 每个站点的调度秒数列表（相对于开始时间）
     """
-    df = pd.read_csv('nowcast_crawl_list_v3_bk.csv')
+    import random
+    
+    total_seconds = duration_hours * 3600
+    # 总执行时间 = 所有站点的爬取时间总和
+    total_scrape_time = total_stations * avg_scrape_time
+    # 可用于间隔的时间 = 总时间 - 总执行时间
+    available_interval_time = total_seconds - total_scrape_time
+    
+    if available_interval_time < 0:
+        print(f"⚠️ 警告: {duration_hours}小时不足以完成{total_stations}个站点（需要{total_scrape_time/3600:.1f}小时）")
+        print(f"   建议增加持续时间或减少站点数")
+        # 紧密调度，间隔最小化
+        avg_interval = 1
+    else:
+        # 平均间隔 = 可用间隔时间 / 站点数
+        avg_interval = available_interval_time / total_stations
+    
+    print(f"📊 调度参数:")
+    print(f"   总时间: {total_seconds}秒 ({duration_hours}小时)")
+    print(f"   预计爬取时间: {total_scrape_time}秒 ({total_scrape_time/3600:.2f}小时)")
+    print(f"   可用间隔时间: {available_interval_time}秒 ({available_interval_time/3600:.2f}小时)")
+    print(f"   平均间隔: {avg_interval:.1f}秒\n")
+    
+    # 为每个站点分配一个时间段，然后在时间段内随机化
+    schedule = []
+    for i in range(total_stations):
+        # 计算该站点的启动时间段范围（不包括执行时间）
+        segment_start = int(i * avg_interval)
+        segment_end = int((i + 1) * avg_interval)
+        
+        # 在时间段内随机选择一个启动时间点
+        random_time = random.randint(segment_start, min(segment_end, int(available_interval_time)))
+        schedule.append(random_time)
+    
+    # 打乱顺序使其更随机
+    random.shuffle(schedule)
+    
+    return schedule
+
+
+def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v3.csv', max_workers=5):
+    """并发爬取所有城市的气象数据
+    
+    Args:
+        base_dir: 输出目录的基础路径
+        csv_file: CSV 文件路径，默认为 'nowcast_crawl_list_v3.csv'
+        max_workers: 最大并发线程数，默认5个
+    """
+    import random
+    
+    df = pd.read_csv(csv_file)
     name_list = df['name'].tolist()
     id_list = df['id'].tolist()
-    output_root = Path(__file__).parent
+    
+    # 随机打乱站点顺序
+    combined = list(zip(name_list, id_list))
+    random.shuffle(combined)
+    name_list, id_list = zip(*combined)
+    name_list = list(name_list)
+    id_list = list(id_list)
+    
+    output_root = Path(base_dir)
     first_scrape_date = datetime.now(timezone.utc).strftime("%Y%m%d%H")
-    start_time = datetime.now(timezone.utc)
-
-    total = len(name_list)
-    tracker = ProgressTracker(total)
-    results = {}
-    robot_cities: list[tuple[str, str]] = []  # (city, city_id)
-
-    if not batch_size or batch_size <= 0:
-        batch_size = total
-
-    total_batches = (total + batch_size - 1) // batch_size
-
+    
     print(f"\n{'='*60}")
     print(f"开始并发爬取任务 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"输出文件夹: {first_scrape_date}")
-    print(f"总城市数: {total}, 并发线程数: {max_workers}, 批大小: {batch_size}, 批次数: {total_batches}")
+    print(f"总城市数: {len(name_list)}, 并发线程数: {max_workers}")
     print(f"{'='*60}\n")
-
-    for batch_idx, start_idx in enumerate(range(0, total, batch_size), start=1):
-        end_idx = min(start_idx + batch_size, total)
-        batch_cities = name_list[start_idx:end_idx]
-        batch_ids = id_list[start_idx:end_idx]
-
-        print(f"-- 开始第 {batch_idx}/{total_batches} 批，城市 {start_idx+1}-{end_idx} --")
-
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            future_to_city = {
-                executor.submit(
-                    scrape_city_wrapper,
-                    city,
-                    city_id,
-                    False,
-                    output_root,
-                    tracker,
-                    first_scrape_date,
-                ): (city, city_id)
-                for city, city_id in zip(batch_cities, batch_ids)
-            }
-
-            for future in as_completed(future_to_city):
-                city, city_id = future_to_city[future]
-                try:
-                    city_name, result = future.result()
-                    results[city_name] = result
-                    if result and result.get("type") == "robot":
-                        robot_cities.append((city_name, city_id))
-                except Exception as e:
-                    print(f"✗ Exception for {city_id}: {e}")
-                    results[city] = None
-
-        print(f"-- 第 {batch_idx}/{total_batches} 批完成 --\n")
-
-        if batch_idx < total_batches:
-            minutes = sleep_between_batches / 60.0
-            print(f"批次间休眠 {minutes:.1f} 分钟...")
-            time.sleep(sleep_between_batches)
-
-    # 统一完成后，针对被判定为 robot 的城市进行多轮重试（默认两轮），轮与轮之间休眠 10 分钟
-    if robot_cities:
-        pending_robot = list({cid: (city, cid) for city, cid in robot_cities}.values())
-        max_robot_retries = 2
-        attempt = 1
-
-        while pending_robot and attempt <= max_robot_retries:
-            print(f"\n检测到 {len(pending_robot)} 个城市被判定为 robot，休眠 10 分钟后进行第 {attempt} 轮重试...")
-            time.sleep(600)
-
-            retry_tracker = ProgressTracker(len(pending_robot))
-            next_robot: list[tuple[str, str]] = []
-
-            with ThreadPoolExecutor(max_workers=max_workers) as executor:
-                future_to_city = {
-                    executor.submit(
-                        scrape_city_wrapper,
-                        city,
-                        city_id,
-                        False,
-                        output_root,
-                        retry_tracker,
-                        first_scrape_date,  # 与首轮一致，落同一日期文件夹
-                    ): (city, city_id)
-                    for city, city_id in pending_robot
-                }
-
-                for future in as_completed(future_to_city):
-                    city, city_id = future_to_city[future]
-                    try:
-                        city_name, result = future.result()
-                        results[city_name] = result  # 覆盖为重试结果
-                        if result and result.get("type") == "robot":
-                            next_robot.append((city_name, city_id))
-                    except Exception as e:
-                        print(f"✗ Retry exception for {city_id}: {e}")
-
-            pending_robot = list({cid: (city, cid) for city, cid in next_robot}.values())
-            attempt += 1
-
+    
+    tracker = ProgressTracker(len(name_list))
+    results = {}
+    
+    # Use ThreadPoolExecutor for concurrent scraping
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Submit all tasks
+        future_to_city = {
+            executor.submit(scrape_city_wrapper, city, city_id, False, output_root, tracker, first_scrape_date): (city, city_id)
+            for city, city_id in zip(name_list, id_list)
+        }
+        
+        # Process completed tasks
+        for future in as_completed(future_to_city):
+            city, city_id = future_to_city[future]
+            try:
+                city_name, result = future.result()
+                results[city_name] = result
+            except Exception as e:
+                print(f"✗ Exception for {city_id}: {e}")
+                results[city] = None
+    
     print(f"\n{'='*60}")
     print(f"爬取任务完成 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"成功: {sum(1 for r in results.values() if r)}/{total}")
+    print(f"成功: {sum(1 for r in results.values() if r)}/{len(name_list)}")
     print(f"{'='*60}\n")
-
+    
     return results
 
 
 if __name__ == "__main__":
     import pytz
+    import random
     
-    # 设置北京时区
-    beijing_tz = pytz.timezone('Asia/Shanghai')
+    # 定义配置参数
+    CSV_FILE = 'nowcast_crawl_list_v3.csv'
+    BASE_DIR = Path(__file__).parent
+    DURATION_HOURS = 12  # 12小时内完成所有站点
+    AVG_SCRAPE_TIME = 15  # 每个站点平均爬取时间（秒）
     
-    # 使用 APScheduler 配置 UTC 时区的定时任务
+    # 设置调度器
     scheduler = BackgroundScheduler(timezone='UTC')
     
-    # 每天 UTC 时间 0点、6点、12点、18点各执行一次
-    # scheduler.add_job(lambda: scrape_all_cities_concurrent(max_workers=3), 'cron', hour='0,6,12,18')
-    scheduler.add_job(lambda: scrape_all_cities_concurrent(max_workers=3), 'cron', hour='0')
-    scheduler.start()
+    def scheduled_crawl_task():
+        """定时执行的爬取任务"""
+        # 读取站点列表
+        df = pd.read_csv(CSV_FILE)
+        name_list = df['name'].tolist()
+        id_list = df['id'].tolist()
+        total_stations = len(name_list)
+        
+        print("\n" + "="*60)
+        print(f"定时任务触发 - {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}")
+        print("="*60)
+        print(f"总站点数: {total_stations}")
+        print(f"调度周期: {DURATION_HOURS} 小时")
+        print(f"预计单站耗时: {AVG_SCRAPE_TIME} 秒")
+        print("="*60 + "\n")
+        
+        # 生成随机调度时间表
+        schedule = generate_random_schedule(total_stations, DURATION_HOURS, AVG_SCRAPE_TIME)
+        
+        # 获取当前时间作为起始时间
+        start_time = datetime.now(timezone.utc)
+        
+        # 为每个站点添加调度任务
+        scheduled_count = 0
+        for i, (city, city_id, delay_seconds) in enumerate(zip(name_list, id_list, schedule)):
+            # 计算执行时间
+            run_time = start_time + timedelta(seconds=delay_seconds)
+            
+            # 添加一次性任务
+            scheduler.add_job(
+                scrape_single_city,
+                'date',
+                run_date=run_time,
+                args=[city, city_id, BASE_DIR],
+                id=f'scrape_{city_id}_{int(start_time.timestamp())}_{i}'
+            )
+            scheduled_count += 1
+            
+            # 每100个站点输出一次进度
+            if (i + 1) % 100 == 0:
+                print(f"已调度 {i + 1}/{total_stations} 个站点...")
+        
+        print(f"\n✓ 成功调度 {scheduled_count} 个站点")
+        print(f"✓ 开始时间: {start_time.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+        
+        # 计算实际预计结束时间（最后一个任务的启动时间 + 爬取时间）
+        actual_end_time = start_time + timedelta(seconds=max(schedule) + AVG_SCRAPE_TIME)
+        print(f"✓ 预计结束: {actual_end_time.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+        
+        actual_duration = (actual_end_time - start_time).total_seconds() / 3600
+        print(f"✓ 实际持续时间: {actual_duration:.2f} 小时")
+        print(f"✓ 首个任务将在 {min(schedule)} 秒后执行")
+        print(f"✓ 最后任务将在 {max(schedule)} 秒后启动\n")
     
-    print("✓ 定时爬虫已启动（并发模式）")
-    print(f"✓ 将在每天 UTC 时间 00:00, 06:00, 12:00, 18:00 执行爬取任务")
-    print(f"✓ 并发线程数: 3")
-    print(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
+    # 添加定时任务：每天 UTC 0点和12点触发
+    scheduler.add_job(scheduled_crawl_task, 'cron', hour='0,12', minute='0')
+    
+    print("="*60)
+    print("定时爬虫已启动（随机调度模式）")
+    print("="*60)
+    print(f"✓ 输出目录: {BASE_DIR}")
+    print(f"✓ CSV 文件: {CSV_FILE}")
+    print(f"✓ 触发时间: 每天 UTC 00:00 和 12:00")
     print(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
     print("✓ 按 Ctrl+C 停止程序\n")
     
-    # 立即执行一次（可选）
-    scrape_all_cities_concurrent(max_workers=3)
+    # 启动调度器
+    scheduler.start()
     
-    # 持续运行调度器
+    # 立即执行一次（可选，用于测试）
+    # scheduled_crawl_task()
+    
+    # 持续运行
     try:
         while True:
             time.sleep(60)
     except KeyboardInterrupt:
         print("\n\n程序已停止")
         scheduler.shutdown()
+
