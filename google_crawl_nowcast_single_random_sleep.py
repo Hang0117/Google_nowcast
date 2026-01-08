@@ -403,6 +403,19 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v3.csv',
         total_duration_hours: 总执行时长（小时），默认12小时
         avg_scrape_time: 每个站点平均爬取时间（秒），默认15秒
     """
+    # 确保必要的目录存在
+    output_root = Path(base_dir)
+    crawled_dir = output_root / "Crawled"
+    html_dir = output_root / "GoogleNowcastHTML"
+    
+    if not crawled_dir.exists():
+        crawled_dir.mkdir(parents=True, exist_ok=True)
+        print(f"✓ 创建目录: {crawled_dir}")
+    
+    if not html_dir.exists():
+        html_dir.mkdir(parents=True, exist_ok=True)
+        print(f"✓ 创建目录: {html_dir}")
+    
     df = pd.read_csv(csv_file)
     
     # randomly shuffle the DataFrame
@@ -439,7 +452,6 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v3.csv',
         scale_factor = total_interval_time / sum(intervals)
         intervals = [interval * scale_factor for interval in intervals]
     
-    output_root = Path(base_dir)
     first_scrape_date = datetime.now(timezone.utc).strftime("%Y%m%d%H")
     
     print(f"\n{'='*60}")
@@ -459,33 +471,29 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v3.csv',
     
     # Use ThreadPoolExecutor for concurrent scraping
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = []
-        
-        # 逐个提交任务，每个任务之间有随机间隔
+        # 逐个提交任务，等待完成后再等待随机间隔
         for idx, (city, city_id) in enumerate(zip(name_list, id_list)):
-            # 提交任务
+            # 提交任务并立即等待完成
             future = executor.submit(scrape_city_wrapper, city, city_id, False, output_root, tracker, first_scrape_date)
-            futures.append((future, city, city_id))
             
-            # 在提交下一个任务前等待随机间隔（最后一个任务不需要等待）
-            if idx < total_cities - 1:
-                sleep_time = intervals[idx]
-                if sleep_time > 0:
-                    elapsed = time.time() - start_time
-                    expected_elapsed = sum(intervals[:idx+1])
-                    # 调整sleep时间以保持整体节奏
-                    adjusted_sleep = max(0, sleep_time - (elapsed - expected_elapsed))
-                    if adjusted_sleep > 0:
-                        time.sleep(adjusted_sleep)
-        
-        # 等待所有任务完成
-        for future, city, city_id in futures:
             try:
-                city_name, result = future.result()
+                city_name, result = future.result()  # 等待任务完成（浏览器关闭）
                 results[city_name] = result
             except Exception as e:
                 print(f"✗ Exception for {city_id}: {e}")
                 results[city] = None
+            
+            # 任务完成后，在提交下一个任务前等待随机间隔（最后一个任务不需要等待）
+            if idx < total_cities - 1:
+                sleep_time = intervals[idx]
+                if sleep_time > 0:
+                    elapsed = time.time() - start_time
+                    expected_elapsed = sum(intervals[:idx+1]) + (idx + 1) * avg_scrape_time
+                    # 调整sleep时间以保持整体节奏
+                    adjusted_sleep = max(0, sleep_time - max(0, elapsed - expected_elapsed))
+                    if adjusted_sleep > 0:
+                        print(f"⏳ 等待 {adjusted_sleep:.1f} 秒后继续...")
+                        time.sleep(adjusted_sleep)
     
     elapsed_time = time.time() - start_time
     print(f"\n{'='*60}")
