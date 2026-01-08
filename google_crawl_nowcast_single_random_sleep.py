@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """Concurrent Google nowcast scraper with multi-threading.
 
@@ -14,6 +13,7 @@ import json
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
+import random
 
 
 def _install_dependencies():
@@ -137,8 +137,6 @@ def scrape_nowcast_svg(
     first_scrape_date: str | None = None,
 ):
     """Scrape rect heights from the SVG whose viewBox includes 1440 and 48."""
-    start_time = time.time()
-    
     try:
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import WebDriverWait
@@ -160,8 +158,6 @@ def scrape_nowcast_svg(
 
     driver = _chrome_driver(headless=headless)
     try:
-        # start crawling timer
-        crawl_start = time.time()
         driver.get("https://www.google.com/ncr?hl=en&gl=us")
         _accept_consent(driver)
 
@@ -183,12 +179,6 @@ def scrape_nowcast_svg(
             print(f"[{city}] Saved HTML: {html_filename}")
         except Exception as e:
             print(f"[{city}] Warning: Could not save HTML: {e}")
-        
-        crawl_time = time.time() - crawl_start
-        print(f"[{city_id}] 爬取耗时（含保存HTML）: {crawl_time:.2f}秒")
-        
-        # start parsing timer
-        parse_start = time.time()
         
         # Check for reCAPTCHA robot verification
         check_robot_js = """
@@ -361,16 +351,10 @@ def scrape_nowcast_svg(
             fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
             print(f"[{city}] Saved: {fname.name}")
 
-        parse_time = time.time() - parse_start
-        total_time = time.time() - start_time
-        print(f"[{city_id}] ⏱️ 解析耗时: {parse_time:.2f}秒")
-        print(f"[{city_id}] ⏱️ 总耗时: {total_time:.2f}秒")
-        
         return out
 
     except Exception as e:
-        total_time = time.time() - start_time
-        print(f"ERR [{city}] (总耗时 {total_time:.2f}秒):", e)
+        print(f"ERR [{city}]:", e)
         return None
     finally:
         try:
@@ -409,123 +393,93 @@ def scrape_city_wrapper(city, city_id, headless, output_root, tracker, first_scr
     return city, result
 
 
-def scrape_single_city(city, city_id, base_dir):
-    """单个城市的爬取任务（用于定时调度）"""
-    print(f"\n[{datetime.now().strftime('%H:%M:%S')}] 开始爬取 {city_id}")
-    result = scrape_nowcast_svg(
-        city=city,
-        city_id=city_id,
-        headless=False,  # 显示浏览器窗口
-        save_json=True,
-        output_dir=base_dir
-    )
-    if result:
-        if result.get("points"):
-            print(f"✓ {city_id} 完成: {len(result['points'])} 个数据点")
-        elif result.get("type") == "robot":
-            print(f"⚠️ {city_id} reCAPTCHA")
-        else:
-            print(f"✓ {city_id} 完成")
-    else:
-        print(f"✗ {city_id} 失败")
-    return result
-
-
-def generate_random_schedule(total_stations, duration_hours=12, avg_scrape_time=15):
-    """生成随机化的调度时间表（考虑实际爬取耗时）
-    
-    Args:
-        total_stations: 总站点数
-        duration_hours: 持续时间（小时）
-        avg_scrape_time: 平均每个站点的爬取时间（秒），默认15秒
-        
-    Returns:
-        list: 每个站点的调度秒数列表（相对于开始时间）
-    """
-    import random
-    
-    total_seconds = duration_hours * 3600
-    # 总执行时间 = 所有站点的爬取时间总和
-    total_scrape_time = total_stations * avg_scrape_time
-    # 可用于间隔的时间 = 总时间 - 总执行时间
-    available_interval_time = total_seconds - total_scrape_time
-    
-    if available_interval_time < 0:
-        print(f"⚠️ 警告: {duration_hours}小时不足以完成{total_stations}个站点（需要{total_scrape_time/3600:.1f}小时）")
-        print(f"   建议增加持续时间或减少站点数")
-        # 紧密调度，间隔最小化
-        avg_interval = 1
-    else:
-        # 平均间隔 = 可用间隔时间 / 站点数
-        avg_interval = available_interval_time / total_stations
-    
-    print(f"📊 调度参数:")
-    print(f"   总时间: {total_seconds}秒 ({duration_hours}小时)")
-    print(f"   预计爬取时间: {total_scrape_time}秒 ({total_scrape_time/3600:.2f}小时)")
-    print(f"   可用间隔时间: {available_interval_time}秒 ({available_interval_time/3600:.2f}小时)")
-    print(f"   平均间隔: {avg_interval:.1f}秒\n")
-    
-    # 为每个站点分配一个时间段，然后在时间段内随机化
-    schedule = []
-    for i in range(total_stations):
-        # 计算该站点的启动时间段范围（不包括执行时间）
-        segment_start = int(i * avg_interval)
-        segment_end = int((i + 1) * avg_interval)
-        
-        # 在时间段内随机选择一个启动时间点
-        random_time = random.randint(segment_start, min(segment_end, int(available_interval_time)))
-        schedule.append(random_time)
-    
-    # 打乱顺序使其更随机
-    random.shuffle(schedule)
-    
-    return schedule
-
-
-def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v3.csv', max_workers=5):
-    """并发爬取所有城市的气象数据
+def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v3.csv', max_workers=5, total_duration_hours=12, avg_scrape_time=15):
+    """并发爬取所有城市的气象数据，在指定时间内分散执行
     
     Args:
         base_dir: 输出目录的基础路径
         csv_file: CSV 文件路径，默认为 'nowcast_crawl_list_v3.csv'
         max_workers: 最大并发线程数，默认5个
+        total_duration_hours: 总执行时长（小时），默认12小时
+        avg_scrape_time: 每个站点平均爬取时间（秒），默认15秒
     """
-    import random
-    
     df = pd.read_csv(csv_file)
+    
+    # randomly shuffle the DataFrame
+    df = df.sample(frac=1, random_state=None).reset_index(drop=True)
+    
     name_list = df['name'].tolist()
     id_list = df['id'].tolist()
+    total_cities = len(name_list)
     
-    # 随机打乱站点顺序
-    combined = list(zip(name_list, id_list))
-    random.shuffle(combined)
-    name_list, id_list = zip(*combined)
-    name_list = list(name_list)
-    id_list = list(id_list)
+    # calculate total available time in seconds
+    total_seconds = total_duration_hours * 3600
+    total_scrape_time = total_cities * avg_scrape_time
+    total_interval_time = total_seconds - total_scrape_time
+    
+    if total_interval_time < 0:
+        print(f"⚠️  警告: {total_cities} 个站点需要约 {total_scrape_time/3600:.2f} 小时，超过设定的 {total_duration_hours} 小时")
+        total_interval_time = 0
+    
+    # calculate average interval time per city
+    avg_interval = total_interval_time / total_cities if total_cities > 0 else 0
+    
+    # generate random intervals for each city (between 50% and 150% of the average)
+    intervals = []
+    for i in range(total_cities):
+        if avg_interval > 0:
+            # Random offset ±50%
+            random_interval = avg_interval * random.uniform(0.5, 1.5)
+            intervals.append(random_interval)
+        else:
+            intervals.append(0)
+    
+    # Adjust intervals to ensure total duration is close to target
+    if sum(intervals) > 0:
+        scale_factor = total_interval_time / sum(intervals)
+        intervals = [interval * scale_factor for interval in intervals]
     
     output_root = Path(base_dir)
     first_scrape_date = datetime.now(timezone.utc).strftime("%Y%m%d%H")
     
     print(f"\n{'='*60}")
-    print(f"开始并发爬取任务 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"开始分散爬取任务 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"输出文件夹: {first_scrape_date}")
-    print(f"总城市数: {len(name_list)}, 并发线程数: {max_workers}")
+    print(f"总城市数: {total_cities}, 并发线程数: {max_workers}")
+    print(f"预计总时长: {total_duration_hours} 小时 ({total_seconds/3600:.2f}h)")
+    print(f"预计爬取时间: {total_scrape_time/3600:.2f} 小时")
+    print(f"预计间隔时间: {total_interval_time/3600:.2f} 小时")
+    print(f"平均站点间隔: {avg_interval:.1f} 秒 (随机偏移 ±50%)")
+    print(f"✓ 城市列表已随机打乱")
     print(f"{'='*60}\n")
     
-    tracker = ProgressTracker(len(name_list))
+    tracker = ProgressTracker(total_cities)
     results = {}
+    start_time = time.time()
     
     # Use ThreadPoolExecutor for concurrent scraping
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        # Submit all tasks
-        future_to_city = {
-            executor.submit(scrape_city_wrapper, city, city_id, False, output_root, tracker, first_scrape_date): (city, city_id)
-            for city, city_id in zip(name_list, id_list)
-        }
+        futures = []
         
-        # Process completed tasks
-        for future in as_completed(future_to_city):
-            city, city_id = future_to_city[future]
+        # 逐个提交任务，每个任务之间有随机间隔
+        for idx, (city, city_id) in enumerate(zip(name_list, id_list)):
+            # 提交任务
+            future = executor.submit(scrape_city_wrapper, city, city_id, False, output_root, tracker, first_scrape_date)
+            futures.append((future, city, city_id))
+            
+            # 在提交下一个任务前等待随机间隔（最后一个任务不需要等待）
+            if idx < total_cities - 1:
+                sleep_time = intervals[idx]
+                if sleep_time > 0:
+                    elapsed = time.time() - start_time
+                    expected_elapsed = sum(intervals[:idx+1])
+                    # 调整sleep时间以保持整体节奏
+                    adjusted_sleep = max(0, sleep_time - (elapsed - expected_elapsed))
+                    if adjusted_sleep > 0:
+                        time.sleep(adjusted_sleep)
+        
+        # 等待所有任务完成
+        for future, city, city_id in futures:
             try:
                 city_name, result = future.result()
                 results[city_name] = result
@@ -533,9 +487,11 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v3.csv',
                 print(f"✗ Exception for {city_id}: {e}")
                 results[city] = None
     
+    elapsed_time = time.time() - start_time
     print(f"\n{'='*60}")
     print(f"爬取任务完成 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"成功: {sum(1 for r in results.values() if r)}/{len(name_list)}")
+    print(f"实际用时: {elapsed_time/3600:.2f} 小时 ({elapsed_time:.0f} 秒)")
+    print(f"成功: {sum(1 for r in results.values() if r)}/{total_cities}")
     print(f"{'='*60}\n")
     
     return results
@@ -543,94 +499,43 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v3.csv',
 
 if __name__ == "__main__":
     import pytz
-    import random
     
-    # 定义配置参数
+    # settings parameters
     CSV_FILE = 'nowcast_crawl_list_v3.csv'
+    MAX_WORKERS = 1
     BASE_DIR = Path(__file__).parent
-    DURATION_HOURS = 12  # 12小时内完成所有站点
+    TOTAL_DURATION_HOURS = 12  # 每次爬取任务在12小时内完成
     AVG_SCRAPE_TIME = 15  # 每个站点平均爬取时间（秒）
     
-    # 设置调度器
+    # 设置北京时区
+    beijing_tz = pytz.timezone('Asia/Shanghai')
+    
+    # 使用 APScheduler 配置 UTC 时区的定时任务
     scheduler = BackgroundScheduler(timezone='UTC')
     
-    def scheduled_crawl_task():
-        """定时执行的爬取任务"""
-        # 读取站点列表
-        df = pd.read_csv(CSV_FILE)
-        name_list = df['name'].tolist()
-        id_list = df['id'].tolist()
-        total_stations = len(name_list)
-        
-        print("\n" + "="*60)
-        print(f"定时任务触发 - {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}")
-        print("="*60)
-        print(f"总站点数: {total_stations}")
-        print(f"调度周期: {DURATION_HOURS} 小时")
-        print(f"预计单站耗时: {AVG_SCRAPE_TIME} 秒")
-        print("="*60 + "\n")
-        
-        # 生成随机调度时间表
-        schedule = generate_random_schedule(total_stations, DURATION_HOURS, AVG_SCRAPE_TIME)
-        
-        # 获取当前时间作为起始时间
-        start_time = datetime.now(timezone.utc)
-        
-        # 为每个站点添加调度任务
-        scheduled_count = 0
-        for i, (city, city_id, delay_seconds) in enumerate(zip(name_list, id_list, schedule)):
-            # 计算执行时间
-            run_time = start_time + timedelta(seconds=delay_seconds)
-            
-            # 添加一次性任务
-            scheduler.add_job(
-                scrape_single_city,
-                'date',
-                run_date=run_time,
-                args=[city, city_id, BASE_DIR],
-                id=f'scrape_{city_id}_{int(start_time.timestamp())}_{i}'
-            )
-            scheduled_count += 1
-            
-            # 每100个站点输出一次进度
-            if (i + 1) % 100 == 0:
-                print(f"已调度 {i + 1}/{total_stations} 个站点...")
-        
-        print(f"\n✓ 成功调度 {scheduled_count} 个站点")
-        print(f"✓ 开始时间: {start_time.strftime('%Y-%m-%d %H:%M:%S UTC')}")
-        
-        # 计算实际预计结束时间（最后一个任务的启动时间 + 爬取时间）
-        actual_end_time = start_time + timedelta(seconds=max(schedule) + AVG_SCRAPE_TIME)
-        print(f"✓ 预计结束: {actual_end_time.strftime('%Y-%m-%d %H:%M:%S UTC')}")
-        
-        actual_duration = (actual_end_time - start_time).total_seconds() / 3600
-        print(f"✓ 实际持续时间: {actual_duration:.2f} 小时")
-        print(f"✓ 首个任务将在 {min(schedule)} 秒后执行")
-        print(f"✓ 最后任务将在 {max(schedule)} 秒后启动\n")
+    # 每天 UTC 时间 0点、6点、12点、18点各执行一次
+    # scheduler.add_job(lambda: scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, total_duration_hours=TOTAL_DURATION_HOURS, avg_scrape_time=AVG_SCRAPE_TIME), 'cron', hour='0,6,12,18')
+    scheduler.add_job(lambda: scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, total_duration_hours=TOTAL_DURATION_HOURS, avg_scrape_time=AVG_SCRAPE_TIME), 'cron', hour='0')
+    scheduler.start()
     
-    # 添加定时任务：每天 UTC 0点和12点触发
-    scheduler.add_job(scheduled_crawl_task, 'cron', hour='0,12', minute='0')
-    
-    print("="*60)
-    print("定时爬虫已启动（随机调度模式）")
-    print("="*60)
+    print("✓ 定时爬虫已启动（分散爬取模式）")
     print(f"✓ 输出目录: {BASE_DIR}")
     print(f"✓ CSV 文件: {CSV_FILE}")
-    print(f"✓ 触发时间: 每天 UTC 00:00 和 12:00")
+    print(f"✓ 将在每天 UTC 时间 00:00 执行爬取任务")
+    print(f"✓ 并发线程数: {MAX_WORKERS}")
+    print(f"✓ 每次任务时长: {TOTAL_DURATION_HOURS} 小时")
+    print(f"✓ 平均爬取时间: {AVG_SCRAPE_TIME} 秒/站点")
+    print(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
     print("✓ 按 Ctrl+C 停止程序\n")
     
-    # 启动调度器
-    scheduler.start()
+    # 立即执行一次（可选）
+    scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, total_duration_hours=TOTAL_DURATION_HOURS, avg_scrape_time=AVG_SCRAPE_TIME)
     
-    # 立即执行一次（可选，用于测试）
-    # scheduled_crawl_task()
-    
-    # 持续运行
+    # 持续运行调度器
     try:
         while True:
             time.sleep(60)
     except KeyboardInterrupt:
         print("\n\n程序已停止")
         scheduler.shutdown()
-
