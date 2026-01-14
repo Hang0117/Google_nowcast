@@ -11,9 +11,64 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import json
 import time
+import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 import random
+import uuid
+import socket
+import argparse
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
+
+def _get_local_ip():
+    """获取本机 IP 地址"""
+    try:
+        # 创建一个 UDP socket，不实际发送数据
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        try:
+            # 备用方案：获取主机名对应的 IP
+            return socket.gethostbyname(socket.gethostname())
+        except Exception:
+            return "无法获取"
+
+
+def _get_public_ip():
+    """获取公网 IP 地址（Google 看到的 IP）"""
+    try:
+        import requests
+        # 从多个服务轮询，增加可靠性
+        services = [
+            "https://api.ipify.org?format=json",
+            "https://checkip.amazonaws.com",
+            "https://icanhazip.com",
+        ]
+        for service in services:
+            try:
+                if "ipify" in service:
+                    response = requests.get(service, timeout=3)
+                    return response.json().get("ip", "查询失败")
+                else:
+                    response = requests.get(service, timeout=3)
+                    return response.text.strip()
+            except Exception:
+                continue
+        return "无网络连接"
+    except ImportError:
+        return "requests 模块未安装"
+    except Exception:
+        return "查询失败"
 
 
 def _install_dependencies():
@@ -27,12 +82,12 @@ def _install_dependencies():
             import pandas
             from apscheduler.schedulers.background import BackgroundScheduler
         except ImportError:
-            print("⚠️  Warning: Some Python packages not installed. Please install manually:")
-            print("   pip install selenium webdriver-manager pandas apscheduler pytz")
+            logging.info("⚠️  Warning: Some Python packages not installed. Please install manually:")
+            logging.info("   pip install selenium webdriver-manager pandas apscheduler pytz")
         return
     
     # Linux: Install Chrome and Python dependencies
-    print("🔧 Checking and installing dependencies on Linux...")
+    logging.info("🔧 Checking and installing dependencies on Linux...")
     
     # Check if Chrome is installed
     chrome_check = subprocess.run(
@@ -41,38 +96,42 @@ def _install_dependencies():
     )
     
     if chrome_check.returncode != 0:
-        print("📦 Installing Google Chrome...")
+        logging.info("📦 Installing Google Chrome...")
         try:
-            subprocess.run(["sudo", "apt-get", "update"], check=True, capture_output=True)
+            # Try to use apt-get without sudo (works in containers running as root)
+            subprocess.run(["apt-get", "update"], check=True, capture_output=True, timeout=60)
             subprocess.run(
-                ["sudo", "bash", "-c", 
+                ["bash", "-c", 
                  "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && "
                  "echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list"],
-                check=True, capture_output=True
+                check=True, capture_output=True, timeout=30
             )
-            subprocess.run(["sudo", "apt-get", "update"], check=True, capture_output=True)
+            subprocess.run(["apt-get", "update"], check=True, capture_output=True, timeout=60)
             subprocess.run(
-                ["sudo", "apt-get", "install", "-y", "google-chrome-stable"],
-                check=True, capture_output=True
+                ["apt-get", "install", "-y", "google-chrome-stable"],
+                check=True, capture_output=True, timeout=120
             )
-            print("✅ Google Chrome installed")
+            logging.info("✅ Google Chrome installed successfully")
         except subprocess.CalledProcessError as e:
-            print(f"⚠️  Could not install Chrome: {e}")
-            print("   Please install manually: sudo apt-get install -y google-chrome-stable")
+            logging.info(f"⚠️  Could not install Chrome: {e}")
+            logging.info("   Continuing... Chrome may already be partially installed")
+        except subprocess.TimeoutExpired:
+            logging.info(f"⚠️  Chrome installation timed out")
+            logging.info("   Continuing... Chrome may already be installed")
     else:
-        print("✅ Google Chrome already installed")
+        logging.info("✅ Google Chrome already installed")
     
     # Install Python packages
-    print("📦 Installing Python packages...")
-    packages = ["selenium", "webdriver-manager", "pandas", "apscheduler", "pytz"]
+    logging.info("📦 Installing Python packages...")
+    packages = ["selenium", "webdriver-manager", "pandas", "apscheduler", "pytz", "requests"]
     try:
         subprocess.run(
             ["pip", "install", "-q"] + packages,
             check=True
         )
-        print("✅ Python packages installed")
+        logging.info("✅ Python packages installed")
     except subprocess.CalledProcessError as e:
-        print(f"⚠️  Could not install Python packages: {e}")
+        logging.info(f"⚠️  Could not install Python packages: {e}")
         raise
 
 
@@ -99,10 +158,25 @@ def _chrome_driver(headless: bool = True):
     options.add_experimental_option("useAutomationExtension", False)
     mobile_emulation = {"deviceName": "Nexus 5"}
     options.add_experimental_option("mobileEmulation", mobile_emulation)
-    options.add_argument(
+    # options.add_argument(
+    #     "user-agent=Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+    # )
+    # Random User-Agent
+    user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15",
         "user-agent=Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
-    )
+    ]
+    ua = random.choice(user_agents)
+    options.add_argument(f"user-agent={ua}")
 
+    # Isolated Chrome profile (cross-platform)
+    import tempfile
+    import os
+    tmp_dir = tempfile.gettempdir()
+    profile_dir = os.path.join(tmp_dir, f"chrome_profile_{uuid.uuid4()}")
+    options.add_argument(f"--user-data-dir={profile_dir}")
     service = Service(ChromeDriverManager().install())
     return webdriver.Chrome(service=service, options=options)
 
@@ -136,13 +210,24 @@ def scrape_nowcast_svg(
     output_dir: str | Path | None = None,
     first_scrape_date: str | None = None,
 ):
+        # 获取浏览器外网IP
+    try:
+        driver = _chrome_driver(headless=headless)
+        driver.get("https://api.ipify.org?format=json")
+        import json as _json
+        ip_text = driver.find_element("tag name", "body").text
+        ip_info = _json.loads(ip_text)
+        logging.info(f"[Browser Public IP] {ip_info.get('ip')}")
+        driver.quit()
+    except Exception as e:
+        logging.info(f"[Browser Public IP] 获取失败: {e}")
     """Scrape rect heights from the SVG whose viewBox includes 1440 and 48."""
     try:
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
     except Exception as e:
-        print(f"ERR [{city}]: selenium not available:", e)
+        logging.info(f"ERR [{city}]: selenium not available: {e}")
         return None
 
     base_dir = Path(output_dir) if output_dir else Path(__file__).parent
@@ -176,9 +261,9 @@ def scrape_nowcast_svg(
             html_filename = f"{city_id}_{folder_date}.html"
             html_path = html_dir / html_filename
             html_path.write_text(html_content, encoding="utf-8")
-            print(f"[{city}] Saved HTML: {html_filename}")
+            logging.info(f"[{city}] Saved HTML: {html_filename}")
         except Exception as e:
-            print(f"[{city}] Warning: Could not save HTML: {e}")
+            logging.info(f"[{city}] Warning: Could not save HTML: {e}")
         
         # Check for reCAPTCHA robot verification
         check_robot_js = """
@@ -188,7 +273,7 @@ def scrape_nowcast_svg(
         """
         is_robot_check = driver.execute_script(check_robot_js)
         if is_robot_check:
-            print("⚠ reCAPTCHA verification detected: 'I'm not a robot'")
+            logging.info("⚠ reCAPTCHA verification detected: 'I'm not a robot'")
             out["type"] = "robot"
             if save_json:
                 folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
@@ -197,7 +282,7 @@ def scrape_nowcast_svg(
                 outdir.mkdir(parents=True, exist_ok=True)
                 fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
                 fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-                print("Saved:", fname)
+                logging.info(f"Saved: {fname}")
             return out
 
         js = """
@@ -235,7 +320,7 @@ def scrape_nowcast_svg(
 
         result = driver.execute_script(js)
         if not result or not result.get("found"):
-            print(f"[{city}] No target SVG found. Trying fallback div...")
+            logging.info(f"[{city}] No target SVG found. Trying fallback div...")
             fallback_js = """
             const div = document.querySelector('div[jsname="Kt2ahd"].XhUg9e');
             if (!div) return {found: false, reason: 'no_kt2ahd_div'};
@@ -251,13 +336,13 @@ def scrape_nowcast_svg(
             
             fallback_result = driver.execute_script(fallback_js)
             if fallback_result and fallback_result.get("found"):
-                print(f"[{city}] Fallback OK: found divs")
+                logging.info(f"[{city}] Fallback OK: found divs")
                 out["fallback_data"] = fallback_result.get("data")
                 out["source"] = "fallback_div"
                 out["type"] = "nowcast"
                 result = {"viewBox": None, "rects": []}
             else:
-                print(f"[{city}] Fallback div not found. Trying hourly forecast...")
+                logging.info(f"[{city}] Fallback div not found. Trying hourly forecast...")
                 hourly_js = """
                 const container = document.querySelector('[jsname="s2gQvd"].EDblX.HG5ZQb');
                 if (!container) return { found: false, reason: 'no_hourly_container' };
@@ -275,7 +360,7 @@ def scrape_nowcast_svg(
                 
                 hourly_result = driver.execute_script(hourly_js)
                 if hourly_result and hourly_result.get("found"):
-                    print(f"[{city}] Hourly forecast OK: {hourly_result.get('count', 0)} items")
+                    logging.info(f"[{city}] Hourly forecast OK: {hourly_result.get('count', 0)} items")
                     out["hourly_data"] = hourly_result.get("labels", [])
                     out["source"] = "hourly_aria_label"
                     out["type"] = "hourly"
@@ -285,15 +370,15 @@ def scrape_nowcast_svg(
                     dbg = base_dir / f"debug_nowcast_{city.split(',')[0].replace(' ', '_')}.html"
                     dbg.write_text(html, encoding="utf-8")
                     reason = hourly_result.get('reason') if hourly_result else 'unknown'
-                    print(f"[{city}] No data found (reason: {reason}). Wrote {dbg.name}")
+                    logging.info(f"[{city}] No data found (reason: {reason}). Wrote {dbg.name}")
                     # Delete debug file after saving
                     try:
                         import time as time_module
                         time_module.sleep(0.5)  # Brief delay to ensure file is written
                         dbg.unlink()  # Delete the file
-                        print(f"[{city}] Debug file deleted: {dbg.name}")
+                        logging.info(f"[{city}] Debug file deleted: {dbg.name}")
                     except Exception as del_err:
-                        print(f"[{city}] Could not delete debug file: {del_err}")
+                        logging.info(f"[{city}] Could not delete debug file: {del_err}")
                     out["message"] = "no nowcast data now."
                     if save_json:
                         folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
@@ -333,7 +418,7 @@ def scrape_nowcast_svg(
             outdir.mkdir(parents=True, exist_ok=True)
             fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
             fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-            print(f"[{city}] Saved: {fname.name}")
+            logging.info(f"[{city}] Saved: {fname.name}")
         elif save_json and out.get("fallback_data"):
             folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
             file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
@@ -341,7 +426,7 @@ def scrape_nowcast_svg(
             outdir.mkdir(parents=True, exist_ok=True)
             fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
             fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-            print(f"[{city}] Saved: {fname.name}")
+            logging.info(f"[{city}] Saved: {fname.name}")
         elif save_json and out.get("hourly_data"):
             folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
             file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
@@ -349,12 +434,12 @@ def scrape_nowcast_svg(
             outdir.mkdir(parents=True, exist_ok=True)
             fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
             fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-            print(f"[{city}] Saved: {fname.name}")
+            logging.info(f"[{city}] Saved: {fname.name}")
 
         return out
 
     except Exception as e:
-        print(f"ERR [{city}]:", e)
+        logging.info(f"ERR [{city}]: {e}")
         return None
     finally:
         try:
@@ -382,13 +467,13 @@ def scrape_city_wrapper(city, city_id, headless, output_root, tracker, first_scr
     completed = tracker.increment()
     
     if result and result.get("points"):
-        print(f"[{completed}/{tracker.total}] ✓ {city_id}: {len(result['points'])} points")
+        logging.info(f"[{completed}/{tracker.total}] ✓ {city_id}: {len(result['points'])} points")
     elif result and result.get("hourly_data"):
-        print(f"[{completed}/{tracker.total}] ✓ {city_id}: {len(result['hourly_data'])} hourly items")
+        logging.info(f"[{completed}/{tracker.total}] ✓ {city_id}: {len(result['hourly_data'])} hourly items")
     elif result and result.get("fallback_data"):
-        print(f"[{completed}/{tracker.total}] ✓ {city_id}: fallback data")
+        logging.info(f"[{completed}/{tracker.total}] ✓ {city_id}: fallback data")
     else:
-        print(f"[{completed}/{tracker.total}] ✗ {city_id}: No data")
+        logging.info(f"[{completed}/{tracker.total}] ✗ {city_id}: No data")
     
     return city, result
 
@@ -410,11 +495,16 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
     
     if not crawled_dir.exists():
         crawled_dir.mkdir(parents=True, exist_ok=True)
-        print(f"✓ 创建目录: {crawled_dir}")
+        logging.info(f"✓ 创建目录: {crawled_dir}")
     
     if not html_dir.exists():
         html_dir.mkdir(parents=True, exist_ok=True)
-        print(f"✓ 创建目录: {html_dir}")
+        logging.info(f"✓ 创建目录: {html_dir}")
+    
+    # 检查 CSV 文件是否存在
+    csv_path = Path(csv_file)
+    if not csv_path.exists():
+        raise FileNotFoundError(f"CSV 文件不存在: {csv_file}")
     
     df = pd.read_csv(csv_file)
     
@@ -431,7 +521,7 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
     total_interval_time = total_seconds - total_scrape_time
     
     if total_interval_time < 0:
-        print(f"⚠️  警告: {total_cities} 个站点需要约 {total_scrape_time/3600:.2f} 小时，超过设定的 {total_duration_hours} 小时")
+        logging.info(f"⚠️  警告: {total_cities} 个站点需要约 {total_scrape_time/3600:.2f} 小时，超过设定的 {total_duration_hours} 小时")
         total_interval_time = 0
     
     # calculate average interval time per city
@@ -454,16 +544,16 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
     
     first_scrape_date = datetime.now(timezone.utc).strftime("%Y%m%d%H")
     
-    print(f"\n{'='*60}")
-    print(f"开始分散爬取任务 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"输出文件夹: {first_scrape_date}")
-    print(f"总城市数: {total_cities}, 并发线程数: {max_workers}")
-    print(f"预计总时长: {total_duration_hours} 小时 ({total_seconds/3600:.2f}h)")
-    print(f"预计爬取时间: {total_scrape_time/3600:.2f} 小时")
-    print(f"预计间隔时间: {total_interval_time/3600:.2f} 小时")
-    print(f"平均站点间隔: {avg_interval:.1f} 秒 (随机偏移 ±50%)")
-    print(f"✓ 城市列表已随机打乱")
-    print(f"{'='*60}\n")
+    logging.info(f"\n{'='*60}")
+    logging.info(f"开始分散爬取任务 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    logging.info(f"输出文件夹: {first_scrape_date}")
+    logging.info(f"总城市数: {total_cities}, 并发线程数: {max_workers}")
+    logging.info(f"预计总时长: {total_duration_hours} 小时 ({total_seconds/3600:.2f}h)")
+    logging.info(f"预计爬取时间: {total_scrape_time/3600:.2f} 小时")
+    logging.info(f"预计间隔时间: {total_interval_time/3600:.2f} 小时")
+    logging.info(f"平均站点间隔: {avg_interval:.1f} 秒 (随机偏移 ±50%)")
+    logging.info(f"✓ 城市列表已随机打乱")
+    logging.info(f"{'='*60}\n")
     
     tracker = ProgressTracker(total_cities)
     results = {}
@@ -473,14 +563,14 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         # 逐个提交任务，等待完成后再等待随机间隔
         for idx, (city, city_id) in enumerate(zip(name_list, id_list)):
-            # 提交任务并立即等待完成
-            future = executor.submit(scrape_city_wrapper, city, city_id, False, output_root, tracker, first_scrape_date)
+            # 提交任务并立即等待完成（Linux/服务器环境默认使用无头浏览器）
+            future = executor.submit(scrape_city_wrapper, city, city_id, True, output_root, tracker, first_scrape_date)
             
             try:
                 city_name, result = future.result()  # 等待任务完成（浏览器关闭）
                 results[city_name] = result
             except Exception as e:
-                print(f"✗ Exception for {city_id}: {e}")
+                logging.info(f"✗ Exception for {city_id}: {e}")
                 results[city] = None
             
             # 任务完成后，在提交下一个任务前等待随机间隔（最后一个任务不需要等待）
@@ -492,17 +582,55 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
                     # 调整sleep时间以保持整体节奏
                     adjusted_sleep = max(0, sleep_time - max(0, elapsed - expected_elapsed))
                     if adjusted_sleep > 0:
-                        print(f"⏳ 等待 {adjusted_sleep:.1f} 秒后继续...")
+                        logging.info(f"⏳ 等待 {adjusted_sleep:.1f} 秒后继续...")
                         time.sleep(adjusted_sleep)
     
     elapsed_time = time.time() - start_time
-    print(f"\n{'='*60}")
-    print(f"爬取任务完成 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"实际用时: {elapsed_time/3600:.2f} 小时 ({elapsed_time:.0f} 秒)")
-    print(f"成功: {sum(1 for r in results.values() if r)}/{total_cities}")
-    print(f"{'='*60}\n")
+    logging.info(f"\n{'='*60}")
+    logging.info(f"爬取任务完成 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    logging.info(f"实际用时: {elapsed_time/3600:.2f} 小时 ({elapsed_time:.0f} 秒)")
+    logging.info(f"成功: {sum(1 for r in results.values() if r)}/{total_cities}")
+    logging.info(f"{'='*60}\n")
     
     return results
+
+
+if __name__ == "__main__":
+    import pytz
+
+    # settings parameters
+    CSV_FILE = 'nowcast_crawl_list_v4.csv'
+    MAX_WORKERS = 1
+    BASE_DIR = Path(__file__).parent
+    TOTAL_DURATION_HOURS = 12  # 每次爬取任务在12小时内完成
+    AVG_SCRAPE_TIME = 15  # 每个站点平均爬取时间（秒）
+    
+    # 设置北京时区
+    beijing_tz = pytz.timezone('Asia/Shanghai')
+    
+    local_ip = _get_local_ip()
+    public_ip = _get_public_ip()
+    logging.info("✓ 定时爬虫已启动（分散爬取模式）")
+    logging.info(f"✓ 本机 IP (内网): {local_ip}")
+    logging.info(f"✓ 公网 IP (Google看到): {public_ip}")
+    logging.info(f"✓ 输出目录: {BASE_DIR}")
+    logging.info(f"✓ CSV 文件: {CSV_FILE}")
+    logging.info(f"✓ 并发线程数: {MAX_WORKERS}")
+    logging.info(f"✓ 每次任务时长: {TOTAL_DURATION_HOURS} 小时")
+    logging.info(f"✓ 平均爬取时间: {AVG_SCRAPE_TIME} 秒/站点")
+    logging.info(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
+    logging.info(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
+    logging.info("✓ 按 Ctrl+C 停止程序\n")
+    
+    # 立即执行一次
+    try:
+        scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, total_duration_hours=TOTAL_DURATION_HOURS, avg_scrape_time=AVG_SCRAPE_TIME)
+        logging.info("\n✓ 爬虫任务完成")
+    except Exception as e:
+        logging.info(f"\n✗ 爬虫任务失败: {e}")
+        raise
+
+
 
 
 if __name__ == "__main__":
@@ -526,7 +654,9 @@ if __name__ == "__main__":
     scheduler.add_job(lambda: scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, total_duration_hours=TOTAL_DURATION_HOURS, avg_scrape_time=AVG_SCRAPE_TIME), 'cron', hour='0')
     scheduler.start()
     
+    local_ip = _get_local_ip()
     print("✓ 定时爬虫已启动（分散爬取模式）")
+    print(f"✓ 本机 IP: {local_ip}")
     print(f"✓ 输出目录: {BASE_DIR}")
     print(f"✓ CSV 文件: {CSV_FILE}")
     print(f"✓ 将在每天 UTC 时间 00:00 执行爬取任务")
@@ -537,8 +667,8 @@ if __name__ == "__main__":
     print(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
     print("✓ 按 Ctrl+C 停止程序\n")
     
-    # # 立即执行一次（可选）
-    # scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, total_duration_hours=TOTAL_DURATION_HOURS, avg_scrape_time=AVG_SCRAPE_TIME)
+    # 立即执行一次（可选）
+    scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, total_duration_hours=TOTAL_DURATION_HOURS, avg_scrape_time=AVG_SCRAPE_TIME)
     
     # 持续运行调度器
     try:

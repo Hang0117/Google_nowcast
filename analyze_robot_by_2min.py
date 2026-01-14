@@ -2,24 +2,29 @@ import json
 import os
 import re
 from datetime import datetime, timedelta
+from pathlib import Path
 
-folder_path = r"q:\Google_nowcast\Crawled\2026010600"
+# 使用相对路径，自动定位到脚本所在目录
+folder = Path(__file__).parent / "Crawled" / "2026011100"
+# folder_path = Path(__file__).parent / "Crawled" 
+# date_folders = sorted([d for d in folder_path.glob('[0-9]*') if d.is_dir()])
+# folder = date_folders[-1]
 
 # 获取所有json文件
-json_files = [f for f in os.listdir(folder_path) if f.endswith('.json')]
+json_files = [f for f in os.listdir(folder) if f.endswith('.json')]
 
 # 提取时间戳并排序
 file_data = []
 for filename in json_files:
-    # 只处理包含真实日期 20260106 的文件
-    if '20260106' not in filename:
+    # 只处理包含真实日期 20260111 的文件
+    if '20260111' not in filename:
         continue
     
-    # 找出20260106后面的6位数字
-    match = re.search(r'20260106[_]?(\d{6})', filename)
+    # 找出20260111后面的6位数字
+    match = re.search(r'20260111[_]?(\d{6})', filename)
     if match:
         time_str = match.group(1)
-        timestamp_str = f"20260106{time_str}"
+        timestamp_str = f"20260111{time_str}"
         try:
             timestamp = datetime.strptime(timestamp_str, "%Y%m%d%H%M%S")
             file_data.append((filename, timestamp))
@@ -33,7 +38,7 @@ file_data.sort(key=lambda x: x[1])
 robot_status = {}
 
 for filename, timestamp in file_data:
-    filepath = os.path.join(folder_path, filename)
+    filepath = os.path.join(folder, filename)
     has_robot = False
     try:
         with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
@@ -80,14 +85,14 @@ if file_data:
                 if robot_status[(filename, timestamp)]:
                     robot_count += 1
         
-        if total_count > 0 or len(time_segments) == 0:  # 记录有文件的段，或第一段
-            time_segments.append({
-                'start': segment_start,
-                'end': segment_end,
-                'robot_count': robot_count,
-                'total_count': total_count,
-                'files': files_in_segment
-            })
+        # 记录所有时间段，包括没有文件的
+        time_segments.append({
+            'start': segment_start,
+            'end': segment_end,
+            'robot_count': robot_count,
+            'total_count': total_count,
+            'files': files_in_segment
+        })
         
         current_time += timedelta(minutes=2)
     
@@ -96,14 +101,13 @@ if file_data:
     print("-" * 75)
     
     for segment in time_segments:
-        if segment['total_count'] > 0:
-            start_str = segment['start'].strftime('%Y-%m-%d %H:%M:%S')
-            end_str = segment['end'].strftime('%H:%M:%S')
-            robot_count = segment['robot_count']
-            total_count = segment['total_count']
-            ratio = robot_count / total_count * 100 if total_count > 0 else 0
-            
-            print(f"{start_str} - {end_str:<10} {total_count:<8} {robot_count:<12} {ratio:>6.1f}%")
+        start_str = segment['start'].strftime('%Y-%m-%d %H:%M:%S')
+        end_str = segment['end'].strftime('%H:%M:%S')
+        robot_count = segment['robot_count']
+        total_count = segment['total_count']
+        ratio = robot_count / total_count * 100 if total_count > 0 else 0
+        
+        print(f"{start_str} - {end_str:<10} {total_count:<8} {robot_count:<12} {ratio:>6.1f}%")
     
     # 统计汇总
     print("\n" + "="*80)

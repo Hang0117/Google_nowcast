@@ -2,8 +2,9 @@ import json
 import os
 import re
 from datetime import datetime, timedelta
-
-folder_path = r"q:\Google_nowcast\Crawled\2026010607"
+from pathlib import Path
+# folder_path = r"q:\Google_nowcast\Crawled\2026010607"
+folder_path = Path(__file__).parent / "Crawled" / "2026010807"
 
 # 获取所有json文件
 json_files = [f for f in os.listdir(folder_path) if f.endswith('.json')]
