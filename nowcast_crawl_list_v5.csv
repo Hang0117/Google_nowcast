@@ -1,4 +1,43 @@
 id,lat,lon,alt,name,tz,search_name
+KOCF,29.17,-82.22,24.0,"Ocala, Ocala International Airport-Jim Taylor Field",America/New_York,"Ocala, Ocala International Airport-Jim Taylor Field"
+KRDU,35.87,-78.79,126.0,"Raleigh / Durham, Raleigh-Durham International Airport",America/New_York,"Raleigh / Durham, Raleigh-Durham International Airport"
+KFUL,33.87,-117.98,38.0,"Fullerton, Fullerton Municipal Airport",America/Los_Angeles,"Fullerton, Fullerton Municipal Airport"
+KSLI,33.78,-118.05,1.0,Los Alamitos U. S. Army Airfield,America/Los_Angeles,KSLI
+KSNA,33.68,-117.87,2.0,"Santa Ana, John Wayne Airport-Orange County Airport",America/Los_Angeles,"Santa Ana, John Wayne Airport-Orange County Airport"
+KEWR,40.68,-74.17,2.0,"Newark, Newark International Airport",America/New_York,"Newark, Newark International Airport"
+KJFK,40.64,-73.76,7.0,"New York, Kennedy International Airport",America/New_York,"New York, Kennedy International Airport"
+KLGA,40.78,-73.88,7.0,"New York, La Guardia Airport",America/New_York,"New York, La Guardia Airport"
+KNYC,40.78,-73.97,25.0,"New York City, Central Park",America/New_York,"New York City, Central Park"
+KJRB,40.7,-74.01,2.0,Downtown Manhattan Wall Street Heliport,America/New_York,Downtown Manhattan Wall Street Heliport
+KBFI,47.55,-122.31,45.0,"Seattle, Seattle Boeing Field",America/Los_Angeles,"Seattle, Seattle Boeing Field"
+KRNT,47.49,-122.21,32.0,"Renton, Renton Municipal Airport",America/Los_Angeles,"Renton, Renton Municipal Airport"
+KSEA,47.44,-122.31,104.0,"Seattle, Seattle-Tacoma International Airport",America/Los_Angeles,"Seattle, Seattle-Tacoma International Airport"
+KTEB,40.86,-74.06,3.0,"Teterboro, Teterboro Airport",America/New_York,"Teterboro, Teterboro Airport"
+KEMT,34.08,-118.03,87.0,El Monte,America/Los_Angeles,El Monte
+KCQT,34.02,-118.28,56.0,Los Angeles / USC Campus Downtown,America/Los_Angeles,Los Angeles / USC Campus Downtown
+KBUR,34.2,-118.36,213.0,"Burbank, Burbank-Glendale-Pasadena Airport",America/Los_Angeles,"Burbank, Burbank-Glendale-Pasadena Airport"
+KWHP,34.25,-118.4,276.0,"Los Angeles, Whiteman Airport",America/Los_Angeles,"Los Angeles, Whiteman Airport"
+KHHR,33.92,-118.33,22.0,"Hawthorne, Hawthorne Municipal Airport",America/Los_Angeles,"Hawthorne, Hawthorne Municipal Airport"
+KLAX,33.94,-118.39,30.0,"Los Angeles, Los Angeles International Airport",America/Los_Angeles,"Los Angeles, Los Angeles International Airport"
+KSMO,34.02,-118.45,40.0,"Santa Monica, Santa Monica Municipal Airport",America/Los_Angeles,"Santa Monica, Santa Monica Municipal Airport"
+KVNY,34.21,-118.49,235.0,"Van Nuys, Van Nuys Airport",America/Los_Angeles,"Van Nuys, Van Nuys Airport"
+PHNG,21.45,-157.77,2.0,"Kaneohe, Marine Corps Air Station",Pacific/Honolulu,"Kaneohe, Marine Corps Air Station"
+PHNL,21.33,-157.94,14.0,"Honolulu, Honolulu International Airport",Pacific/Honolulu,"Honolulu, Honolulu International Airport"
+KADW,38.82,-76.85,64.0,Camp Springs / Andrews Air Force Base,America/New_York,Camp Springs / Andrews Air Force Base
+KDCA,38.85,-77.03,1.0,"Washington DC, Reagan National Airport",America/New_York,"Washington DC, Reagan National Airport"
+KCGS,38.98,-76.92,15.0,College Park Airport,America/New_York,College Park Airport
+KMIA,25.79,-80.32,2.0,"Miami, Miami International Airport",America/New_York,"Miami, Miami International Airport"
+KOPF,25.91,-80.28,2.0,"Miami, Opa Locka Airport",America/New_York,"Miami, Opa Locka Airport"
+KMCO,28.42,-81.32,24.0,"Orlando, Orlando International Airport",America/New_York,"Orlando, Orlando International Airport"
+KORL,28.55,-81.34,35.0,"Orlando, Orlando Executive Airport",America/New_York,"Orlando, Orlando Executive Airport"
+KOAK,37.72,-122.24,1.0,"Oakland, Metro Oakland International Airport",America/Los_Angeles,"Oakland, Metro Oakland International Airport"
+KSFO,37.62,-122.36,1.0,"San Francisco, San Francisco International Airport",America/Los_Angeles,"San Francisco, San Francisco International Airport"
+KLAS,36.08,-115.16,659.0,"Las Vegas, McCarran International Airport",America/Los_Angeles,"Las Vegas, McCarran International Airport"
+KLSV,36.23,-115.03,557.0,Nellis Air Force Base,America/Los_Angeles,Nellis Air Force Base
+KVGT,36.21,-115.2,668.0,"Las Vegas, North Las Vegas Airport",America/Los_Angeles,"Las Vegas, North Las Vegas Airport"
+KCBF,41.27,-95.77,349.0,Council Bluffs,America/Chicago,Council Bluffs
+KOFF,41.12,-95.9,300.0,Omaha / Offutt Air Force Base,America/Chicago,Omaha / Offutt Air Force Base
+KOMA,41.31,-95.9,299.0,"Omaha, Eppley Airfield",America/Chicago,"Omaha, Eppley Airfield"
 KMDW,41.78,-87.76,188.0,"Chicago, Chicago Midway Airport",America/Chicago,"Chicago, Chicago Midway Airport"
 KHOU,29.64,-95.28,14.0,"Houston, Houston Hobby Airport",America/Chicago,"Houston, Houston Hobby Airport"
 KMCJ,29.72,-95.4,69.0,HOUSTON/UNIV,America/Chicago,HOUSTON/UNIV

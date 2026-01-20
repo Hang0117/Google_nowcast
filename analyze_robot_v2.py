@@ -3,7 +3,7 @@ import os
 import re
 from datetime import datetime
 
-folder_path = r"q:\Google_nowcast\Crawled\2026010600"
+folder_path = r"q:\Google_nowcast\Crawled\2026010706"
 
 # 获取所有json文件
 json_files = [f for f in os.listdir(folder_path) if f.endswith('.json')]
@@ -12,7 +12,7 @@ json_files = [f for f in os.listdir(folder_path) if f.endswith('.json')]
 file_data = []
 for filename in json_files:
     # 只处理包含真实日期 20260106 的文件
-    if '20260106' not in filename:
+    if '20260107' not in filename:
         continue
     
     # 从文件名中提取时间戳 - 两种格式:
@@ -20,10 +20,10 @@ for filename in json_files:
     # 格式2: nowcast_xxx_20260106xxxxxx.json (无下划线)
     
     # 找出20260106后面的6位数字
-    match = re.search(r'20260106[_]?(\d{6})', filename)
+    match = re.search(r'20260107[_]?(\d{6})', filename)
     if match:
         time_str = match.group(1)
-        timestamp_str = f"20260106{time_str}"
+        timestamp_str = f"20260107{time_str}"
         try:
             timestamp = datetime.strptime(timestamp_str, "%Y%m%d%H%M%S")
             file_data.append((filename, timestamp))

@@ -12,7 +12,7 @@ from pathlib import Path
 import json
 import time
 import logging
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import threading
 import random
 import uuid
@@ -166,7 +166,7 @@ def _chrome_driver(headless: bool = True):
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15",
-        "user-agent=Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+        "Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
     ]
     ua = random.choice(user_agents)
     options.add_argument(f"user-agent={ua}")
@@ -210,18 +210,8 @@ def scrape_nowcast_svg(
     output_dir: str | Path | None = None,
     first_scrape_date: str | None = None,
 ):
-        # 获取浏览器外网IP
-    try:
-        driver = _chrome_driver(headless=headless)
-        driver.get("https://api.ipify.org?format=json")
-        import json as _json
-        ip_text = driver.find_element("tag name", "body").text
-        ip_info = _json.loads(ip_text)
-        logging.info(f"[Browser Public IP] {ip_info.get('ip')}")
-        driver.quit()
-    except Exception as e:
-        logging.info(f"[Browser Public IP] 获取失败: {e}")
-    """Scrape rect heights from the SVG whose viewBox includes 1440 and 48."""
+
+    # 合并：只用一个driver实例，先抓取天气页面，再获取公网IP
     try:
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import WebDriverWait
@@ -243,6 +233,7 @@ def scrape_nowcast_svg(
 
     driver = _chrome_driver(headless=headless)
     try:
+        # 1. 访问 Google 天气页面
         driver.get("https://www.google.com/ncr?hl=en&gl=us")
         _accept_consent(driver)
 
@@ -251,7 +242,21 @@ def scrape_nowcast_svg(
         driver.get(f"https://www.google.com/search?q={q}&hl=en&gl=us")
 
         time.sleep(3)
-        
+
+        # 2. 获取公网IP（同一个driver实例，直接访问api.ipify.org）
+        try:
+            driver.execute_script("window.open('https://api.ipify.org?format=json', '_blank');")
+            driver.switch_to.window(driver.window_handles[-1])
+            time.sleep(1.5)
+            ip_text = driver.find_element(By.TAG_NAME, "body").text
+            import json as _json
+            ip_info = _json.loads(ip_text)
+            logging.info(f"[Browser Public IP] {ip_info.get('ip')}")
+            driver.close()
+            driver.switch_to.window(driver.window_handles[0])
+        except Exception as e:
+            logging.info(f"[Browser Public IP] 获取失败: {e}")
+
         # Save HTML page
         try:
             html_content = driver.page_source
@@ -264,7 +269,7 @@ def scrape_nowcast_svg(
             logging.info(f"[{city}] Saved HTML: {html_filename}")
         except Exception as e:
             logging.info(f"[{city}] Warning: Could not save HTML: {e}")
-        
+
         # Check for reCAPTCHA robot verification
         check_robot_js = """
         const pageText = document.body.innerText;
@@ -449,44 +454,22 @@ def scrape_nowcast_svg(
 
 
 # Thread-safe counter for progress tracking
-class ProgressTracker:
-    def __init__(self, total):
-        self.total = total
-        self.completed = 0
-        self.lock = threading.Lock()
-    
-    def increment(self):
-        with self.lock:
-            self.completed += 1
-            return self.completed
 
 
-def scrape_city_wrapper(city, city_id, headless, output_root, tracker, first_scrape_date):
-    """Wrapper function for concurrent scraping."""
+
+def scrape_city_wrapper(city, city_id, headless, output_root, first_scrape_date):
+    """Wrapper function for concurrent scraping (no tracker, for process pool)."""
     result = scrape_nowcast_svg(city, city_id=city_id, headless=headless, save_json=True, output_dir=output_root, first_scrape_date=first_scrape_date)
-    completed = tracker.increment()
-    
-    if result and result.get("points"):
-        logging.info(f"[{completed}/{tracker.total}] ✓ {city_id}: {len(result['points'])} points")
-    elif result and result.get("hourly_data"):
-        logging.info(f"[{completed}/{tracker.total}] ✓ {city_id}: {len(result['hourly_data'])} hourly items")
-    elif result and result.get("fallback_data"):
-        logging.info(f"[{completed}/{tracker.total}] ✓ {city_id}: fallback data")
-    else:
-        logging.info(f"[{completed}/{tracker.total}] ✗ {city_id}: No data")
-    
     return city, result
 
 
-def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv', max_workers=5, total_duration_hours=12, avg_scrape_time=15):
+def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv', max_workers=5, random_group=None):
     """并发爬取所有城市的气象数据，在指定时间内分散执行
     
     Args:
         base_dir: 输出目录的基础路径
         csv_file: CSV 文件路径，默认为 'nowcast_crawl_list_v4.csv'
         max_workers: 最大并发线程数，默认5个
-        total_duration_hours: 总执行时长（小时），默认12小时
-        avg_scrape_time: 每个站点平均爬取时间（秒），默认15秒
     """
     # 确保必要的目录存在
     output_root = Path(base_dir)
@@ -507,91 +490,105 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
         raise FileNotFoundError(f"CSV 文件不存在: {csv_file}")
     
     df = pd.read_csv(csv_file)
-    
-    # randomly shuffle the DataFrame
+    # 如果指定了random_group，只保留该组
+    if random_group is not None:
+        if 'random_group' not in df.columns:
+            raise ValueError('CSV文件缺少random_group列')
+        df = df[df['random_group'] == int(random_group)]
+        if df.empty:
+            raise ValueError(f'random_group={random_group} 没有任何station')
+    # 打乱顺序
     df = df.sample(frac=1, random_state=None).reset_index(drop=True)
-    
     name_list = df['search_name'].tolist()
     id_list = df['id'].tolist()
     total_cities = len(name_list)
     
-    # calculate total available time in seconds
-    total_seconds = total_duration_hours * 3600
-    total_scrape_time = total_cities * avg_scrape_time
-    total_interval_time = total_seconds - total_scrape_time
-    
-    if total_interval_time < 0:
-        logging.info(f"⚠️  警告: {total_cities} 个站点需要约 {total_scrape_time/3600:.2f} 小时，超过设定的 {total_duration_hours} 小时")
-        total_interval_time = 0
-    
-    # calculate average interval time per city
-    avg_interval = total_interval_time / total_cities if total_cities > 0 else 0
-    
-    # generate random intervals for each city (between 50% and 150% of the average)
-    intervals = []
-    for i in range(total_cities):
-        if avg_interval > 0:
-            # Random offset ±50%
-            random_interval = avg_interval * random.uniform(0.5, 1.5)
-            intervals.append(random_interval)
-        else:
-            intervals.append(0)
-    
-    # Adjust intervals to ensure total duration is close to target
-    if sum(intervals) > 0:
-        scale_factor = total_interval_time / sum(intervals)
-        intervals = [interval * scale_factor for interval in intervals]
-    
+    # 直接并发执行所有任务，无等待间隔
     first_scrape_date = datetime.now(timezone.utc).strftime("%Y%m%d%H")
-    
     logging.info(f"\n{'='*60}")
-    logging.info(f"开始分散爬取任务 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    logging.info(f"开始并发爬取任务 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     logging.info(f"输出文件夹: {first_scrape_date}")
-    logging.info(f"总城市数: {total_cities}, 并发线程数: {max_workers}")
-    logging.info(f"预计总时长: {total_duration_hours} 小时 ({total_seconds/3600:.2f}h)")
-    logging.info(f"预计爬取时间: {total_scrape_time/3600:.2f} 小时")
-    logging.info(f"预计间隔时间: {total_interval_time/3600:.2f} 小时")
-    logging.info(f"平均站点间隔: {avg_interval:.1f} 秒 (随机偏移 ±50%)")
+    logging.info(f"总城市数: {total_cities}, 并发进程数: {max_workers}")
     logging.info(f"✓ 城市列表已随机打乱")
     logging.info(f"{'='*60}\n")
-    
-    tracker = ProgressTracker(total_cities)
+
     results = {}
+    failed_stations = []  # 记录失败的station名
     start_time = time.time()
-    
-    # Use ThreadPoolExecutor for concurrent scraping
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        # 逐个提交任务，等待完成后再等待随机间隔
-        for idx, (city, city_id) in enumerate(zip(name_list, id_list)):
-            # 提交任务并立即等待完成（Linux/服务器环境默认使用无头浏览器）
-            future = executor.submit(scrape_city_wrapper, city, city_id, True, output_root, tracker, first_scrape_date)
-            
+    completed = 0
+    # 用 ProcessPoolExecutor 并发提交所有任务（无等待间隔, 3进程）
+    with ProcessPoolExecutor(max_workers=3) as executor:
+        futures = []
+        for city, city_id in zip(name_list, id_list):
+            futures.append(executor.submit(scrape_city_wrapper, city, city_id, True, output_root, first_scrape_date))
+        # 用 zip 绑定 future 和城市名/id，保证异常分支也能拿到 city_name
+        for future, city_name, city_id in zip(futures, name_list, id_list):
             try:
-                city_name, result = future.result()  # 等待任务完成（浏览器关闭）
-                results[city_name] = result
+                city_name_result, result = future.result()
+                completed += 1
+                if result and result.get("points"):
+                    logging.info(f"[{completed}/{total_cities}] ✓ {city_name_result}: {len(result['points'])} points")
+                elif result and result.get("hourly_data"):
+                    logging.info(f"[{completed}/{total_cities}] ✓ {city_name_result}: {len(result['hourly_data'])} hourly items")
+                elif result and result.get("fallback_data"):
+                    logging.info(f"[{completed}/{total_cities}] ✓ {city_name_result}: fallback data")
+                else:
+                    logging.info(f"[{completed}/{total_cities}] ✗ {city_name_result}: No data")
+                    failed_stations.append((city_name_result, city_id))
+                results[city_name_result] = result
             except Exception as e:
-                logging.info(f"✗ Exception for {city_id}: {e}")
-                results[city] = None
-            
-            # 任务完成后，在提交下一个任务前等待随机间隔（最后一个任务不需要等待）
-            if idx < total_cities - 1:
-                sleep_time = intervals[idx]
-                if sleep_time > 0:
-                    elapsed = time.time() - start_time
-                    expected_elapsed = sum(intervals[:idx+1]) + (idx + 1) * avg_scrape_time
-                    # 调整sleep时间以保持整体节奏
-                    adjusted_sleep = max(0, sleep_time - max(0, elapsed - expected_elapsed))
-                    if adjusted_sleep > 0:
-                        logging.info(f"⏳ 等待 {adjusted_sleep:.1f} 秒后继续...")
-                        time.sleep(adjusted_sleep)
-    
+                completed += 1
+                logging.info(f"[{completed}/{total_cities}] ✗ Exception: {e}")
+                failed_stations.append((city_name, city_id))
+
     elapsed_time = time.time() - start_time
     logging.info(f"\n{'='*60}")
     logging.info(f"爬取任务完成 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     logging.info(f"实际用时: {elapsed_time/3600:.2f} 小时 ({elapsed_time:.0f} 秒)")
     logging.info(f"成功: {sum(1 for r in results.values() if r)}/{total_cities}")
     logging.info(f"{'='*60}\n")
-    
+
+    # 失败重试逻辑
+    max_retry = 5
+    retry_count = 0
+    while failed_stations and retry_count < max_retry:
+        retry_count += 1
+        logging.info(f"等待10分钟后重试失败的站点，第{retry_count}轮，共{len(failed_stations)}个...")
+        time.sleep(600)  # 10分钟
+        # 在重试阶段打乱 failed_stations 顺序
+        random.shuffle(failed_stations)
+        retry_failed = []
+        for city_name, city_id in failed_stations:
+            # 删除旧json/html文件
+            try:
+                folder_date = first_scrape_date
+                # 删除Crawled下的json
+                for f in (output_root / "Crawled" / folder_date).glob(f"nowcast_{city_id}_*.json"):
+                    f.unlink()
+                # 删除GoogleNowcastHTML下的html
+                for f in (output_root / "GoogleNowcastHTML" / folder_date).glob(f"{city_id}_{folder_date}.html"):
+                    f.unlink()
+            except Exception as del_err:
+                logging.info(f"[重试] 删除旧文件失败: {del_err}")
+            # 重新爬取
+            try:
+                _, result = scrape_city_wrapper(city_name, city_id, True, output_root, first_scrape_date)
+                if result and result.get("points"):
+                    logging.info(f"[重试{retry_count}] ✓ {city_name}: {len(result['points'])} points")
+                elif result and result.get("hourly_data"):
+                    logging.info(f"[重试{retry_count}] ✓ {city_name}: {len(result['hourly_data'])} hourly items")
+                elif result and result.get("fallback_data"):
+                    logging.info(f"[重试{retry_count}] ✓ {city_name}: fallback data")
+                else:
+                    logging.info(f"[重试{retry_count}] ✗ {city_name}: No data")
+                    retry_failed.append((city_name, city_id))
+                results[city_name] = result
+            except Exception as e:
+                logging.info(f"[重试{retry_count}] ✗ Exception: {e}")
+                retry_failed.append((city_name, city_id))
+        failed_stations = retry_failed
+    if failed_stations:
+        logging.info(f"最终仍有{len(failed_stations)}个站点爬取失败: {[c for c, _ in failed_stations]}")
     return results
 
 
@@ -599,81 +596,39 @@ if __name__ == "__main__":
     import pytz
 
     # settings parameters
-    CSV_FILE = 'nowcast_crawl_list_v4.csv'
-    MAX_WORKERS = 1
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--group', type=str, default=None, help='只爬取指定random_group编号的station（1~7）')
+    args = parser.parse_args()
+
+    CSV_FILE = 'nowcast_crawl_list_v4_with_group.csv'
+    MAX_WORKERS = 3
     BASE_DIR = Path(__file__).parent
-    TOTAL_DURATION_HOURS = 12  # 每次爬取任务在12小时内完成
-    AVG_SCRAPE_TIME = 15  # 每个站点平均爬取时间（秒）
-    
+    # 已移除 TOTAL_DURATION_HOURS 和 AVG_SCRAPE_TIME
+
     # 设置北京时区
     beijing_tz = pytz.timezone('Asia/Shanghai')
-    
+
     local_ip = _get_local_ip()
     public_ip = _get_public_ip()
-    logging.info("✓ 定时爬虫已启动（分散爬取模式）")
+    logging.info("✓ 定时爬虫已启动（分组爬取模式）")
     logging.info(f"✓ 本机 IP (内网): {local_ip}")
     logging.info(f"✓ 公网 IP (Google看到): {public_ip}")
     logging.info(f"✓ 输出目录: {BASE_DIR}")
     logging.info(f"✓ CSV 文件: {CSV_FILE}")
     logging.info(f"✓ 并发线程数: {MAX_WORKERS}")
-    logging.info(f"✓ 每次任务时长: {TOTAL_DURATION_HOURS} 小时")
-    logging.info(f"✓ 平均爬取时间: {AVG_SCRAPE_TIME} 秒/站点")
+    # logging.info(f"✓ 每次任务时长: {TOTAL_DURATION_HOURS} 小时")
+    # logging.info(f"✓ 平均爬取时间: {AVG_SCRAPE_TIME} 秒/站点")
     logging.info(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
     logging.info(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
+    logging.info(f"✓ 只爬取 random_group = {args.group}" if args.group else "✓ 爬取全部分组")
     logging.info("✓ 按 Ctrl+C 停止程序\n")
-    
+
     # 立即执行一次
     try:
-        scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, total_duration_hours=TOTAL_DURATION_HOURS, avg_scrape_time=AVG_SCRAPE_TIME)
+        scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, random_group=args.group)
         logging.info("\n✓ 爬虫任务完成")
     except Exception as e:
         logging.info(f"\n✗ 爬虫任务失败: {e}")
         raise
 
-
-
-
-if __name__ == "__main__":
-    import pytz
-    
-    # settings parameters
-    CSV_FILE = 'nowcast_crawl_list_v4.csv'
-    MAX_WORKERS = 1
-    BASE_DIR = Path(__file__).parent
-    TOTAL_DURATION_HOURS = 12  # 每次爬取任务在12小时内完成
-    AVG_SCRAPE_TIME = 15  # 每个站点平均爬取时间（秒）
-    
-    # 设置北京时区
-    beijing_tz = pytz.timezone('Asia/Shanghai')
-    
-    # 使用 APScheduler 配置 UTC 时区的定时任务
-    scheduler = BackgroundScheduler(timezone='UTC')
-    
-    # 每天 UTC 时间 0点、6点、12点、18点各执行一次
-    # scheduler.add_job(lambda: scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, total_duration_hours=TOTAL_DURATION_HOURS, avg_scrape_time=AVG_SCRAPE_TIME), 'cron', hour='0,6,12,18')
-    scheduler.add_job(lambda: scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, total_duration_hours=TOTAL_DURATION_HOURS, avg_scrape_time=AVG_SCRAPE_TIME), 'cron', hour='0')
-    scheduler.start()
-    
-    local_ip = _get_local_ip()
-    print("✓ 定时爬虫已启动（分散爬取模式）")
-    print(f"✓ 本机 IP: {local_ip}")
-    print(f"✓ 输出目录: {BASE_DIR}")
-    print(f"✓ CSV 文件: {CSV_FILE}")
-    print(f"✓ 将在每天 UTC 时间 00:00 执行爬取任务")
-    print(f"✓ 并发线程数: {MAX_WORKERS}")
-    print(f"✓ 每次任务时长: {TOTAL_DURATION_HOURS} 小时")
-    print(f"✓ 平均爬取时间: {AVG_SCRAPE_TIME} 秒/站点")
-    print(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
-    print("✓ 按 Ctrl+C 停止程序\n")
-    
-    # 立即执行一次（可选）
-    scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS, total_duration_hours=TOTAL_DURATION_HOURS, avg_scrape_time=AVG_SCRAPE_TIME)
-    
-    # 持续运行调度器
-    try:
-        while True:
-            time.sleep(60)
-    except KeyboardInterrupt:
-        print("\n\n程序已停止")
-        scheduler.shutdown()
