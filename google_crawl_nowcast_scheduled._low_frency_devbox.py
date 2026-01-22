@@ -346,7 +346,16 @@ def scrape_nowcast_svg(
                 out["fallback_data"] = fallback_result.get("data")
                 out["source"] = "fallback_div"
                 out["type"] = "nowcast"
-                result = {"viewBox": None, "rects": []}
+                # 保存fallback数据
+                if save_json:
+                    folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
+                    file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+                    outdir = base_dir / "Crawled" / folder_date
+                    outdir.mkdir(parents=True, exist_ok=True)
+                    fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
+                    fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+                    logging.info(f"[{city}] Saved: {fname.name}")
+                return out
             else:
                 logging.info(f"[{city}] Fallback div not found. Trying hourly forecast...")
                 hourly_js = """
@@ -370,7 +379,16 @@ def scrape_nowcast_svg(
                     out["hourly_data"] = hourly_result.get("labels", [])
                     out["source"] = "hourly_aria_label"
                     out["type"] = "hourly"
-                    result = {"viewBox": None, "rects": []}
+                    # 保存hourly数据
+                    if save_json:
+                        folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
+                        file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+                        outdir = base_dir / "Crawled" / folder_date
+                        outdir.mkdir(parents=True, exist_ok=True)
+                        fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
+                        fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+                        logging.info(f"[{city}] Saved: {fname.name}")
+                    return out
                 else:
                     html = driver.page_source
                     dbg = base_dir / f"debug_nowcast_{city.split(',')[0].replace(' ', '_')}.html"
@@ -598,7 +616,69 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
     logging.info(f"成功: {sum(1 for r in results.values() if r)}/{total_cities}")
     logging.info(f"{'='*60}\n")
     
-    return results
+    return results, first_scrape_date
+
+
+def upload_to_azure(base_dir, folder_date, container_prefix="GoogleNowcast"):
+    """上传爬取的数据到 Azure Blob 存储
+    
+    Args:
+        base_dir: 基础目录路径
+        folder_date: 文件夹日期标识（如 2026012202）
+        container_prefix: Azure Blob 容器中的路径前缀，默认为 "GoogleNowcast"
+    """
+    try:
+        # 动态导入，避免没有配置环境变量时启动失败
+        from azure_wrapper import get_wxforecasting_azure_wrapper
+        
+        logging.info(f"\n{'='*60}")
+        logging.info("开始上传数据到 Azure Blob 存储...")
+        logging.info(f"Azure 路径前缀: {container_prefix}")
+        logging.info(f"{'='*60}\n")
+        
+        wrapper = get_wxforecasting_azure_wrapper()
+        base_path = Path(base_dir)
+        
+        # 上传 Crawled 文件夹
+        crawled_folder = base_path / "Crawled" / folder_date
+        if crawled_folder.exists():
+            azure_path = f"{container_prefix}/Crawled/{folder_date}"
+            logging.info(f"📤 上传 Crawled 文件夹: {crawled_folder}")
+            logging.info(f"   目标路径: {azure_path}")
+            success, total = wrapper.upload_folder(
+                local_folder=str(crawled_folder),
+                container_prefix=azure_path,
+                show_progress=True
+            )
+            logging.info(f"✅ Crawled 上传完成: {success}/{total} 文件")
+        else:
+            logging.info(f"⚠️  Crawled 文件夹不存在: {crawled_folder}")
+        
+        # 上传 GoogleNowcastHTML 文件夹
+        html_folder = base_path / "GoogleNowcastHTML" / folder_date
+        if html_folder.exists():
+            azure_path = f"{container_prefix}/GoogleNowcastHTML/{folder_date}"
+            logging.info(f"\n📤 上传 GoogleNowcastHTML 文件夹: {html_folder}")
+            logging.info(f"   目标路径: {azure_path}")
+            success, total = wrapper.upload_folder(
+                local_folder=str(html_folder),
+                container_prefix=azure_path,
+                show_progress=True
+            )
+            logging.info(f"✅ GoogleNowcastHTML 上传完成: {success}/{total} 文件")
+        else:
+            logging.info(f"⚠️  GoogleNowcastHTML 文件夹不存在: {html_folder}")
+        
+        logging.info(f"\n{'='*60}")
+        logging.info("✅ Azure 上传任务完成")
+        logging.info(f"{'='*60}\n")
+        
+    except ImportError as e:
+        logging.info(f"⚠️  Azure 上传跳过: 缺少依赖库 ({e})")
+    except ValueError as e:
+        logging.info(f"⚠️  Azure 上传跳过: {e}")
+    except Exception as e:
+        logging.info(f"❌ Azure 上传失败: {e}")
 
 
 if __name__ == "__main__":
@@ -610,22 +690,29 @@ if __name__ == "__main__":
     BASE_DIR = Path(__file__).parent
     TOTAL_DURATION_HOURS = 12  # 每次爬取任务在12小时内完成
     AVG_SCRAPE_TIME = 15  # 每个站点平均爬取时间（秒）
+    AZURE_CONTAINER_PREFIX = "users/v-zhanghang/lib/data/GoogleNowcast"  # Azure Blob 容器中的路径前缀
 
     # 设置时区
     beijing_tz = pytz.timezone('Asia/Shanghai')
     start_time = datetime.now(timezone.utc)
 
-    # 使用 APScheduler 配置 UTC 时区的定时任务，每天 UTC 00:00 触发
-    scheduler = BackgroundScheduler(timezone='UTC')
-    # 不设置end_date，改为在主循环中检查结束时间
-    scheduler.add_job(
-        lambda: scrape_all_cities_concurrent(
+    # 定义调度任务函数
+    def scheduled_task():
+        """定时任务：爬取数据并上传到 Azure"""
+        results, folder_date = scrape_all_cities_concurrent(
             base_dir=BASE_DIR,
             csv_file=CSV_FILE,
             max_workers=MAX_WORKERS,
             total_duration_hours=TOTAL_DURATION_HOURS,
             avg_scrape_time=AVG_SCRAPE_TIME,
-        ),
+        )
+        # 爬取完成后上传到 Azure
+        upload_to_azure(BASE_DIR, folder_date, AZURE_CONTAINER_PREFIX)
+    
+    # 使用 APScheduler 配置 UTC 时区的定时任务，每天 UTC 00:00 触发
+    scheduler = BackgroundScheduler(timezone='UTC')
+    scheduler.add_job(
+        scheduled_task,
         'cron',
         hour=0,
         minute=0,
@@ -645,6 +732,7 @@ if __name__ == "__main__":
     logging.info(f"✓ 每次任务时长: {TOTAL_DURATION_HOURS} 小时")
     logging.info(f"✓ 平均爬取时间: {AVG_SCRAPE_TIME} 秒/站点")
     logging.info("✓ 计划任务: 每天 UTC 00:00 自动执行一次")
+    logging.info(f"✓ Azure 上传路径: {AZURE_CONTAINER_PREFIX}")
     logging.info(f"✓ 程序启动时间: {start_time.strftime('%Y-%m-%d %H:%M:%S')} UTC")
     logging.info(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
     logging.info(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
@@ -652,7 +740,7 @@ if __name__ == "__main__":
 
     # 立即执行一次，以便首次启动时就有数据
     try:
-        scrape_all_cities_concurrent(
+        results, folder_date = scrape_all_cities_concurrent(
             base_dir=BASE_DIR,
             csv_file=CSV_FILE,
             max_workers=MAX_WORKERS,
@@ -660,6 +748,9 @@ if __name__ == "__main__":
             avg_scrape_time=AVG_SCRAPE_TIME,
         )
         logging.info("\n✓ 首次爬虫任务完成")
+        
+        # 上传到 Azure
+        upload_to_azure(BASE_DIR, folder_date, AZURE_CONTAINER_PREFIX)
     except Exception as e:
         logging.info(f"\n✗ 首次爬虫任务失败: {e}")
 

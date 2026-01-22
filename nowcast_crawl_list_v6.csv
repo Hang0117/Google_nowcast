@@ -2,7 +2,7 @@ id,lat,lon,alt,name,tz,search_name
 KOCF,29.17,-82.22,24.0,"Ocala, Ocala International Airport-Jim Taylor Field",America/New_York,"Ocala, Ocala International Airport-Jim Taylor Field"
 KRDU,35.87,-78.79,126.0,"Raleigh / Durham, Raleigh-Durham International Airport",America/New_York,"Raleigh / Durham, Raleigh-Durham International Airport"
 KFUL,33.87,-117.98,38.0,"Fullerton, Fullerton Municipal Airport",America/Los_Angeles,"Fullerton, Fullerton Municipal Airport"
-KSLI,33.78,-118.05,1.0,Los Alamitos U. S. Army Airfield,America/Los_Angeles,KSLI
+KSLI,33.78,-118.05,1.0,Los Alamitos U. S. Army Airfield,America/Los_Angeles,Los Alamitos
 KSNA,33.68,-117.87,2.0,"Santa Ana, John Wayne Airport-Orange County Airport",America/Los_Angeles,"Santa Ana, John Wayne Airport-Orange County Airport"
 KEWR,40.68,-74.17,2.0,"Newark, Newark International Airport",America/New_York,"Newark, Newark International Airport"
 KJFK,40.64,-73.76,7.0,"New York, Kennedy International Airport",America/New_York,"New York, Kennedy International Airport"
@@ -48,7 +48,7 @@ KFTY,33.78,-84.52,242.0,"Atlanta, Fulton County Airport-Brown Field",America/New
 KPDK,33.88,-84.3,277.0,"Atlanta, De Kalb-Peachtree Airport",America/New_York,"Atlanta, De Kalb-Peachtree Airport"
 KMYF,32.81,-117.14,126.0,"San Diego, Montgomery Field",America/Los_Angeles,"San Diego, Montgomery Field"
 KNKX,32.87,-117.14,145.0,"San Diego, Miramar MCAS/Mitscher Field Airport",America/Los_Angeles,"San Diego, Miramar MCAS/Mitscher Field Airport"
-KNRS,32.56,-117.11,7.0,"Imperial Beach, Naval Auxiliary Landing Field",America/Los_Angeles,"Imperial Beach, Naval Auxiliary Landing Field"
+KNRS,32.56,-117.11,7.0,"Imperial Beach, Naval Auxiliary Landing Field",America/Los_Angeles,"Imperial Beach"
 KNZY,32.69,-117.21,7.0,"San Diego, North Island, Naval Air Station",America/Los_Angeles,"San Diego, North Island, Naval Air Station"
 KSAN,32.73,-117.18,2.0,"San Diego, San Diego International-Lindbergh Field",America/Los_Angeles,"San Diego, San Diego International-Lindbergh Field"
 KSEE,32.83,-116.97,111.0,"San Diego/El Cajon, Gillespie Field Airport",America/Los_Angeles,"San Diego/El Cajon, Gillespie Field Airport"
@@ -82,7 +82,7 @@ KTTD,45.55,-122.41,34.0,"Portland, Portland-Troutdale Airport",America/Los_Angel
 KANE,45.15,-93.22,277.0,Minneapolis / Blaine,America/Chicago,Minneapolis / Blaine
 KMIC,45.06,-93.35,265.0,"Minneapolis, Crystal Airport",America/Chicago,"Minneapolis, Crystal Airport"
 KMSP,44.88,-93.23,256.0,"Minneapolis, Minneapolis-St. Paul International Airport",America/Chicago,"Minneapolis, Minneapolis-St. Paul International Airport"
-KSTP,44.93,-93.05,213.0,"St. Paul, St. Paul Downtown Holman Field",America/Chicago,"St. Paul Downtown Airport / Holman Field"
+KSTP,44.93,-93.05,213.0,"St. Paul, St. Paul Downtown Holman Field",America/Chicago,St. Paul
 KAUS,30.19,-97.67,152.0,"Austin, Austin-Bergstrom International Airport",America/Chicago,"Austin, Austin-Bergstrom International Airport"
 KATT,30.32,-97.77,217.0,"Austin City, Austin Camp Mabry",America/Chicago,"Austin City, Austin Camp Mabry"
 KBOS,42.36,-71.01,1.0,"Boston, Logan International Airport",America/New_York,"Boston, Logan International Airport"
@@ -122,7 +122,7 @@ KMTN,39.33,-76.42,1.0,Baltimore / Martin,America/New_York,Baltimore / Martin
 KMKC,39.12,-94.6,225.0,"Kansas City, Kansas City Downtown Airport",America/Chicago,"Kansas City, Kansas City Downtown Airport"
 KALB,42.75,-73.8,90.0,"Albany, Albany International Airport",America/New_York,"Albany, Albany International Airport"
 KFTW,32.83,-97.36,213.0,"Fort Worth, Meacham International Airport",America/Chicago,"Fort Worth, Meacham International Airport"
-KNFW,32.77,-97.43,183.0,"Fort Worth, Naval Air Station",America/Chicago,"Fort Worth, Naval Air Station"
+KNFW,32.77,-97.43,183.0,"Fort Worth, Naval Air Station",America/Chicago,"Fort Worth"
 KMCC,38.67,-121.4,18.0,"Sacramento, McClellan Airfield Airport",America/Los_Angeles,"Sacramento, McClellan Airfield Airport"
 KMHR,38.55,-121.3,24.0,"Sacramento, Sacramento Mather Airport",America/Los_Angeles,"Sacramento, Sacramento Mather Airport"
 KSAC,38.51,-121.49,5.0,"Sacramento, Sacramento Executive Airport",America/Los_Angeles,"Sacramento, Sacramento Executive Airport"
@@ -133,7 +133,7 @@ KAWM,35.13,-90.23,64.0,"West Memphis, West Memphis Municipal Airport",America/Ch
 KMKE,42.96,-87.9,217.0,"Milwaukee, General Mitchell International Airport",America/Chicago,"Milwaukee, General Mitchell International Airport"
 KMWC,43.12,-88.03,228.0,Milwaukee / Timmerman,America/Chicago,Milwaukee / Timmerman
 KAFF,38.97,-104.82,1999.0,Air Force Academy,America/Denver,Air Force Academy
-KCOS,38.82,-104.71,1886.0,"Colorado Springs, City Of Colorado Springs Municipal Airport",America/Denver,"Colorado Springs, City Of Colorado Springs Municipal Airport"
+KCOS,38.82,-104.71,1886.0,"Colorado Springs, City Of Colorado Springs Municipal Airport",America/Denver,"Colorado Springs Airport"
 KFCS,38.7,-104.77,1737.0,Fort Carson,America/Denver,Fort Carson
 KDET,42.41,-83.01,191.0,"Detroit, Detroit City Airport",America/New_York,"Detroit, Detroit City Airport"
 KDAA,38.72,-77.18,15.0,Fort Belvoir,America/New_York,Fort Belvoir
@@ -142,7 +142,7 @@ K21D,45.0,-92.86,284.0,Lake Elmo Airport,America/Chicago,Lake Elmo Airport
 KOKC,35.39,-97.6,395.0,"Oklahoma City, Will Rogers World Airport",America/Chicago,"Oklahoma City, Will Rogers World Airport"
 KPWA,35.54,-97.65,401.0,"Oklahoma City, Wiley Post Airport",America/Chicago,"Oklahoma City, Wiley Post Airport"
 KTIK,35.42,-97.38,390.0,Tinker Air Force Base,America/Chicago,Tinker Air Force Base
-KMSN,43.14,-89.35,259.0,"Madison, Dane County Regional-Truax Field",America/Chicago,"Truax"
+KMSN,43.14,-89.35,259.0,"Madison, Dane County Regional-Truax Field",America/Chicago,Truax
 KC29,43.11,-89.53,283.0,Middleton Municipal Morey Field,America/Chicago,Middleton Municipal Morey Field
 KABQ,35.04,-106.61,1615.0,"Albuquerque, Albuquerque International Airport",America/Denver,"Albuquerque, Albuquerque International Airport"
 KAEG,35.15,-106.79,1767.0,"Albuquerque, Double Eagle II Airport",America/Denver,"Albuquerque, Double Eagle II Airport"
@@ -163,7 +163,7 @@ KPMP,26.25,-80.11,4.0,"Pompano Beach, Pompano Beach Airpark",America/New_York,"P
 KHWO,26.0,-80.24,3.0,"Hollywood, North Perry Airport",America/New_York,"Hollywood, North Perry Airport"
 KLEX,38.04,-84.61,274.0,"Lexington, Blue Grass Airport",America/New_York,"Lexington, Blue Grass Airport"
 KBHM,33.57,-86.74,208.0,"Birmingham, Birmingham International Airport",America/Chicago,"Birmingham, Birmingham International Airport"
-KASG,36.18,-94.12,408.0,Springdale Municipal,America/Chicago,Springdale Municipal
+KASG,36.18,-94.12,408.0,Springdale Municipal,America/Chicago,Springdale Municipal Airport
 KFYV,36.01,-94.17,393.0,"Fayetteville, Drake Field",America/Chicago,"Fayetteville, Drake Field"
 KSDM,32.58,-116.99,123.0,"San Diego, Brown Field Municipal Airport",America/Los_Angeles,"San Diego, Brown Field Municipal Airport"
 KFFZ,33.47,-111.73,405.0,Mesa / Falcon Field,America/Phoenix,Mesa / Falcon Field
@@ -176,7 +176,7 @@ KLNS,40.12,-76.29,121.0,"Lancaster, Lancaster Airport",America/New_York,"Lancast
 KE16,37.08,-121.6,86.0,South County Arpt Of Santa Clara County,America/Los_Angeles,South County Arpt Of Santa Clara County
 KBIF,31.85,-106.38,1197.0,Biggs Army Air Field / Ft. Bliss,America/Denver,Biggs Army Air Field / Ft. Bliss
 KELP,31.81,-106.38,1205.0,"El Paso, El Paso International Airport",America/Denver,"El Paso, El Paso International Airport"
-KTRM,33.63,-116.16,-32.0,"Palm Springs, Jacqueline Cochran Regional Airport",America/Los_Angeles,"Palm Springs, Jacqueline Cochran Regional Airport"
+KTRM,33.63,-116.16,-32.0,"Palm Springs, Jacqueline Cochran Regional Airport",America/Los_Angeles,"Jacqueline Cochran Regional Airport"
 KCHD,33.27,-111.81,377.0,"Chandler, Chandler Municipal Airport",America/Phoenix,"Chandler, Chandler Municipal Airport"
 KIWA,33.32,-111.65,422.0,"Mesa, Williams Gateway Airport",America/Phoenix,"Mesa, Williams Gateway Airport"
 KMGE,33.92,-84.52,312.0,Marietta / Dobbins Air Force Base,America/New_York,Marietta / Dobbins Air Force Base
@@ -193,7 +193,7 @@ KTCM,47.15,-122.48,94.0,Tacoma / McChord Air Force Base,America/Los_Angeles,Taco
 KTIW,47.27,-122.58,84.0,"Tacoma, Tacoma Narrows Airport",America/Los_Angeles,"Tacoma, Tacoma Narrows Airport"
 KLRJ,42.78,-96.19,368.0,"Le Mars, Le Mars Municipal Airport",America/Chicago,"Le Mars, Le Mars Municipal Airport"
 KADS,32.97,-96.83,198.0,Dallas / Addison Airport,America/Chicago,Dallas / Addison Airport
-KTKI,33.18,-96.59,168.0,"Mc Kinney, Collin County Regional Airport at Mc Kinney",America/Chicago,"Mc Kinney, Collin County Regional Airport at Mc Kinney"
+KTKI,33.18,-96.59,168.0,"Mc Kinney, Collin County Regional Airport at Mc Kinney",America/Chicago,"McKinney"
 KGEG,47.62,-117.53,715.0,"Spokane, Spokane International Airport",America/Los_Angeles,"Spokane, Spokane International Airport"
 KSFF,47.69,-117.32,605.0,"Spokane, Felts Field",America/Los_Angeles,"Spokane, Felts Field"
 KSKA,47.62,-117.65,742.0,Fairchild Air Force Base,America/Los_Angeles,Fairchild Air Force Base
@@ -204,7 +204,7 @@ KNTU,36.82,-76.03,5.0,"Virginia Beach, Oceana, Naval Air Station",America/New_Yo
 KORF,36.9,-76.19,5.0,"Norfolk, Norfolk International Airport",America/New_York,"Norfolk, Norfolk International Airport"
 KMDQ,34.86,-86.56,218.0,"Huntsville, Madison County Executive Airport",America/Chicago,"Huntsville, Madison County Executive Airport"
 KHUA,34.68,-86.68,208.0,Redstone Army Air Field,America/Chicago,Redstone Army Air Field
-KHWD,37.66,-122.12,20.0,"Hayward, Hayward Air Terminal",America/Los_Angeles,"Hayward Executive Airport"
+KHWD,37.66,-122.12,20.0,"Hayward, Hayward Air Terminal",America/Los_Angeles,Hayward Executive Airport
 KPAO,37.47,-122.12,1.0,Palo Alto Airport,America/Los_Angeles,Palo Alto Airport
 KTYS,35.82,-83.99,299.0,"Knoxville, McGhee Tyson Airport",America/New_York,"Knoxville, McGhee Tyson Airport"
 KDKX,35.97,-83.87,261.0,Knoxville Downtown,America/New_York,Knoxville Downtown
@@ -228,14 +228,14 @@ KDWH,30.07,-95.56,48.0,"Houston, Hooks Memorial Airport",America/Chicago,"Housto
 KIAH,29.99,-95.36,28.0,"Houston, Houston Intercontinental Airport",America/Chicago,"Houston, Houston Intercontinental Airport"
 KSRQ,27.4,-82.56,7.0,"Sarasota / Bradenton, Sarasota-Bradenton International Airpo",America/New_York,"Sarasota / Bradenton, Sarasota-Bradenton International Airpo"
 KNYG,38.51,-77.29,3.0,"Quantico, Marine Corps Air Facility",America/New_York,"Quantico, Marine Corps Air Facility"
-KBTR,30.54,-91.15,18.0,"Baton Rouge, Baton Rouge Metropolitan, Ryan Field",America/Chicago,"Ryan Field"
+KBTR,30.54,-91.15,18.0,"Baton Rouge, Baton Rouge Metropolitan, Ryan Field",America/Chicago,Ryan Field
 KRNO,39.48,-119.77,1350.0,"Reno, Reno Tahoe International Airport",America/Los_Angeles,"Reno, Reno Tahoe International Airport"
 KRTS,39.67,-119.88,1539.0,Reno/stead,America/Los_Angeles,Reno/stead
 KAUO,32.62,-85.43,229.0,Auburn-Opelika Airport,America/Chicago,Auburn-Opelika Airport
 KF44,32.16,-95.83,135.0,Athens Muni,America/Chicago,Athens Municipal Airport
 KSMQ,40.62,-74.67,30.0,"Somerville, Somerset Airport",America/New_York,"Somerville, Somerset Airport"
 KW63,36.6,-78.57,122.0,Clarksville / Marks,America/New_York,Clarksville / Marks
-KCXE,36.79,-78.5,153.0,Chase City Municipal Airport,America/New_York,Chase City Municipal Airport
+KCXE,36.79,-78.5,153.0,Chase City Municipal Airport,America/New_York,Chase City
 KGSO,36.1,-79.94,271.0,"Greensboro, Piedmont Triad International Airport",America/New_York,"Greensboro, Piedmont Triad International Airport"
 KTTN,40.28,-74.82,61.0,"Trenton, Mercer County Airport",America/New_York,"Trenton, Mercer County Airport"
 KPIA,40.67,-89.68,198.0,"Peoria, Greater Peoria Regional Airport",America/Chicago,"Peoria, Greater Peoria Regional Airport"
@@ -264,7 +264,7 @@ PAFR,61.27,-149.65,121.0,"Ft. Richardson / Bryant U. S. Army Heliport, Ak",Ameri
 PALH,61.18,-149.97,23.0,"Anchorage, Lake Hood Seaplane Base",America/Anchorage,"Anchorage, Lake Hood Seaplane Base"
 PAMR,61.22,-149.85,31.0,"Anchorage, Merrill Field Airport",America/Anchorage,"Anchorage, Merrill Field Airport"
 PANC,61.17,-150.0,38.0,"Anchorage, Ted Stevens Anchorage International Airport",America/Anchorage,"Anchorage, Ted Stevens Anchorage International Airport"
-KCXY,40.22,-76.85,92.0,"Harrisburg, Capital City Airport",America/New_York,"Harrisburg, Capital City Airport"
+KCXY,40.22,-76.85,92.0,"Harrisburg, Capital City Airport",America/New_York,"Susquehanna River"
 KMDT,40.19,-76.76,91.0,"Harrisburg, Harrisburg International Airport",America/New_York,"Harrisburg, Harrisburg International Airport"
 KCHA,35.03,-85.2,213.0,"Chattanooga, Lovell Field",America/New_York,"Chattanooga, Lovell Field"
 KSYR,43.11,-76.1,122.0,"Syracuse, Syracuse Hancock International Airport",America/New_York,"Syracuse, Syracuse Hancock International Airport"
@@ -305,11 +305,11 @@ KDNV,40.2,-87.6,204.0,"Danville, Vermilion County Airport",America/Chicago,"Danv
 KLHQ,39.76,-82.66,269.0,"Lancaster, Fairfield County Airport",America/New_York,"Lancaster, Fairfield County Airport"
 KCAK,40.92,-81.44,365.0,"Akron, Akron-Canton Regional Airport",America/New_York,"Akron, Akron-Canton Regional Airport"
 KAKR,41.04,-81.46,320.0,"Akron, Akron Fulton International Airport",America/New_York,"Akron, Akron Fulton International Airport"
-KROG,36.37,-94.1,407.0,"Rogers, Rogers Municipal Airport-Carter Field",America/Chicago,"Rogers, Rogers Municipal Airport-Carter Field"
-KVBT,36.35,-94.22,394.0,"Bentonville, Bentonville Municipal Airport/Louise M Thaden F",America/Chicago,"Bentonville, Bentonville Municipal Airport/Louise M Thaden F"
+KROG,36.37,-94.1,407.0,"Rogers, Rogers Municipal Airport-Carter Field",America/Chicago,"Rogers Municipal Airport"
+KVBT,36.35,-94.22,394.0,"Bentonville, Bentonville Municipal Airport/Louise M Thaden F",America/Chicago,"Bentonville Municipal Airport"
 KXNA,36.28,-94.31,388.0,"Fayetteville/Springdale, Northwest Arkansas Regional Airport",America/Chicago,"Fayetteville/Springdale, Northwest Arkansas Regional Airport"
 KBOW,27.95,-81.78,38.0,Bartow Municipal,America/New_York,Bartow Municipal
-KGIF,28.06,-81.76,39.0,"Winter Haven, Winter Haven's Gilbert Airport",America/New_York,"KGIF"
+KGIF,28.06,-81.76,39.0,"Winter Haven, Winter Haven's Gilbert Airport",America/New_York,KGIF
 KLAL,27.98,-82.02,39.0,Lakeland Regional,America/New_York,Lakeland Linder Regional Airport
 KARB,42.22,-83.74,243.0,"Ann Arbor, Ann Arbor Municipal Airport",America/New_York,"Ann Arbor, Ann Arbor Municipal Airport"
 KYIP,42.24,-83.53,217.0,"Detroit, Willow Run Airport",America/New_York,"Detroit, Willow Run Airport"
@@ -431,3 +431,435 @@ c101080106,40.75,111.7,1045.4,呼和浩特郊区站,Asia/Shanghai,呼和浩特�
 ZSNB,29.83,121.46,4.0,Ningbo Lishe International Airport,Asia/Shanghai,Ningbo Lishe International Airport
 c101210412,29.98,121.6,4.0,镇海,Asia/Shanghai,镇海
 c101210401,29.8,121.5,6.2,鄞州,Asia/Shanghai,鄞州
+c101210410,29.88,121.83,5.0,北仑,Asia/Shanghai,北仑
+c101280302,23.18,114.25,50.2,博罗,Asia/Shanghai,博罗
+c101280303,23.07,114.37,108.5,惠阳,Asia/Shanghai,惠阳
+c101100401,37.68,112.77,831.2,榆次,Asia/Shanghai,榆次
+c101270107,30.82,103.88,558.5,郫县,Asia/Shanghai,郫县
+ZYTL,38.9,121.63,105.0,Dalian,Asia/Shanghai,Dalian
+c101070201,38.9,121.63,91.5,大连,Asia/Shanghai,大连
+c101110404,38.03,110.48,894.4,佳县,Asia/Shanghai,佳县
+c101161301,36.55,104.15,1736.7,白银,Asia/Shanghai,白银
+c101271401,29.57,103.75,424.2,乐山,Asia/Shanghai,乐山
+c101210904,29.33,120.08,90.0,义乌,Asia/Shanghai,义乌
+c101210905,29.27,120.22,89.9,东阳,Asia/Shanghai,东阳
+c101100504,36.33,113.23,947.6,潞城,Asia/Shanghai,潞城
+c101100501,36.07,113.03,1046.9,长治,Asia/Shanghai,长治
+c101100511,36.12,113.2,1122.0,壶关,Asia/Shanghai,壶关
+c101031100,39.05,117.72,4.8,塘沽,Asia/Shanghai,塘沽
+c101050501,46.62,126.97,179.6,北林,Asia/Shanghai,北林
+c101190605,32.45,119.58,5.2,江都,Asia/Shanghai,江都
+c101190601,32.42,119.42,9.9,扬州,Asia/Shanghai,扬州
+c101240701,25.87,115.0,137.5,赣县,Asia/Shanghai,赣县
+RJAI,35.73,139.92,14.0,Ichikawa,Asia/Tokyo,Ichikawa
+RJTI,35.63,139.85,5.0,Tokyo Heliport,Asia/Tokyo,Tokyo Heliport
+RJTL,35.8,140.02,20.0,Shimofusa Ab,Asia/Tokyo,Shimofusa Air Base
+RJOY,34.6,135.6,12.0,Yao Airport,Asia/Tokyo,Yao Airport
+RJOO,34.78,135.45,7.0,Osaka International Airport,Asia/Tokyo,Osaka International Airport
+RJTC,35.7,139.4,70.0,Tachikawa Ab,Asia/Tokyo,Tachikawa Air Base
+RJTR,35.52,139.4,83.0,Zama Airfield,Asia/Tokyo,Zama Ab
+RJTT,35.55,139.78,1.0,Tokyo International Airport,Asia/Tokyo,Tokyo International Airport
+RJTF,35.67,139.53,40.0,Chofu Airport,Asia/Tokyo,Chofu Airport
+RKSS,37.55,126.8,15.0,Seoul / Kimp'O International Airport,Asia/Seoul,Seoul / Kimp'O International Airport
+RKSF,37.5,126.93,33.0,Seoul / Yongdungp'O Rokaf Wc,Asia/Seoul,Seoul / Yongdungp'O Rokaf Wc
+RKSM,37.43,127.12,27.0,Seoul E Ab,Asia/Seoul,Seoul E Ab
+RKSY,37.52,126.98,14.0,Yongsan / H-208 Hp,Asia/Seoul,Yongsan / H-208 Hp
+47159,35.1,129.03,3.0,BUSAN,Asia/Seoul,BUSAN
+RKPK,35.18,128.93,3.0,Pusan / Kimhae International Airport,Asia/Seoul,Pusan / Kimhae International Airport
+RJFF,33.58,130.45,9.0,Fukuoka Airport,Asia/Tokyo,Fukuoka Airport
+RJCO,43.12,141.38,5.0,Sapporo Ab,Asia/Tokyo,Sapporo Airport
+KQTA,35.45,139.47,50.0,ATSUGI,Asia/Tokyo,ATSUGI
+RJBE,34.63,135.22,7.0,Kobe Airport,Asia/Tokyo,Kobe Airport
+47143,35.88,128.62,51.0,DAEGU,Asia/Seoul,DAEGU
+RKTN,35.9,128.65,33.0,Taegu Ab,Asia/Seoul,Taegu Airport
+RKSO,37.1,127.03,9.0,Osan Ab,Asia/Seoul,Osan
+RKSW,37.25,127.0,19.0,Suwon Ab,Asia/Seoul,Suwon
+47133,36.37,127.37,31.0,DAEJEON,Asia/Seoul,DAEJEON
+RKTE,36.4,127.5,72.0,Songmu Ab,Asia/Seoul,Songmu Ab
+RKTF,36.3,127.4,161.0,Taejon,Asia/Seoul,Taejon
+RKSD,37.35,127.27,171.0,Maesanri,Asia/Seoul,Maesanri
+RJOB,34.75,133.85,200.0,Okayama Airport,Asia/Tokyo,Okayama Airport
+RJSS,38.13,140.92,2.0,Sendai Airport,Asia/Tokyo,Sendai Airport
+RJSU,38.23,140.92,8.0,Kasuminome Ab,Asia/Tokyo,Kasuminome
+RJTU,36.52,139.87,99.0,Utsunomiya Ab,Asia/Tokyo,Utsunomiya
+47152,35.55,129.32,6.0,ULSAN,Asia/Seoul,ULSAN
+RJNY,34.82,138.3,6.0,Shizuhama Ab,Asia/Tokyo,Shizuhama Airport
+RJNS,34.8,138.19,123.0,Shizuoka,Asia/Tokyo,Shizuoka
+RJOM,33.82,132.7,18.0,Matsuyama Airport,Asia/Tokyo,Matsuyama Airport
+RJTY,35.75,139.35,132.0,Yokota Ab,Asia/Tokyo,Yokota Ab
+RJNT,36.65,137.18,25.0,Toyama Airport,Asia/Tokyo,Toyama Airport
+RJAF,36.17,137.93,650.0,Matsumoto Airport,Asia/Tokyo,Matsumoto Airport
+RKSG,36.93,127.0,1.0,Pyongtaek Ab,Asia/Seoul,Pyongtaek Ab
+RKTU,36.7,127.5,50.0,Chongju Ab,Asia/Seoul,Chongju Airport
+RJOT,34.22,134.02,194.0,Takamatsu Airport,Asia/Tokyo,Takamatsu Airport
+RJAH,36.18,140.42,30.0,Hyakuri Ab,Asia/Tokyo,Hyakuri Air Base
+RKPC,33.5,126.5,60.0,Cheju International Airport,Asia/Seoul,Cheju International Airport
+47098,37.9,127.07,130.0,DONGDUCHEON,Asia/Seoul,DONGDUCHEON
+RJSK,39.62,140.22,98.0,Akita Airport,Asia/Tokyo,Akita Airport
+RJBD,33.67,135.35,99.0,Nankishirahama Airport,Asia/Tokyo,Nankishirahama Airport
+RJAK,36.03,140.2,21.0,Kasumigaura Ab,Asia/Tokyo,Kasumigaura
+47154,36.12,128.32,48.0,GUMI,Asia/Seoul,GUMI
+94766,-33.9,151.12,1.0,CANTERBURY RACECOURSE,Australia/Sydney,CANTERBURY RACECOURSE
+94767,-33.93,151.17,1.0,SYDNEY AIRPORT AMO,Australia/Sydney,SYDNEY AIRPORT AMO
+94768,-33.85,151.2,40.0,SYDNEY REGIONAL OFFICE,Australia/Sydney,Sydney
+95761,-33.83,151.28,25.0,SOUTH HEAD,Australia/Sydney,SOUTH HEAD
+95765,-33.85,151.07,1.0,HOMEBUSH (OLYMPIC STADIUM),Australia/Sydney,HOMEBUSH (OLYMPIC STADIUM)
+YSSY,-33.95,151.18,6.0,Sydney Airport,Australia/Sydney,Sydney Airport
+94865,-37.87,144.75,12.0,LAVERTON RAAF,Australia/Sydney,LAVERTON RAAF
+94866,-37.67,144.83,116.0,MELBOURNE AIRPORT,Australia/Sydney,MELBOURNE AIRPORT
+95866,-37.73,144.9,100.0,ESSENDON AIRPORT,Australia/Sydney,ESSENDON AIRPORT
+95874,-37.73,145.1,152.0,VIEWBANK (ARPNSA),Australia/Sydney,VIEWBANK (ARPNSA)
+95936,-37.8256,144.9817,8.0,MELBOURNE (OLYMPIC PARK),Australia/Sydney,MELBOURNE (OLYMPIC PARK)
+YMML,-37.67,144.83,116.0,Melbourne Airport,Australia/Sydney,Melbourne Airport
+94759,-33.68,151.23,157.0,TERREY HILLS AWS,Australia/Sydney,TERREY HILLS
+94575,-27.57,153.0,60.0,ARCHERFIELD AIRPORT,Australia/Brisbane,ARCHERFIELD AIRPORT
+94576,-27.48,153.03,16.0,BRISBANE CENTRAL,Australia/Brisbane,BRISBANE CENTRAL
+94578,-27.38,153.13,1.0,BRISBANE AERO,Australia/Brisbane,BRISBANE Airport
+YBBN,-27.38,153.1,2.0,Brisbane Airport M. O,Australia/Brisbane,Brisbane Airport
+94608,-31.92,115.87,50.0,MOUNT LAWLEY PERTH METRO AWS,Australia/Perth,Perth Metro
+94609,-32.1,115.88,88.0,JANDAKOT AERO,Australia/Perth,Jandakot Airport
+94610,-31.93,115.97,98.0,PERTH AIRPORT,Australia/Perth,PERTH AIRPORT
+94614,-31.95,115.77,7.0,SWANBOURNE,Australia/Perth,SWANBOURNE
+YPPH,-31.93,115.95,90.0,Belmont Perth Airport,Australia/Perth,Belmont Perth Airport
+YPJT,-32.1,115.88,30.0,Perth Jandakot Airport,Australia/Perth,Perth Jandakot Airport
+94672,-34.95,138.53,11.0,ADELAIDE AIRPORT,Australia/Adelaide,ADELAIDE AIRPORT
+95677,-34.78,138.63,49.0,PARAFIELD AIRPORT,Australia/Adelaide,PARAFIELD AIRPORT
+95678,-34.97,138.7,312.0,MT LOFTY AWS,Australia/Adelaide,Mount Lofty
+YPAD,-34.93,138.52,7.0,Adelaide Airport,Australia/Adelaide,Adelaide Airport
+SBMT,-23.52,-46.63,634.0,Marte Civ / Mil,America/Sao_Paulo,Marte Civ / Mil
+SBSP,-23.62,-46.65,667.0,Sao Paulo/Congonhas Aeroporto,America/Sao_Paulo,Sao Paulo/Congonhas Aeroporto
+SBAF,-22.87,-43.37,119.0,Afonsos Aeroporto,America/Sao_Paulo,Afonsos Airport
+SBGL,-22.82,-43.25,1.0,Galeao,America/Sao_Paulo,Galeao
+SBJR,-22.98,-43.37,9.0,Rio / Jacarepagua,America/Sao_Paulo,Rio / Jacarepagua
+SBRJ,-22.9,-43.17,3.0,Rio De Janeiro Aeroporto,America/Sao_Paulo,Rio De Janeiro Aeroporto
+SBBH,-19.85,-43.95,851.0,Belo Horizonte Aeroporto,America/Sao_Paulo,Belo Horizonte Aeroporto
+SBCF,-19.93,-43.93,929.0,Belo Horizonte,America/Sao_Paulo,Belo Horizonte
+SBPR,-19.91,-43.99,928.0,Carlos Prates Airport,America/Sao_Paulo,Carlos Prates Airport
+SBBI,-25.43,-49.27,913.0,Curitiba,America/Sao_Paulo,Curitiba
+SBCT,-25.52,-49.17,914.0,Curitiba Aeroporto,America/Sao_Paulo,Curitiba Aeroporto
+SBKP,-23.0,-47.13,645.0,Campinas Aeroporto,America/Sao_Paulo,Campinas Aeroporto
+SBFZ,-3.78,-38.53,20.0,Fortaleza / pinto Martins,America/Fortaleza,Fortaleza / pinto Martins
+SBCO,-30.02,-51.22,1.0,Porto Alegre,America/Sao_Paulo,Porto Alegre
+SBPA,-30.0,-51.18,34.0,Porto Alegre Aero-Porto,America/Sao_Paulo,Porto Alegre Aero-Porto
+SBGO,-16.63,-49.22,747.0,Goiania Aeroporto,America/Sao_Paulo,Goiania Aeroporto
+SBRF,-8.07,-34.85,19.0,Recife Aeroporto,America/Recife,Recife Aeroporto
+SBEG,-3.03,-60.05,49.0,Eduardo Gomes International,America/Manaus,Eduardo Gomes International
+SBMN,-3.15,-59.98,34.0,Manaus Aeroporto,America/Manaus,Manaus Aeroporto
+SBGR,-23.43,-46.47,808.0,Guarulhos Civ / Mil,America/Sao_Paulo,Guarulhos Civ / Mil
+SBBE,-1.38,-48.48,2.0,Belem Aeroporto,America/Fortaleza,Belem Aeroporto
+SBRP,-21.13,-47.78,575.0,Leite Lopes / Ribeir,America/Sao_Paulo,Leite Lopes / Ribeir
+SBSJ,-23.23,-45.87,596.0,Sao Jose Dos Campo,America/Sao_Paulo,Sao Jose Dos Campo
+SBUL,-18.88,-48.23,642.0,Uberlandia,America/Sao_Paulo,Uberlandia
+SBFL,-27.67,-48.55,26.0,Florianopolis Aeroporto,America/Sao_Paulo,Florianopolis Aeroporto
+SBCG,-20.47,-54.67,567.0,Campo Grande Aeroporto,America/Campo_Grande,Campo Grande Airport
+SBSL,-2.6,-44.23,7.0,Sao Luiz Aeroporto,America/Fortaleza,Sao Luiz Airport
+SBCY,-15.65,-56.1,187.0,Cuiaba Aeroporto,America/Cuiaba,Cuiaba Aeroporto
+SBNT,-5.92,-35.25,21.0,Natal Aeroporto,America/Fortaleza,Natal Aeroporto
+SBMG,-23.42,-51.95,542.0,Maringa,America/Sao_Paulo,Maringa
+98425,14.58,120.98,1.0,MANILA,Asia/Manila,MANILA
+RPLL,14.52,121.0,12.0,Ninoy Aquino Inter-National Airport,Asia/Manila,Ninoy Aquino Inter-National Airport
+48564,7.88,98.4,9.0,PHUKET,Asia/Bangkok,PHUKET
+VVTS,10.82,106.67,7.0,Ho Chi Minh,Asia/Ho_Chi_Minh,Ho Chi Minh
+VVNB,21.02,105.8,16.0,Ha Noi,Asia/Ho_Chi_Minh,Ha Noi
+48453,13.67,100.6,3.0,BANGNA AGROMET,Asia/Bangkok,Bangkok
+48454,13.7,100.57,2.0,BANGKOK PORT,Asia/Bangkok,BANGKOK PORT
+48455,13.73,100.57,2.0,BANGKOK,Asia/Bangkok,BANGKOK
+48461,12.92,100.87,14.0,PHATTHAYA,Asia/Bangkok,PHATTHAYA
+48463,13.08,100.88,82.0,LAEM CHABANG,Asia/Bangkok,LAEM CHABANG
+WMSA,3.12,101.53,86.0,Subang/Sultan Abdul Aziz Shah Airport,Asia/Kuala_Lumpur,Subang/Sultan Abdul Aziz Shah Airport
+48456,13.92,100.6,2.0,DON MUANG,Asia/Bangkok,DON MUANG
+VTBD,13.92,100.6,2.0,Don Muang,Asia/Bangkok,Don Muang
+RPMD,7.12,125.65,2.0,Davao Airport,Asia/Manila,Davao Airport
+98646,10.3,123.97,5.0,MACTAN,Asia/Manila,MACTAN
+RPVM,10.31667,123.98333,21.0,Masbate,Asia/Manila,Masbate
+VDPP,11.55,104.85,18.0,Phnom-Penh / Pochentong,Asia/Phnom_Penh,Phnom-Penh / Pochentong
+48327,18.78,98.97,295.0,CHIANG MAI,Asia/Bangkok,CHIANG MAI
+VTCC,18.78,98.98,293.0,Chiang Mai,Asia/Bangkok,Chiang Mai
+WMKJ,1.63,103.67,23.0,Johore Bharu / Senai,Asia/Kuala_Lumpur,Johore Bharu / Senai
+WBGG,1.48,110.33,65.0,Kuching,Asia/Kuching,Kuching
+MMCL,24.76667,-107.46667,45.0,"Culiacan, Sin.",America/Mexico_City,"Culiacan, Sin."
+MMMX,19.43,-99.1,2211.0,Mexico City / Licenci,America/Mexico_City,Mexico City / Licenci
+MMUN,21.03,-86.87,1.0,Cancun International Airport,America/Mexico_City,Cancun International Airport
+76612,20.7,-103.38,1566.0,"GUADALAJARA, JAL.",America/Mexico_City,"GUADALAJARA, JAL."
+MMGL,20.52,-103.32,1569.0,Don Miguel / Guadalaj,America/Mexico_City,Don Miguel / Guadalaj
+76393,25.73,-100.3,513.0,"MONTERREY, N.L.",America/Mexico_City,"MONTERREY, N.L."
+76625,20.58,-100.4,1841.0,"QUERETARO, QRO.",America/Mexico_City,"QUERETARO, QRO."
+MMQT,20.6,-100.38,1868.0,"Queretaro, Qro.",America/Mexico_City,"Queretaro, Qro."
+76685,19.05,-98.17,2184.0,"PUEBLA, PUE.",America/Mexico_City,"PUEBLA, PUE."
+MMPB,19.05,-98.17,2184.0,"Puebla, Pue.",America/Mexico_City,"Puebla, Pue."
+76644,20.95,-89.65,11.0,"AEROP.INTERNACIONAL MERIDA, YUC",America/Mexico_City,"AEROP.INTERNACIONAL MERIDA, YUC"
+MMMD,20.93,-89.65,12.0,Merida / lic Manuel Crecencio,America/Mexico_City,Merida / lic Manuel Crecencio
+MMLO,21.0,-101.48,1813.0,Del Bajio / Leon,America/Mexico_City,Del Bajio / Leon
+76843,16.75,-93.13,584.0,"TUXTLA GUTIERREZ,  CHIS.",America/Mexico_City,"Tuxtla Gutiérrez"
+MMTG,16.75,-93.12,571.0,"Tuxtla Gutierrez, Chis.",America/Mexico_City,"Tuxtla Gutierrez, Chis."
+MMAN,25.87,-100.23,439.0,"Aerop. Internacional Monterrey, N. L.",America/Mexico_City,"Aerop. Internacional Monterrey, N. L."
+MMMY,25.78,-100.1,374.0,Monterrey / Gen Maria,America/Mexico_City,Monterrey / Gen Maria
+76675,19.28,-99.7,2751.0,"TOLUCA, MEX.",America/Mexico_City,"TOLUCA, MEX."
+MMTO,19.35,-99.57,2572.0,Toluca / Jose Maria,America/Mexico_City,Toluca / Jose Maria
+76687,19.5,-96.9,1400.0,"JALAPA, VER.",America/Mexico_City,"JALAPA, VER."
+76743,17.98,-92.93,10.0,"VILLAHERMOSA, TAB.",America/Mexico_City,"VILLAHERMOSA, TAB."
+MMVA,18.0,-92.82,10.0,Villahermosa,America/Mexico_City,Villahermosa
+MMCS,31.63,-106.43,1160.0,Ciudad Juarez International,America/Mexico_City,Abraham González International Airport
+76225,28.67,-106.03,1398.0,"CHIHUAHUA, CHIH.",America/Mexico_City,"CHIHUAHUA, CHIH."
+MMCU,28.7,-105.97,1356.0,Chihuahua International Airport,America/Mexico_City,Chihuahua International Airport
+76665,19.7,-101.18,1927.0,"MORELIA, MICH.",America/Mexico_City,"MORELIA, MICH."
+03770,51.5047,-0.1311,5.0,"LONDON, ST JAMES PARK",Europe/London,"LONDON, ST JAMES PARK"
+EGLC,51.51,0.06,33.0,London City Airport,Europe/London,London City Airport
+EGLL,51.48,-0.45,31.0,London / Heathrow Airport,Europe/London,London / Heathrow Airport
+EGWU,51.55,-0.42,36.0,Northolt,Europe/London,Northolt
+07690,43.65,7.2,28.0,NICE,Europe/Paris,NICE
+LFMN,43.65,7.2,4.0,Nice,Europe/Paris,Nice
+EYVI,54.63333000000001,25.28333,148.0,Vilnius,Europe/Vilnius,Vilnius
+02469,59.18,17.91,62.0,TULLINGE,Europe/Stockholm,TULLINGE
+ESSB,59.35,17.95,18.0,Stockholm / Bromma,Europe/Stockholm,Stockholm / Bromma
+LTAI,36.90028,30.80112,51.0,Antalya,Europe/Istanbul,Antalya
+26038,59.38,24.58,48.0,TALLINN,Europe/Tallinn,TALLINN
+EETN,59.4,24.82,48.0,Tallinn,Europe/Tallinn,Tallinn
+LTBA,40.97,28.82,28.0,Istanbul / Ataturk,Europe/Istanbul,Istanbul / Ataturk
+EPWA,52.17,20.97,88.0,Warszawa-Okecie,Europe/Warsaw,Warszawa-Okecie
+08535,38.72,-9.15,46.0,LISBOA/GEOF,Europe/Lisbon,LISBOA/GEOF
+08579,38.77,-9.13,90.0,LISBOA/GAGO COUTINHO,Europe/Lisbon,LISBOA/GAGO COUTINHO
+LPPT,38.77,-9.13,90.0,Lisboa / Portela,Europe/Lisbon,Lisboa / Portela
+LPMT,38.7,-9.04,1.0,Montijo Mil.,Europe/Lisbon,Montijo
+LPCS,38.72,-9.36,99.0,Cascais Airport,Europe/Lisbon,Cascais Airport
+08285,39.48,-0.38,10.0,VALENCIA,Europe/Madrid,VALENCIA
+LEVC,39.5,-0.47,38.0,Valencia / Aeropuerto,Europe/Madrid,Valencia / Aeropuerto
+LEBT,39.58,-0.45,50.0,Valencia/Bétera,Europe/Madrid,Valencia/Bétera
+08391,37.42,-5.9,22.0,SEVILLA/SAN PABLO,Europe/Madrid,SEVILLA/SAN PABLO
+LEZL,37.42,-5.9,22.0,Sevilla / San Pablo,Europe/Madrid,Sevilla / San Pablo
+08301,39.55,2.62,1.0,PALMA DE MALLORCA,Europe/Madrid,PALMA DE MALLORCA
+08303,39.74,2.71,1030.0,SIERRA DE ALFABIA,Europe/Madrid,SIERRA DE ALFABIA
+LEPA,39.55,2.73,8.0,Palma De Mallorca / Son San Juan,Europe/Madrid,Palma De Mallorca / Son San Juan
+EKCH,55.62,12.65,2.0,Koebenhavn / Kastrup,Europe/Copenhagen,Koebenhavn / Kastrup
+03166,55.93,-3.35,27.0,EDINBURGH GOGARBANK,Europe/London,Edinburgh Airport
+EGPH,55.95,-3.35,3.0,Edinburgh Airport,Europe/London,Edinburgh Airport
+06660,47.38,8.57,611.0,ZUERICH-METEOSCHWEIZ,Europe/Zurich,Zurich Airport
+06664,47.43,8.52,441.0,RECKENHOLZ,Europe/Zurich,RECKENHOLZ
+06670,47.48,8.53,424.0,ZUERICH-KLOTEN,Europe/Zurich,ZUERICH-KLOTEN
+06673,47.22,8.68,429.0,WAEDENSWIL,Europe/Zurich,WAEDENSWIL
+LSZH,47.48,8.53,424.0,Zurich-Kloten,Europe/Zurich,Zurich Airport
+LSMD,47.4,8.65,448.0,Dubendorf Airport,Europe/Zurich,Dubendorf Airport
+08545,41.23,-8.68,64.0,PORTO/PEDRAS RUBRAS,Europe/Lisbon,PORTO/PEDRAS RUBRAS
+LPPR,41.23,-8.68,64.0,Porto / Pedras Rubras,Europe/Lisbon,Porto / Pedras Rubras
+06240,52.3,4.77,-4.0,AMSTERDAM AP SCHIPHOL,Europe/Amsterdam,AMSTERDAM AP SCHIPHOL
+EHAM,52.3,4.77,-4.0,Amsterdam Airport Schiphol,Europe/Amsterdam,Amsterdam Airport Schiphol
+11034,48.2,16.37,171.0,WIEN/CITY,Europe/Vienna,WIEN/CITY
+11035,48.25,16.37,149.0,WIEN/HOHE WARTE,Europe/Vienna,WIEN/HOHE WARTE
+11036,48.12,16.57,181.0,WIEN/SCHWECHAT-FLUGHAFEN,Europe/Vienna,WIEN/SCHWECHAT-FLUGHAFEN
+11037,48.2,16.57,144.0,GROSSENZERSDORF,Europe/Vienna,GROSSENZERSDORF
+11040,48.13,16.42,174.0,WIEN/UNTERLAA,Europe/Vienna,WIEN/UNTERLAA
+11080,48.2,16.23,231.0,WIEN/MARIABRUNN,Europe/Vienna,WIEN/MARIABRUNN
+11090,48.2575,16.4333,161.0,WIEN-DONAUFELD,Europe/Vienna,Vienna
+LOWW,48.12,16.57,181.0,Wien / Schwechat-Flughafen,Europe/Vienna,Wien / Schwechat-Flughafen
+EBBR,50.9,4.53,50.0,Bruxelles National,Europe/Brussels,Bruxelles National
+EDDF,50.05,8.6,108.0,Frankfurt / M-Flughafen,Europe/Berlin,Frankfurt / M-Flughafen
+10381,52.47,13.3,48.0,BERLIN-DAHLEM,Europe/Berlin,BERLIN-DAHLEM
+EDDB,52.38,13.52,45.0,Berlin-Schoenefeld,Europe/Berlin,Berlin-Schoenefeld
+EDDT,52.57,13.32,37.0,Berlin-Tegel,Europe/Berlin,Berlin-Tegel
+EIDW,53.43,-6.25,22.0,Dublin Airport,Europe/Dublin,Dublin Airport
+EIME,53.3,-6.43,95.0,Casement Aerodrome,Europe/Dublin,Casement Aerodrome
+07149,48.72,2.38,87.0,PARIS-ORLY,Europe/Paris,PARIS-ORLY
+07150,48.97,2.43,52.0,LE BOURGET,Europe/Paris,LE BOURGET
+07156,48.82,2.33,73.0,PARIS-MONTSOURIS,Europe/Paris,PARIS-MONTSOURIS
+LFPB,48.97,2.45,59.0,Paris / Le Bourget,Europe/Paris,Paris / Le Bourget
+LFPO,48.73,2.4,64.0,Paris-Orly,Europe/Paris,Paris-Orly
+LFPV,48.77,2.2,172.0,Villacoublay,Europe/Paris,Villacoublay
+LHBP,47.43,19.27,122.0,Budapest / Ferihegy,Europe/Budapest,Budapest / Ferihegy
+11518,50.1,14.25,363.0,PRAHA/RUZYNE,Europe/Prague,PRAHA/RUZYNE
+11520,50.02,14.45,273.0,PRAHA-LIBUS,Europe/Prague,PRAHA-LIBUS
+11567,50.12,14.53,273.0,PRAHA-KBELY,Europe/Prague,PRAHA-KBELY
+LKPR,50.1,14.25,363.0,Praha / Ruzyne,Europe/Prague,Praha / Ruzyne
+LKKB,50.12,14.54,286.0,Kbely Air Base,Europe/Prague,Kbely Air Base
+LKVO,50.22,14.4,280.0,Vodochody Airport,Europe/Prague,Vodochody Airport
+EPKK,50.08,19.8,249.0,Krakow,Europe/Warsaw,Krakow
+08220,40.45,-3.72,680.0,MADRID/C. UNIVERSITARIA,Europe/Madrid,MADRID/C. UNIVERSITARIA
+08221,40.45,-3.55,563.0,MADRID/BARAJAS RS,Europe/Madrid,MADRID/BARAJAS RS
+08222,40.42,-3.68,667.0,"MADRID, RETIRO",Europe/Madrid,"MADRID, RETIRO"
+LEMD,40.45,-3.55,563.0,Madrid / Barajas,Europe/Madrid,Madrid / Barajas
+LEVS,40.38,-3.78,660.0,Madrid / Cuatro Vientos,Europe/Madrid,Madrid / Cuatro Vientos
+08180,41.39,2.2,25.0,"BARCELONA,CMT",Europe/Madrid,"BARCELONA,CMT"
+08181,41.29278,2.07,4.0,BARCELONA/AEROPUERTO,Europe/Madrid,BARCELONA/AEROPUERTO
+LEBL,41.28,2.07,4.0,Barcelona / Aeropuerto,Europe/Madrid,Barcelona / Aeropuerto
+LELL,41.52,2.1,142.0,Sabadell,Europe/Madrid,Sabadell
+01486,59.86,10.43,140.0,ASKER,Europe/Oslo,ASKER
+01489,60.05,10.69,360.0,BJORNHOLT,Europe/Oslo,BJORNHOLT
+01490,59.98,10.67,514.0,TRYVASSHOGDA,Europe/Oslo,Tryvann / Holmenkollen
+01492,59.94,10.72,120.0,OSLO-BLINDERN,Europe/Oslo,OSLO-BLINDERN
+EDDH,53.63,10.0,15.0,Hamburg-Fuhlsbuettel,Europe/Berlin,Hamburg-Fuhlsbuettel
+EDHI,53.53,9.83,9.0,Hamburg-Finkenwerder,Europe/Berlin,Hamburg-Finkenwerder
+06674,47.18,8.47,413.0,CHAM,Europe/Zurich,CHAM
+02974,60.33,24.96,58.0,HELSINKI-VANTAA,Europe/Helsinki,HELSINKI-VANTAA
+02978,60.18,24.94,23.0,"HELSINKI, KAISANIEMI",Europe/Helsinki,"HELSINKI, KAISANIEMI"
+02985,60.18,24.79,6.0,Espoo Tapiola,Europe/Helsinki,Espoo Tapiola
+02998,60.2,24.96,11.0,Helsinki Kumpula,Europe/Helsinki,Helsinki Kumpula
+EFHK,60.32,24.97,54.0,Helsinki-Vantaa,Europe/Helsinki,Helsinki-Vantaa
+EDDK,50.87,7.17,107.0,Koeln / Bonn,Europe/Berlin,Koeln / Bonn
+EGCC,53.35,-2.28,59.0,Manchester Airport,Europe/London,Manchester Airport
+EDDS,48.68,9.22,362.0,Stuttgart-Echterdingen,Europe/Berlin,Stuttgart-Echterdingen
+EDDL,51.3,6.77,35.0,Duesseldorf,Europe/Berlin,Duesseldorf
+EDLN,51.23,6.5,38.0,Monchengladbach,Europe/Berlin,Monchengladbach
+EDDV,52.47,9.68,53.0,Hannover,Europe/Berlin,Hannover
+03535,52.48,-1.68,88.0,COLESHILL,Europe/London,COLESHILL
+EGBB,52.45,-1.73,87.0,Birmingham / Airport,Europe/London,Birmingham / Airport
+LTAD,39.95,32.68,797.0,Ankara / Etimesgut,Europe/Istanbul,Ankara / Etimesgut
+LTAB,39.93,32.75,836.0,Ankara / Güvercinlik,Europe/Istanbul,Ankara / Güvercinlik
+EPPO,52.42,16.83,74.0,Poznan,Europe/Warsaw,Poznan
+07480,45.72,4.93,203.0,LYON-BRON,Europe/Paris,LYON-BRON
+07481,45.75,5.08,230.0,LYON-ST EXUPERY,Europe/Paris,LYON-ST EXUPERY
+LFLL,45.73,5.08,237.0,Lyon / Satolas,Europe/Paris,Lyon / Satolas
+LFLY,45.72,4.95,206.0,Lyon / Bron,Europe/Paris,Lyon / Bron
+EDDN,49.5,11.05,307.0,Nuernberg,Europe/Berlin,Nuernberg
+EPWR,51.1,16.88,111.0,Wroclaw Ii,Europe/Warsaw,Wroclaw
+EDDP,51.42,12.23,136.0,Leipzig-Schkeuditz,Europe/Berlin,Leipzig/Halle Airport
+EGPF,55.87,-4.43,55.0,Glasgow Airport,Europe/London,Glasgow Airport
+02513,57.72,11.99,34.0,GOTEBORG,Europe/Stockholm,GOTEBORG
+ESGG,57.67,12.3,153.0,Goteborg / Landvetter,Europe/Stockholm,Goteborg / Landvetter
+15420,44.5,26.13,68.0,BUCURESTI BANEASA,Europe/Bucharest,BUCURESTI BANEASA
+15421,44.48,26.18,67.0,BUCURESTI AFUMATI,Europe/Bucharest,AFUMATI
+15422,44.42,26.1,65.0,BUCARESTI FILARET,Europe/Bucharest,BUCARESTI FILARET
+LRBS,44.5,26.13,68.0,Bucuresti / Imh,Europe/Bucharest,Bucuresti / Imh
+LROP,44.55,26.1,76.0,Bucuresti Otopeni,Europe/Bucharest,Bucuresti Otopeni
+06344,51.95,4.45,-5.0,ROTTERDAM AP ZESTIENHOVEN,Europe/Amsterdam,Rotterdam The Hague Airport
+EHRD,51.95,4.45,-5.0,Rotterdam Airport Zestienhoven,Europe/Amsterdam,Rotterdam Airport Zestienhoven
+11010,48.23,14.18,291.0,LINZ/HOERSCHING-FLUGHAFEN,Europe/Vienna,LINZ/HOERSCHING-FLUGHAFEN
+11060,48.3,14.28,266.0,LINZ/STADT,Europe/Vienna,LINZ/STADT
+LOWL,48.23,14.18,291.0,Linz / Hoersching-Flughafen,Europe/Vienna,Linz / Hoersching-Flughafen
+03316,53.5,-3.07,9.0,CROSBY,Europe/London,CROSBY
+EGGP,53.33,-2.85,1.0,Liverpool Airport,Europe/London,Liverpool Airport
+EGOW,53.58,-3.06,2.0,Woodvale,Europe/London,Woodvale
+EDLW,51.52,7.62,117.0,Dortmund / Wickede,Europe/Berlin,Dortmund / Wickede
+LDZA,45.73,16.07,116.0,Zagreb / Pleso,Europe/Zagreb,Zagreb / Pleso
+EGNM,53.87,-1.65,153.0,Leeds And Bradford,Europe/London,Leeds And Bradford
+EPLL,51.73,19.4,176.0,LOAZ/LUBLINEK,Europe/Warsaw,LOAZ/LUBLINEK
+LTBJ,38.27,27.15,133.0,Izmir / Adnan Menderes,Europe/Istanbul,Izmir / Adnan Menderes
+LTBL,38.5,27.02,20.0,Izmir / Cigli,Europe/Istanbul,Izmir / Cigli
+LTFA,38.52,26.98,19.0,Izmir  Kaklic,Europe/Istanbul,Izmir  Kaklic
+EGGD,51.38,-2.72,180.0,Bristol / Lulsgate,Europe/London,Bristol / Lulsgate
+EPGD,54.38,18.47,147.0,Gdansk-Rebiechowo,Europe/Warsaw,Gdansk-Rebiechowo
+EDDE,50.98,10.97,295.0,Erfurt-Bindersleben,Europe/Berlin,Erfurt-Bindersleben
+02635,55.57,13.07,14.0,MALMO,Europe/Stockholm,MALMO
+EBAW,51.2,4.47,7.0,Antwerpen / Deurne,Europe/Brussels,Antwerpen / Deurne
+07630,43.62,1.38,150.0,TOULOUSE BLAGNAC,Europe/Paris,TOULOUSE BLAGNAC
+LFBO,43.63,1.37,149.0,Toulouse / Blagnac,Europe/Paris,Toulouse / Blagnac
+EGSY,53.39,-1.39,69.0,"Yorkshire and Humberside, Sheffield City",Europe/London,"Sheffield"
+07222,47.15,-1.62,22.0,NANTES-BOUGUENAIS,Europe/Paris,Nantes Atlantique Airport
+LFRS,47.17,-1.6,27.0,Nantes,Europe/Paris,Nantes
+06330,51.98,4.1,14.0,HOEK VAN HOLLAND,Europe/Amsterdam,HOEK VAN HOLLAND
+03354,53.0,-1.25,87.0,NOTTINGHAM/WATNALL,Europe/London,NOTTINGHAM/WATNALL
+EGNX,52.83,-1.33,79.0,East Midlands,Europe/London,East Midlands
+EVRA,56.92,23.97,12.0,Riga International Airport,Europe/Riga,Riga International Airport
+08479,36.72,-4.42,20.0,"MÁLAGA,PUERTO",Europe/Madrid,"MÁLAGA,PUERTO"
+08481,36.72,-4.48,60.0,"MÁLAGA,CMT",Europe/Madrid,"Málaga Airport"
+08482,36.67,-4.48,18.0,MALAGA/AEROPUERTO,Europe/Madrid,MALAGA/AEROPUERTO
+LEMG,36.67,-4.48,18.0,Malaga / Aeropuerto,Europe/Madrid,Malaga / Aeropuerto
+ETOU,50.05,8.33,137.0,Wiesbaden,Europe/Berlin,Wiesbaden
+07510,44.83,-0.7,46.0,BORDEAUX MERIGNAC,Europe/Paris,BORDEAUX MERIGNAC
+LFBD,44.83,-0.7,46.0,Bordeaux / Merignac,Europe/Paris,Bordeaux / Merignac
+26850,53.93,27.63,219.0,MINSK,Europe/Minsk,MINSK
+EDDC,51.13,13.75,226.0,Dresden-Klotzsche,Europe/Berlin,Dresden-Klotzsche
+EDDW,53.05,8.8,5.0,Bremen,Europe/Berlin,Bremen
+LZIB,48.2,17.2,120.0,Bratislava Ivanka,Europe/Bratislava,Ivanka pri Dunaji
+EGFF,51.4,-3.35,2.0,Cardiff-Wales Airport,Europe/London,Cardiff-Wales Airport
+07015,50.58,3.1,51.0,LILLE-LESQUIN,Europe/Paris,Lille Lesquin Airport
+LFQQ,50.57,3.1,41.0,Lille,Europe/Paris,Lille
+EDFM,49.47,8.52,95.0,"Baden Wurttemberg, Neuostheim",Europe/Berlin,"Baden Wurttemberg, Neuostheim"
+11723,49.15,16.7,243.0,BRNO/TURANY,Europe/Prague,BRNO/TURANY
+LKTB,49.15,16.7,243.0,Brno / Turany,Europe/Prague,Brno / Turany
+08141,41.65,-4.77,705.0,VALLADOLID,Europe/Madrid,VALLADOLID
+LEVD,41.72,-4.85,836.0,Valladolid / Villanubla,Europe/Madrid,Valladolid / Villanubla
+06260,52.1,5.18,2.0,DE BILT,Europe/Amsterdam,DE BILT
+07190,48.55,7.63,149.0,STRASBOURG-ENTZHEIM,Europe/Paris,STRASBOURG-ENTZHEIM
+LFST,48.55,7.63,149.0,Strasbourg,Europe/Paris,Strasbourg
+03544,52.37,-1.33,82.0,CHURCH LAWFORD,Europe/London,Rugby
+08159,41.62083,-0.935,254.0,ZARAGOZA-VALDESPARTERA,Europe/Madrid,ZARAGOZA-VALDESPARTERA
+08160,41.67,-1.0,208.0,ZARAGOZA/AEROPUERTO,Europe/Madrid,ZARAGOZA/AEROPUERTO
+LEZG,41.67,-1.02,223.0,Zaragoza / Aeropuerto,Europe/Madrid,Zaragoza / Aeropuerto
+EDMA,48.43,10.93,460.0,Augsburg,Europe/Berlin,Augsburg
+LETO,40.48,-3.45,587.0,Madrid / Torrejon,Europe/Madrid,Madrid / Torrejon
+EGHI,50.9,-1.4,9.0,Southampton / Weather Centre,Europe/London,Southampton / Weather Centre
+11240,47.0,15.43,335.0,GRAZ-THALERHOF-FLUGHAFEN,Europe/Vienna,GRAZ-THALERHOF-FLUGHAFEN
+11241,47.2,15.47,1080.0,SCHOECKL,Europe/Vienna,SCHOECKL
+11290,47.08,15.45,370.0,GRAZ UNIVERSITAET,Europe/Vienna,GRAZ UNIVERSITAET
+LOWG,47.0,15.43,335.0,Graz-Thalerhof-Flughafen,Europe/Vienna,Graz-Thalerhof-Flughafen
+02763,61.47,23.75,86.0,TAMPERE HÄRMÄLÄ,Europe/Helsinki,TAMPERE HÄRMÄLÄ
+EFTP,61.42,23.58,124.0,Tampere / Pirkkala,Europe/Helsinki,Tampere / Pirkkala
+02986,60.2913,24.5679,90.0,Espoo Nuuksio,Europe/Helsinki,Espoo Nuuksio
+07130,48.07,-1.73,36.0,RENNES-SAINT JACQUES,Europe/Paris,RENNES-SAINT JACQUES
+LFRN,48.07,-1.73,36.0,Rennes,Europe/Paris,Rennes
+EGTC,52.07,-0.62,77.0,Cranfield,Europe/London,Cranfield
+EDDG,52.13,7.7,49.0,Muenster / Osnabrueck,Europe/Berlin,Muenster / Osnabrueck
+LJLJ,46.22,14.48,353.0,Ljubljana / Brnik,Europe/Ljubljana,Ljubljana / Brnik
+06370,51.45,5.42,20.0,EINDHOVEN AP,Europe/Amsterdam,Eindhoven Airport
+EHEH,51.45,5.42,20.0,Eindhoven,Europe/Amsterdam,Eindhoven
+06631,46.98,7.47,555.0,BERN-LIEBEFELD,Europe/Zurich,BERN-LIEBEFELD
+06636,46.98,7.28,549.0,MUEHLEBERG,Europe/Zurich,MUEHLEBERG
+LSZB,46.92,7.5,577.0,Bern / Belp,Europe/Zurich,Bern / Belp
+EGUB,51.62,-1.08,89.0,Benson,Europe/London,Benson
+EGAA,54.65,-6.22,77.0,Belfast / Aldergrove Airport,Europe/London,Belfast / Aldergrove Airport
+EGAC,54.6,-5.88,25.0,Belfast / Harbour,Europe/London,Belfast / Harbour
+ELLX,49.62,6.22,340.0,Luxembourg / Luxembourg,Europe/Luxembourg,Luxembourg / Luxembourg
+06708,46.57,6.87,786.0,ORON,Europe/Zurich,ORON
+06710,46.55,6.62,617.0,LAUSANNE,Europe/Zurich,LAUSANNE
+06711,46.52,6.67,599.0,PULLY,Europe/Zurich,PULLY
+03344,53.82,-1.87,194.0,BINGLEY NO.2,Europe/London,BINGLEY NO.2
+07643,43.58,3.97,1.0,MONTPELLIER,Europe/Paris,MONTPELLIER
+LFMT,43.58,3.97,1.0,Montpellier,Europe/Paris,Montpellier
+EBLG,50.65,5.45,188.0,Bierset,Europe/Brussels,Bierset
+03740,51.5,-1.98,85.0,LYNEHAM,Europe/London,LYNEHAM
+EGVA,51.68,-1.78,76.0,Fairford Royal Air Force Base,Europe/London,Fairford Royal Air Force Base
+08025,43.3,-2.9,36.0,BILBAO/SONDICA,Europe/Madrid,BILBAO/SONDICA
+08035,43.2,-3.1,208.0,"GÜEÑES,IBERDROLA",Europe/Madrid,"GÜEÑES,IBERDROLA"
+08059,43.38,-3.02,90.0,PUNTA GALEA GOLF,Europe/Madrid,PUNTA GALEA GOLF
+LEBB,43.3,-2.93,8.0,Bilbao / Sondica,Europe/Madrid,Bilbao / Sondica
+ETSI,48.72,11.53,362.0,Ingolstadt,Europe/Berlin,Ingolstadt
+ETSN,48.72,11.22,378.0,Neuburg / Donau,Europe/Berlin,Neuburg / Donau
+03238,55.02,-1.87,116.0,ALBEMARLE,Europe/London,ALBEMARLE
+EGNT,55.03,-1.7,85.0,Newcastle,Europe/London,Newcastle
+07157,49.02,2.53,115.0,PARIS-AEROPORT ROISSY,Europe/Paris,PARIS-AEROPORT ROISSY
+LFPG,49.02,2.53,115.0,Paris-Aeroport Charles De Gaulle,Europe/Paris,Paris-Aeroport Charles De Gaulle
+EPSC,53.4,14.62,1.0,Szczecin,Europe/Warsaw,Szczecin
+07487,45.22,5.85,224.0,GRENOBLE-LVD,Europe/Paris,GGrenoble-Le Versoud Airport
+06257,52.5,4.6,1.0,WIJK AAN ZEE,Europe/Amsterdam,WIJK AAN ZEE
+EDHK,54.38,10.17,31.0,Kiel / Holtenau Civilian,Europe/Berlin,Kiel / Holtenau Civilian
+KQDG,37.0,35.43,73.0,Adana,Europe/Istanbul,Adana
+EQYK,37.0,35.43,73.0,[unknown],Europe/Istanbul,[unknown]
+LTAF,36.98,35.3,11.0,Adana / Sakirpasa,Europe/Istanbul,Adana / Sakirpasa
+LTAG,37.0,35.42,55.0,Adana / Incirlik,Europe/Istanbul,Adana / Incirlik
+EPBY,53.1,17.98,72.0,Bydgoszcz Ignacy Jan Paderewski Airport,Europe/Warsaw,Bydgoszcz Ignacy Jan Paderewski Airport
+11150,47.8,13.0,423.0,SALZBURG-FLUGHAFEN,Europe/Vienna,SALZBURG-FLUGHAFEN
+11350,47.78,13.05,418.0,SALZBURG/FREISAAL,Europe/Vienna,SALZBURG/FREISAAL
+LOWS,47.8,13.0,423.0,Salzburg-Flughafen,Europe/Vienna,Salzburg-Flughafen
+EBCI,50.47,4.45,175.0,Charleroi / Gosselies,Europe/Brussels,Charleroi / Gosselies
+EPRZ,50.1,22.05,194.0,Rzeszow-Jasionka,Europe/Warsaw,Rzeszow-Jasionka
+LEGR,37.18,-3.78,583.0,Granada / Aeropuerto,Europe/Madrid,Granada / Aeropuerto
+LEGA,37.13,-3.64,682.0,Granada / Armilla,Europe/Madrid,Granada / Armilla
+EDVK,51.4,9.38,291.0,Kassel / Calden,Europe/Berlin,Kassel / Calden
+EDVE,52.3,10.45,77.0,Braunschweig,Europe/Berlin,Braunschweig
+60029,28.1,-15.41,55.0,"LAS PALMAS G.C.,SAN CRISTÓBAL",Atlantic/Canary,"LAS PALMAS G.C.,SAN CRISTÓBAL"
+60032,28.11306,-15.42139,15.0,LAS PALMAS DE GRAN CANARIA-PLAZA DE LA FERIA,Atlantic/Canary,Plaza de la Feria
+60030,27.93,-15.38,136.0,LAS PALMAS DE GRAN CANARIA/GANDO,Atlantic/Canary,LAS PALMAS DE GRAN CANARIA/GANDO
+GCLP,27.93,-15.38,136.0,Gran Canaria - Canary Islands,Atlantic/Canary,Gran Canaria - Canary Islands
+EGKB,51.32,0.03,153.0,Biggin Hill,Europe/London,Biggin Hill
+08430,38.0,-1.17,31.0,MURCIA,Europe/Madrid,MURCIA
+LERI,37.95,-1.23,44.0,Murcia / Alcantarilla,Europe/Madrid,Murcia / Alcantarilla
+EGNJ,53.58,-0.35,49.0,Humberside,Europe/London,Humberside
+EGXV,53.87,-0.43,2.0,Leconfield,Europe/London,Leconfield
+02458,59.9,17.6,12.0,UPPSALA,Europe/Stockholm,UPPSALA
+02462,59.87,17.63,13.0,UPPSALA UNIVERSITY,Europe/Stockholm,UPPSALA UNIVERSITY
+ESCM,59.88,17.6,7.0,Uppsala,Europe/Stockholm,Uppsala
+08359,38.37,-0.5,66.0,ALICANTE,Europe/Madrid,ALICANTE
+08360,38.28,-0.55,12.0,ALICANTE/EL ALTET,Europe/Madrid,ALICANTE/EL ALTET
+LEAL,38.28,-0.55,12.0,Alicante / El Altet,Europe/Madrid,Alicante / El Altet
+03330,53.13,-1.98,318.0,LEEK THORNCLIFFE,Europe/London,Thorncliffe
+01311,60.29,5.23,40.0,BERGEN/FLESLAND,Europe/Oslo,BERGEN/FLESLAND
+01317,60.38,5.33,7.0,BERGEN/FLORIDA,Europe/Oslo,BERGEN/FLORIDA
+ENBR,60.28,5.23,40.0,Bergen / Flesland,Europe/Oslo,Bergen / Flesland
+EGKA,50.83,-0.28,2.0,Shoreham Airport,Europe/London,Shoreham Airport
+EDDR,49.22,7.12,323.0,Saarbruecken / Ensheim,Europe/Berlin,Saarbruecken / Ensheim
+15120,46.77,23.57,333.0,CLUJ-NAPOCA,Europe/Bucharest,CLUJ-NAPOCA
+LRCL,46.78,23.57,362.0,Cluj-Napoca,Europe/Bucharest,Cluj-Napoca
+LTFJ,40.9,29.31,78.0,Istanbul / Sabiha Gokcen,Europe/Istanbul,Istanbul / Sabiha Gokcen
+EGSH,52.63,1.3,9.0,Norwich Weather Centre,Europe/London,Norwich Weather Centre
+07145,48.77,2.02,164.0,TRAPPES,Europe/Paris,TRAPPES
+07146,48.75,2.12,153.0,TOUSSUS LE NOBLE,Europe/Paris,TOUSSUS LE NOBLE
+LFPN,48.75056,2.11361,152.0,Toussus Le Noble,Europe/Paris,Toussus Le Noble

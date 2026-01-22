@@ -1,0 +1,821 @@
+id,lat,lon,alt,name,tz,search_name
+SBCB,-22.92,-42.07,7.0,Cabo Frio Airport,America/Sao_Paulo,Cabo Frio Airport
+SBVH,-12.7,-60.1,612.0,Vilhena Aeroporto,America/Porto_Velho,Vilhena Aeroporto
+SBOI,3.83,-51.83,26.0,Oiapoque,America/Fortaleza,Oiapoque
+SBSN,-2.43,-54.72,13.0,Santarem-Aeroporto,America/Fortaleza,Santarem-Aeroporto
+SBPJ,-10.24167,-48.35278,236.0,Brigadeiro Lysias Rodrigues Airport,America/Fortaleza,Brigadeiro Lysias Rodrigues Airport
+SBPP,-22.55,-55.7,657.0,Ponta Pora Intl,America/Campo_Grande,Ponta Pora Intl
+SBAT,-9.87,-56.1,288.0,Alta Floresta Aeroporto,America/Cuiaba,Alta Floresta Aeroporto
+SBDN,-22.12,-51.38,436.0,Presidente Prudente,America/Sao_Paulo,Presidente Prudente
+SBTK,-8.17,-70.77,190.0,Tarauaca,America/Eirunepe,Tarauaca
+SBRB,-10.0,-67.8,149.0,Rio Branco,America/Eirunepe,Rio Branco
+SBAX,-19.56,-46.96,999.0,Araxá Airport,America/Sao_Paulo,Araxá Airport
+83650,-20.5,-29.32,28.0,TRINDADE (ILHA),America/Noronha,TRINDADE (ILHA)
+SBTE,-5.05,-42.82,48.0,Teresina Aeroporto,America/Fortaleza,Teresina Aeroporto
+SBSY,-11.57,-50.67,10.0,SANTA ISABEL,America/Araguaina,SANTA ISABEL
+SBPV,-8.77,-63.92,80.0,Porto Velho Aeroporto,America/Manaus,Porto Velho Aeroporto
+SBIL,-14.82,-39.03,1.0,Ilheus Aeroporto,America/Fortaleza,Ilheus Aeroporto
+SBVT,-20.27,-40.28,4.0,Vitoria Aeroporto,America/Sao_Paulo,Vitoria Aeroporto
+SBMY,-5.82,-61.3,50.0,Manicore,America/Manaus,Manicore
+SBAN,-16.23,-48.97,1137.0,Anapolis Braz-Afb,America/Sao_Paulo,Anapolis Braz-Afb
+SBAR,-10.98,-37.07,1.0,Aracaju Aeroporto,America/Fortaleza,Aracaju Aeroporto
+SBTF,-3.37,-64.68,44.0,Tefe,America/Manaus,Tefe
+SBAU,-21.14,-50.42,415.0,Araçatuba Airport,America/Sao_Paulo,Araçatuba Airport
+SBMA,-5.35,-49.15,40.0,Maraba,America/Fortaleza,Maraba
+SBES,-22.82,-42.1,1.0,S. P. Aldeia Aerodrome,America/Sao_Paulo,S. P. Aldeia Aerodrome
+SBLE,-12.48,-41.28,511.0,Chapada Diamantina Airport,America/Fortaleza,Chapada Diamantina Airport
+SBST,-23.93,-46.3,1.0,Santos Aeroporto,America/Sao_Paulo,Santos Aeroporto
+SBPB,-2.92,-41.75,4.0,Parnaiba Aeroporto,America/Fortaleza,Parnaiba Aeroporto
+SBPL,-9.35,-40.55,360.0,Petrolina,America/Fortaleza,Petrolina
+SBCX,-29.19706,-51.18754000000001,733.0,CAXIAS DO SUL,America/Sao_Paulo,CAXIAS DO SUL
+SBNF,-26.88,-48.65,5.0,Ministro Victor Konder International Airport,America/Sao_Paulo,Ministro Victor Konder International Airport
+SBSM,-29.72,-53.7,156.0,Santa Maria Aero-Porto,America/Sao_Paulo,Santa Maria Aero-Porto
+SBBG,-31.35,-54.12,234.0,Bage Aeroporto,America/Sao_Paulo,Bage Aeroporto
+SBML,-22.2,-49.93,647.0,Marília Airport,America/Sao_Paulo,Marília Airport
+SBUA,-0.13,-67.08,73.0,Sao Gabriel Da Cachoeira,America/Manaus,Sao Gabriel Da Cachoeira
+SBPK,-31.78333,-52.41667,1.0,Pelotas,America/Sao_Paulo,Pelotas
+SBIC,-3.13,-58.48,43.0,Itacoatiara Airport,America/Manaus,Itacoatiara Airport
+SBHT,-3.2,-52.2,29.0,Altamira,America/Fortaleza,Altamira
+SBBU,-22.32,-49.07,536.0,Bauru,America/Sao_Paulo,Bauru
+SBCI,-7.32,-47.47,120.0,Maranhao / Carolina Airport,America/Fortaleza,Maranhao / Carolina Airport
+SBJV,-26.22,-48.8,5.0,Lauro Carneiro de Loyola Airport,America/Sao_Paulo,Lauro Carneiro de Loyola Airport
+SBMS,-5.2,-37.37,46.0,Mocoro / 17 Rosado,America/Fortaleza,Mocoro / 17 Rosado
+SBGW,-22.78,-45.2,483.0,Guaratingueta,America/Sao_Paulo,Guaratingueta
+SBFN,-3.85,-32.42,1.0,Fernando De Noronha,America/Noronha,Fernando De Noronha
+SBSR,-20.82,-49.41,544.0,São José do Rio Preto Airport,America/Sao_Paulo,São José do Rio Preto Airport
+SBAA,-8.25,-49.28,117.0,Conceicao Do Araguaia,America/Fortaleza,Conceicao Do Araguaia
+SBCZ,-7.59991,-72.76949,188.0,Cruzeiro Do Sul,America/Eirunepe,Cruzeiro Do Sul
+SBIZ,-5.53,-47.5,80.0,Imperatriz,America/Fortaleza,Imperatriz
+SBNM,-28.28,-54.17,322.0,Santo Ângelo Airport,America/Sao_Paulo,Santo Ângelo Airport
+SBUR,-19.78,-47.97,713.0,Uberaba,America/Sao_Paulo,Uberaba
+SBLO,-23.33,-51.13,569.0,Londrina Aeroporto,America/Sao_Paulo,Londrina Aeroporto
+82595,-5.17,-35.48,1.0,CALCANHAR,America/Fortaleza,CALCANHAR
+SBBW,-15.87,-52.38,350.0,Barra Do Garcas,America/Cuiaba,Barra Do Garcas
+SBPS,-16.43,-39.07,1.0,Porto Seguro,America/Fortaleza,Porto Seguro
+SBPG,-25.52,-48.52,1.0,Paranagua,America/Sao_Paulo,Paranagua
+SBLB,-7.25,-64.78,76.0,LABREA,America/Manaus,LABREA
+SBEK,-6.27,-57.73,98.0,Jacareacanga,America/Santarem,Jacareacanga
+SBIH,-4.25,-56.0,38.0,Itaituba,America/Fortaleza,Itaituba
+SBCH,-27.13422000000001,-52.65655,622.0,CHAPECO,America/Sao_Paulo,CHAPECO
+SBFS,-22.03,-41.07,3.0,São Tomé Heliport,America/Sao_Paulo,São Tomé Heliport
+SBTA,-23.0401,-45.51600000000001,573.0,TAUBATE,America/Sao_Paulo,TAUBATE
+98425,14.58,120.98,1.0,MANILA,Asia/Manila,MANILA
+RPLL,14.52,121.0,12.0,Ninoy Aquino Inter-National Airport,Asia/Manila,Ninoy Aquino Inter-National Airport
+48564,7.88,98.4,9.0,PHUKET,Asia/Bangkok,PHUKET
+48565,8.13,98.3,4.0,PHUKET AIRPORT,Asia/Bangkok,PHUKET AIRPORT
+VTSP,8.12,98.32,71.0,Phuket Airport,Asia/Bangkok,Phuket Airport
+VVTS,10.82,106.67,7.0,Ho Chi Minh,Asia/Ho_Chi_Minh,Ho Chi Minh
+VVNB,21.02,105.8,16.0,Ha Noi,Asia/Ho_Chi_Minh,Ha Noi
+48453,13.67,100.6,3.0,BANGNA AGROMET,Asia/Bangkok,Bangkok
+48454,13.7,100.57,2.0,BANGKOK PORT,Asia/Bangkok,BANGKOK PORT
+48455,13.73,100.57,2.0,BANGKOK,Asia/Bangkok,BANGKOK
+48456,13.92,100.6,2.0,DON MUANG,Asia/Bangkok,DON MUANG
+VTBD,13.92,100.6,2.0,Don Muang,Asia/Bangkok,Don Muang
+48460,13.17,100.8,41.0,KO SICHANG,Asia/Bangkok,KO SICHANG
+48461,12.92,100.87,14.0,PHATTHAYA,Asia/Bangkok,PHATTHAYA
+48463,13.08,100.88,82.0,LAEM CHABANG,Asia/Bangkok,LAEM CHABANG
+48477,12.68,100.98,14.0,SATTAHIP,Asia/Bangkok,SATTAHIP
+WMKJ,1.63,103.67,23.0,Johore Bharu / Senai,Asia/Kuala_Lumpur,Johore Bharu / Senai
+WMSA,3.12,101.53,86.0,Subang/Sultan Abdul Aziz Shah Airport,Asia/Kuala_Lumpur,Subang/Sultan Abdul Aziz Shah Airport
+48429,13.68,100.77,1.0,SUVARNABHUMI INTERNATIONAL AIRPORT,Asia/Bangkok,SUVARNABHUMI INTERNATIONAL AIRPORT
+RPMD,7.12,125.65,2.0,Davao Airport,Asia/Manila,Davao Airport
+98646,10.3,123.97,5.0,MACTAN,Asia/Manila,MACTAN
+RPVM,10.31667,123.98333,21.0,Masbate,Asia/Manila,Masbate
+VDPP,11.55,104.85,18.0,Phnom-Penh / Pochentong,Asia/Phnom_Penh,Phnom-Penh / Pochentong
+48327,18.78,98.97,295.0,CHIANG MAI,Asia/Bangkok,CHIANG MAI
+48329,18.57,99.03,286.0,LAMPHUN,Asia/Bangkok,LAMPHUN
+VTCC,18.78,98.98,293.0,Chiang Mai,Asia/Bangkok,Chiang Mai
+WBGG,1.48,110.33,65.0,Kuching,Asia/Kuching,Kuching
+98644,9.6,123.85,12.0,TAGBILARAN,Asia/Manila,TAGBILARAN
+48941,18.47,102.4,180.0,PHONHONG,Asia/Vientiane,PHONHONG
+48432,14.88,103.5,159.0,SURIN,Asia/Bangkok,SURIN
+48420,13.52,100.75,3.0,SAMUTPRAKAN AGROMET,Asia/Bangkok,SAMUTPRAKAN AGROMET
+48409,15.03,104.25,127.0,SISAKET AGROMET,Asia/Bangkok,SISAKET AGROMET
+48427,14.3,99.87,7.0,U THONG AGROMET,Asia/Bangkok,U THONG AGROMET
+48355,17.12,104.05,192.0,SAKON NAKHON AGROMET,Asia/Bangkok,SAKON NAKHON AGROMET
+WMAU,2.38,103.87,3.0,Mersing Airport,Asia/Kuala_Lumpur,Mersing Airport
+VTSS,6.92,100.43,71.0,Hat Yai,Asia/Bangkok,Hat Yai
+VVCI,20.82,106.72,2.0,Cat Bi International Airport,Asia/Ho_Chi_Minh,Cat Bi International Airport
+48310,19.13,99.9,385.0,PHAYAO,Asia/Bangkok,PHAYAO
+WMKB,5.47,100.39,3.0,Butterworth Airport,Asia/Kuala_Lumpur,Butterworth Airport
+VTPM,16.67,98.55,208.0,Mae Sot,Asia/Bangkok,Mae Sot
+48935,19.47,103.13,1057.0,PLAINE DES JARRES (XIENGKHOUANG),Asia/Vientiane,PLAINE DES JARRES (XIENGKHOUANG)
+98553,11.65,125.43,47.0,BORONGAN,Asia/Manila,BORONGAN
+48566,7.53,99.05,77.0,KO LANTA,Asia/Bangkok,KO LANTA
+48430,14.05,101.37,26.0,PRACHIN BURI,Asia/Bangkok,PRACHIN BURI
+48940,17.95,102.57,167.0,VIENTIANE,Asia/Vientiane,VIENTIANE
+48302,19.92,99.03,1543.0,DOI ANG KHANG,Asia/Bangkok,DOI ANG KHANG
+48303,19.97,99.88,358.0,CHIANG RAI,Asia/Bangkok,CHIANG RAI
+48383,16.53,104.72,154.0,MUKDAHAN,Asia/Bangkok,MUKDAHAN
+48330,18.17,100.17,165.0,PHRAE,Asia/Bangkok,PHRAE
+VTUL,17.45,101.73,251.0,Loei,Asia/Bangkok,Loei
+WBKT,6.92,116.83,1.0,Kudat,Asia/Kuching,Kudat
+48315,19.12,100.8,219.0,THA WANG PHA,Asia/Bangkok,THA WANG PHA
+48458,13.5,101.45,70.0,CHACHOENGSAO AGROMET,Asia/Bangkok,CHACHOENGSAO AGROMET
+48561,8.68,98.25,19.0,TAKUA PA,Asia/Bangkok,TAKUA PA
+48356,17.15,104.13,169.0,SAKON NAKHON,Asia/Bangkok,SAKON NAKHON
+48387,16.75,98.93,863.0,DOI MU SOE AGROMET,Asia/Bangkok,DOI MU SOE AGROMET
+48567,7.52,99.62,18.0,TRANG,Asia/Bangkok,TRANG
+48555,9.1,99.63,37.0,SURAT THANI AGROMET,Asia/Bangkok,SURAT THANI AGROMET
+RPMZ,6.9,122.07,5.0,Zamboanga,Asia/Manila,Zamboanga
+48415,14.52,100.72,8.0,AYUTTHAYA AGROMET,Asia/Bangkok,AYUTTHAYA AGROMET
+48425,14.47,100.13,6.0,SUPHAN BURI,Asia/Bangkok,SUPHAN BURI
+48439,13.98,101.7,11.0,KABINBURI,Asia/Bangkok,KABINBURI
+48437,15.23,103.25,197.0,BURERAM,Asia/Bangkok,BURERAM
+48405,16.05,103.68,141.0,ROI ET,Asia/Bangkok,ROI ET
+48568,7.2,100.6,15.0,SONGKHLA,Asia/Bangkok,SONGKHLA
+WMKC,6.17,102.28,1.0,Kota Bharu,Asia/Kuala_Lumpur,Kota Bharu
+48459,13.37,100.98,2.0,CHON BURI,Asia/Bangkok,CHON BURI
+WMKN,5.38,103.1,6.0,Sultan Mahmud Airport,Asia/Kuala_Lumpur,Sultan Mahmud Airport
+VTPP,16.82,100.27,39.0,PHITSANULOK,Asia/Bangkok,PHITSANULOK
+48560,7.58,100.17,2.0,PHATTHALUNG AGROMET,Asia/Bangkok,PHATTHALUNG AGROMET
+98546,12.5,124.63,14.0,CATARMAN,Asia/Manila,CATARMAN
+48407,15.25,104.87,130.0,UBON RATCHATHANI,Asia/Bangkok,UBON RATCHATHANI
+48550,9.47,100.05,4.0,KO SAMUI,Asia/Bangkok,KO SAMUI
+48479,12.73,101.13,45.0,HUAI PONG AGROMET,Asia/Bangkok,HUAI PONG AGROMET
+48583,6.42,101.82,1.0,NARATHIWAT,Asia/Bangkok,NARATHIWAT
+WBKS,5.9,118.07,1.0,Sandakan,Asia/Kuching,Sandakan
+98440,14.13,122.98,3.0,DAET,Asia/Manila,DAET
+VTUK,16.46663,102.78366,162.0,Khon Kaen,Asia/Bangkok,Khon Kaen
+VTSE,10.71,99.36,5.0,Chumphon Airport,Asia/Bangkok,Chumphon Airport
+48324,17.63,99.25,180.0,THOEN,Asia/Bangkok,THOEN
+48374,16.77,101.25,149.0,LOMSAK,Asia/Bangkok,LOMSAK
+48419,14.1,100.62,6.0,PATHUMTHANI AGROMET,Asia/Bangkok,PATHUMTHANI AGROMET
+48438,13.4078,100.0322,2.0,SAMUTSONGKRAM,Asia/Bangkok,SAMUTSONGKRAM
+48426,14.8,100.62,6.0,LOP BURI,Asia/Bangkok,LOP BURI
+VTCT,19.95,99.88333,382.0,Chiang Rai,Asia/Bangkok,Chiang Rai
+RPLC,15.18,120.55,149.0,Clarkfield Pampanga International Airport,Asia/Manila,Clarkfield Pampanga International Airport
+48450,14.02,99.53,17.0,KANCHANA BURI,Asia/Bangkok,KANCHANA BURI
+98618,9.75,118.73,1.0,PUERTO PRINCESA,Asia/Manila,PUERTO PRINCESA
+48372,17.1,99.8,55.0,SUKHOTHAI,Asia/Bangkok,SUKHOTHAI
+48402,15.15,100.18,15.0,CHAI NAT AGROMET,Asia/Bangkok,CHAI NAT AGROMET
+48464,13.48,99.78,5.0,RATCHA BURI,Asia/Bangkok,RATCHA BURI
+WBKL,5.3,115.25,1.0,Labuan,Asia/Kuching,Labuan
+48357,17.42,104.78,129.0,NAKHON PHANOM,Asia/Bangkok,NAKHON PHANOM
+98548,11.78,124.88,84.0,CATBALOGAN,Asia/Manila,CATBALOGAN
+48571,7.0,100.5,10.0,KHO HONG AGROMET,Asia/Bangkok,KHO HONG AGROMET
+48532,9.98,98.62,7.0,RANONG,Asia/Bangkok,RANONG
+VLVT,17.95,102.57,167.0,Vientiane,Asia/Vientiane,Vientiane
+VTSC,6.51667,101.75,1.0,NARATHIWAT,Asia/Bangkok,NARATHIWAT
+VLLN,20.97,101.4,600.0,Luang Namtha Airport,Asia/Vientiane,Luang Namtha Airport
+48436,14.58,102.8,194.0,NANGRONG,Asia/Bangkok,NANGRONG
+03770,51.5047,-0.1311,5.0,"LONDON, ST JAMES PARK",Europe/London,"LONDON, ST JAMES PARK"
+EGLC,51.51,0.06,33.0,London City Airport,Europe/London,London City Airport
+EGLL,51.48,-0.45,31.0,London / Heathrow Airport,Europe/London,London / Heathrow Airport
+EGWU,51.55,-0.42,36.0,Northolt,Europe/London,Northolt
+07690,43.65,7.2,28.0,NICE,Europe/Paris,NICE
+LFMN,43.65,7.2,4.0,Nice,Europe/Paris,Nice
+EYVI,54.63333000000001,25.28333,148.0,Vilnius,Europe/Vilnius,Vilnius
+02469,59.18,17.91,62.0,TULLINGE,Europe/Stockholm,TULLINGE
+ESSB,59.35,17.95,18.0,Stockholm / Bromma,Europe/Stockholm,Stockholm / Bromma
+LTAI,36.90028,30.80112,51.0,Antalya,Europe/Istanbul,Antalya
+26038,59.38,24.58,48.0,TALLINN,Europe/Tallinn,TALLINN
+EETN,59.4,24.82,48.0,Tallinn,Europe/Tallinn,Tallinn
+LTBA,40.97,28.82,28.0,Istanbul / Ataturk,Europe/Istanbul,Istanbul / Ataturk
+EPWA,52.17,20.97,88.0,Warszawa-Okecie,Europe/Warsaw,Warszawa-Okecie
+08535,38.72,-9.15,46.0,LISBOA/GEOF,Europe/Lisbon,LISBOA/GEOF
+08579,38.77,-9.13,90.0,LISBOA/GAGO COUTINHO,Europe/Lisbon,LISBOA/GAGO COUTINHO
+LPPT,38.77,-9.13,90.0,Lisboa / Portela,Europe/Lisbon,Lisboa / Portela
+LPMT,38.7,-9.04,1.0,Montijo Mil.,Europe/Lisbon,Montijo
+LPCS,38.72,-9.36,99.0,Cascais Airport,Europe/Lisbon,Cascais Airport
+08285,39.48,-0.38,10.0,VALENCIA,Europe/Madrid,VALENCIA
+LEVC,39.5,-0.47,38.0,Valencia / Aeropuerto,Europe/Madrid,Valencia / Aeropuerto
+LEBT,39.58,-0.45,50.0,Valencia/Bétera,Europe/Madrid,Valencia/Bétera
+08391,37.42,-5.9,22.0,SEVILLA/SAN PABLO,Europe/Madrid,SEVILLA/SAN PABLO
+LEZL,37.42,-5.9,22.0,Sevilla / San Pablo,Europe/Madrid,Sevilla / San Pablo
+08301,39.55,2.62,1.0,PALMA DE MALLORCA,Europe/Madrid,PALMA DE MALLORCA
+08303,39.74,2.71,1030.0,SIERRA DE ALFABIA,Europe/Madrid,SIERRA DE ALFABIA
+LEPA,39.55,2.73,8.0,Palma De Mallorca / Son San Juan,Europe/Madrid,Palma De Mallorca / Son San Juan
+EKCH,55.62,12.65,2.0,Koebenhavn / Kastrup,Europe/Copenhagen,Koebenhavn / Kastrup
+03166,55.93,-3.35,27.0,EDINBURGH GOGARBANK,Europe/London,Edinburgh Airport
+EGPH,55.95,-3.35,3.0,Edinburgh Airport,Europe/London,Edinburgh Airport
+06660,47.38,8.57,611.0,ZUERICH-METEOSCHWEIZ,Europe/Zurich,Zurich Airport
+06664,47.43,8.52,441.0,RECKENHOLZ,Europe/Zurich,RECKENHOLZ
+06670,47.48,8.53,424.0,ZUERICH-KLOTEN,Europe/Zurich,ZUERICH-KLOTEN
+06673,47.22,8.68,429.0,WAEDENSWIL,Europe/Zurich,WAEDENSWIL
+LSZH,47.48,8.53,424.0,Zurich-Kloten,Europe/Zurich,Zurich Airport
+LSMD,47.4,8.65,448.0,Dubendorf Airport,Europe/Zurich,Dubendorf Airport
+08545,41.23,-8.68,64.0,PORTO/PEDRAS RUBRAS,Europe/Lisbon,PORTO/PEDRAS RUBRAS
+LPPR,41.23,-8.68,64.0,Porto / Pedras Rubras,Europe/Lisbon,Porto / Pedras Rubras
+06240,52.3,4.77,-4.0,AMSTERDAM AP SCHIPHOL,Europe/Amsterdam,AMSTERDAM AP SCHIPHOL
+EHAM,52.3,4.77,-4.0,Amsterdam Airport Schiphol,Europe/Amsterdam,Amsterdam Airport Schiphol
+11034,48.2,16.37,171.0,WIEN/CITY,Europe/Vienna,WIEN/CITY
+11035,48.25,16.37,149.0,WIEN/HOHE WARTE,Europe/Vienna,WIEN/HOHE WARTE
+11036,48.12,16.57,181.0,WIEN/SCHWECHAT-FLUGHAFEN,Europe/Vienna,WIEN/SCHWECHAT-FLUGHAFEN
+11037,48.2,16.57,144.0,GROSSENZERSDORF,Europe/Vienna,GROSSENZERSDORF
+11040,48.13,16.42,174.0,WIEN/UNTERLAA,Europe/Vienna,WIEN/UNTERLAA
+11080,48.2,16.23,231.0,WIEN/MARIABRUNN,Europe/Vienna,WIEN/MARIABRUNN
+11090,48.2575,16.4333,161.0,WIEN-DONAUFELD,Europe/Vienna,Vienna
+LOWW,48.12,16.57,181.0,Wien / Schwechat-Flughafen,Europe/Vienna,Wien / Schwechat-Flughafen
+EBBR,50.9,4.53,50.0,Bruxelles National,Europe/Brussels,Bruxelles National
+EDDF,50.05,8.6,108.0,Frankfurt / M-Flughafen,Europe/Berlin,Frankfurt / M-Flughafen
+10381,52.47,13.3,48.0,BERLIN-DAHLEM,Europe/Berlin,BERLIN-DAHLEM
+EDDB,52.38,13.52,45.0,Berlin-Schoenefeld,Europe/Berlin,Berlin-Schoenefeld
+EDDT,52.57,13.32,37.0,Berlin-Tegel,Europe/Berlin,Berlin-Tegel
+EIDW,53.43,-6.25,22.0,Dublin Airport,Europe/Dublin,Dublin Airport
+EIME,53.3,-6.43,95.0,Casement Aerodrome,Europe/Dublin,Casement Aerodrome
+07149,48.72,2.38,87.0,PARIS-ORLY,Europe/Paris,PARIS-ORLY
+07150,48.97,2.43,52.0,LE BOURGET,Europe/Paris,LE BOURGET
+07156,48.82,2.33,73.0,PARIS-MONTSOURIS,Europe/Paris,PARIS-MONTSOURIS
+LFPB,48.97,2.45,59.0,Paris / Le Bourget,Europe/Paris,Paris / Le Bourget
+LFPO,48.73,2.4,64.0,Paris-Orly,Europe/Paris,Paris-Orly
+LFPV,48.77,2.2,172.0,Villacoublay,Europe/Paris,Villacoublay
+LHBP,47.43,19.27,122.0,Budapest / Ferihegy,Europe/Budapest,Budapest / Ferihegy
+11518,50.1,14.25,363.0,PRAHA/RUZYNE,Europe/Prague,PRAHA/RUZYNE
+11520,50.02,14.45,273.0,PRAHA-LIBUS,Europe/Prague,PRAHA-LIBUS
+11567,50.12,14.53,273.0,PRAHA-KBELY,Europe/Prague,PRAHA-KBELY
+LKPR,50.1,14.25,363.0,Praha / Ruzyne,Europe/Prague,Praha / Ruzyne
+LKKB,50.12,14.54,286.0,Kbely Air Base,Europe/Prague,Kbely Air Base
+LKVO,50.22,14.4,280.0,Vodochody Airport,Europe/Prague,Vodochody Airport
+EPKK,50.08,19.8,249.0,Krakow,Europe/Warsaw,Krakow
+08220,40.45,-3.72,680.0,MADRID/C. UNIVERSITARIA,Europe/Madrid,MADRID/C. UNIVERSITARIA
+08221,40.45,-3.55,563.0,MADRID/BARAJAS RS,Europe/Madrid,MADRID/BARAJAS RS
+08222,40.42,-3.68,667.0,"MADRID, RETIRO",Europe/Madrid,"MADRID, RETIRO"
+LEMD,40.45,-3.55,563.0,Madrid / Barajas,Europe/Madrid,Madrid / Barajas
+LEVS,40.38,-3.78,660.0,Madrid / Cuatro Vientos,Europe/Madrid,Madrid / Cuatro Vientos
+08180,41.39,2.2,25.0,"BARCELONA,CMT",Europe/Madrid,"BARCELONA,CMT"
+08181,41.29278,2.07,4.0,BARCELONA/AEROPUERTO,Europe/Madrid,BARCELONA/AEROPUERTO
+LEBL,41.28,2.07,4.0,Barcelona / Aeropuerto,Europe/Madrid,Barcelona / Aeropuerto
+LELL,41.52,2.1,142.0,Sabadell,Europe/Madrid,Sabadell
+01486,59.86,10.43,140.0,ASKER,Europe/Oslo,ASKER
+01489,60.05,10.69,360.0,BJORNHOLT,Europe/Oslo,BJORNHOLT
+01490,59.98,10.67,514.0,TRYVASSHOGDA,Europe/Oslo,Tryvann / Holmenkollen
+01492,59.94,10.72,120.0,OSLO-BLINDERN,Europe/Oslo,OSLO-BLINDERN
+EDDH,53.63,10.0,15.0,Hamburg-Fuhlsbuettel,Europe/Berlin,Hamburg-Fuhlsbuettel
+EDHI,53.53,9.83,9.0,Hamburg-Finkenwerder,Europe/Berlin,Hamburg-Finkenwerder
+06674,47.18,8.47,413.0,CHAM,Europe/Zurich,CHAM
+02974,60.33,24.96,58.0,HELSINKI-VANTAA,Europe/Helsinki,HELSINKI-VANTAA
+02978,60.18,24.94,23.0,"HELSINKI, KAISANIEMI",Europe/Helsinki,"HELSINKI, KAISANIEMI"
+02985,60.18,24.79,6.0,Espoo Tapiola,Europe/Helsinki,Espoo Tapiola
+02998,60.2,24.96,11.0,Helsinki Kumpula,Europe/Helsinki,Helsinki Kumpula
+EFHK,60.32,24.97,54.0,Helsinki-Vantaa,Europe/Helsinki,Helsinki-Vantaa
+EDDK,50.87,7.17,107.0,Koeln / Bonn,Europe/Berlin,Koeln / Bonn
+EGCC,53.35,-2.28,59.0,Manchester Airport,Europe/London,Manchester Airport
+EDDS,48.68,9.22,362.0,Stuttgart-Echterdingen,Europe/Berlin,Stuttgart-Echterdingen
+EDDL,51.3,6.77,35.0,Duesseldorf,Europe/Berlin,Duesseldorf
+EDLN,51.23,6.5,38.0,Monchengladbach,Europe/Berlin,Monchengladbach
+EDDV,52.47,9.68,53.0,Hannover,Europe/Berlin,Hannover
+03535,52.48,-1.68,88.0,COLESHILL,Europe/London,COLESHILL
+EGBB,52.45,-1.73,87.0,Birmingham / Airport,Europe/London,Birmingham / Airport
+LTAD,39.95,32.68,797.0,Ankara / Etimesgut,Europe/Istanbul,Ankara / Etimesgut
+LTAB,39.93,32.75,836.0,Ankara / Güvercinlik,Europe/Istanbul,Ankara / Güvercinlik
+EPPO,52.42,16.83,74.0,Poznan,Europe/Warsaw,Poznan
+07480,45.72,4.93,203.0,LYON-BRON,Europe/Paris,LYON-BRON
+07481,45.75,5.08,230.0,LYON-ST EXUPERY,Europe/Paris,LYON-ST EXUPERY
+LFLL,45.73,5.08,237.0,Lyon / Satolas,Europe/Paris,Lyon / Satolas
+LFLY,45.72,4.95,206.0,Lyon / Bron,Europe/Paris,Lyon / Bron
+EDDN,49.5,11.05,307.0,Nuernberg,Europe/Berlin,Nuernberg
+EPWR,51.1,16.88,111.0,Wroclaw Ii,Europe/Warsaw,Wroclaw
+EDDP,51.42,12.23,136.0,Leipzig-Schkeuditz,Europe/Berlin,Leipzig/Halle Airport
+EGPF,55.87,-4.43,55.0,Glasgow Airport,Europe/London,Glasgow Airport
+02513,57.72,11.99,34.0,GOTEBORG,Europe/Stockholm,GOTEBORG
+ESGG,57.67,12.3,153.0,Goteborg / Landvetter,Europe/Stockholm,Goteborg / Landvetter
+15420,44.5,26.13,68.0,BUCURESTI BANEASA,Europe/Bucharest,BUCURESTI BANEASA
+15421,44.48,26.18,67.0,BUCURESTI AFUMATI,Europe/Bucharest,AFUMATI
+15422,44.42,26.1,65.0,BUCARESTI FILARET,Europe/Bucharest,BUCARESTI FILARET
+LRBS,44.5,26.13,68.0,Bucuresti / Imh,Europe/Bucharest,Bucuresti / Imh
+LROP,44.55,26.1,76.0,Bucuresti Otopeni,Europe/Bucharest,Bucuresti Otopeni
+06344,51.95,4.45,-5.0,ROTTERDAM AP ZESTIENHOVEN,Europe/Amsterdam,Rotterdam The Hague Airport
+EHRD,51.95,4.45,-5.0,Rotterdam Airport Zestienhoven,Europe/Amsterdam,Rotterdam Airport Zestienhoven
+11010,48.23,14.18,291.0,LINZ/HOERSCHING-FLUGHAFEN,Europe/Vienna,LINZ/HOERSCHING-FLUGHAFEN
+11060,48.3,14.28,266.0,LINZ/STADT,Europe/Vienna,LINZ/STADT
+LOWL,48.23,14.18,291.0,Linz / Hoersching-Flughafen,Europe/Vienna,Linz / Hoersching-Flughafen
+03316,53.5,-3.07,9.0,CROSBY,Europe/London,CROSBY
+EGGP,53.33,-2.85,1.0,Liverpool Airport,Europe/London,Liverpool Airport
+EGOW,53.58,-3.06,2.0,Woodvale,Europe/London,Woodvale
+EDLW,51.52,7.62,117.0,Dortmund / Wickede,Europe/Berlin,Dortmund / Wickede
+LDZA,45.73,16.07,116.0,Zagreb / Pleso,Europe/Zagreb,Zagreb / Pleso
+EGNM,53.87,-1.65,153.0,Leeds And Bradford,Europe/London,Leeds And Bradford
+EPLL,51.73,19.4,176.0,LOAZ/LUBLINEK,Europe/Warsaw,LOAZ/LUBLINEK
+LTBJ,38.27,27.15,133.0,Izmir / Adnan Menderes,Europe/Istanbul,Izmir / Adnan Menderes
+LTBL,38.5,27.02,20.0,Izmir / Cigli,Europe/Istanbul,Izmir / Cigli
+LTFA,38.52,26.98,19.0,Izmir  Kaklic,Europe/Istanbul,Izmir  Kaklic
+EGGD,51.38,-2.72,180.0,Bristol / Lulsgate,Europe/London,Bristol / Lulsgate
+EPGD,54.38,18.47,147.0,Gdansk-Rebiechowo,Europe/Warsaw,Gdansk-Rebiechowo
+EDDE,50.98,10.97,295.0,Erfurt-Bindersleben,Europe/Berlin,Erfurt-Bindersleben
+02635,55.57,13.07,14.0,MALMO,Europe/Stockholm,MALMO
+EBAW,51.2,4.47,7.0,Antwerpen / Deurne,Europe/Brussels,Antwerpen / Deurne
+07630,43.62,1.38,150.0,TOULOUSE BLAGNAC,Europe/Paris,TOULOUSE BLAGNAC
+LFBO,43.63,1.37,149.0,Toulouse / Blagnac,Europe/Paris,Toulouse / Blagnac
+EGSY,53.39,-1.39,69.0,"Yorkshire and Humberside, Sheffield City",Europe/London,Sheffield
+07222,47.15,-1.62,22.0,NANTES-BOUGUENAIS,Europe/Paris,Nantes Atlantique Airport
+LFRS,47.17,-1.6,27.0,Nantes,Europe/Paris,Nantes
+06330,51.98,4.1,14.0,HOEK VAN HOLLAND,Europe/Amsterdam,HOEK VAN HOLLAND
+03354,53.0,-1.25,87.0,NOTTINGHAM/WATNALL,Europe/London,NOTTINGHAM/WATNALL
+EGNX,52.83,-1.33,79.0,East Midlands,Europe/London,East Midlands
+EVRA,56.92,23.97,12.0,Riga International Airport,Europe/Riga,Riga International Airport
+08479,36.72,-4.42,20.0,"MÁLAGA,PUERTO",Europe/Madrid,"MÁLAGA,PUERTO"
+08481,36.72,-4.48,60.0,"MÁLAGA,CMT",Europe/Madrid,Málaga Airport
+08482,36.67,-4.48,18.0,MALAGA/AEROPUERTO,Europe/Madrid,MALAGA/AEROPUERTO
+LEMG,36.67,-4.48,18.0,Malaga / Aeropuerto,Europe/Madrid,Malaga / Aeropuerto
+ETOU,50.05,8.33,137.0,Wiesbaden,Europe/Berlin,Wiesbaden
+07510,44.83,-0.7,46.0,BORDEAUX MERIGNAC,Europe/Paris,BORDEAUX MERIGNAC
+LFBD,44.83,-0.7,46.0,Bordeaux / Merignac,Europe/Paris,Bordeaux / Merignac
+26850,53.93,27.63,219.0,MINSK,Europe/Minsk,MINSK
+EDDC,51.13,13.75,226.0,Dresden-Klotzsche,Europe/Berlin,Dresden-Klotzsche
+EDDW,53.05,8.8,5.0,Bremen,Europe/Berlin,Bremen
+LZIB,48.2,17.2,120.0,Bratislava Ivanka,Europe/Bratislava,Ivanka pri Dunaji
+EGFF,51.4,-3.35,2.0,Cardiff-Wales Airport,Europe/London,Cardiff-Wales Airport
+07015,50.58,3.1,51.0,LILLE-LESQUIN,Europe/Paris,Lille Lesquin Airport
+LFQQ,50.57,3.1,41.0,Lille,Europe/Paris,Lille
+EDFM,49.47,8.52,95.0,"Baden Wurttemberg, Neuostheim",Europe/Berlin,"Baden Wurttemberg, Neuostheim"
+11723,49.15,16.7,243.0,BRNO/TURANY,Europe/Prague,BRNO/TURANY
+LKTB,49.15,16.7,243.0,Brno / Turany,Europe/Prague,Brno / Turany
+08141,41.65,-4.77,705.0,VALLADOLID,Europe/Madrid,VALLADOLID
+LEVD,41.72,-4.85,836.0,Valladolid / Villanubla,Europe/Madrid,Valladolid / Villanubla
+06260,52.1,5.18,2.0,DE BILT,Europe/Amsterdam,DE BILT
+07190,48.55,7.63,149.0,STRASBOURG-ENTZHEIM,Europe/Paris,STRASBOURG-ENTZHEIM
+LFST,48.55,7.63,149.0,Strasbourg,Europe/Paris,Strasbourg
+03544,52.37,-1.33,82.0,CHURCH LAWFORD,Europe/London,Rugby
+08159,41.62083,-0.935,254.0,ZARAGOZA-VALDESPARTERA,Europe/Madrid,ZARAGOZA-VALDESPARTERA
+08160,41.67,-1.0,208.0,ZARAGOZA/AEROPUERTO,Europe/Madrid,ZARAGOZA/AEROPUERTO
+LEZG,41.67,-1.02,223.0,Zaragoza / Aeropuerto,Europe/Madrid,Zaragoza / Aeropuerto
+EDMA,48.43,10.93,460.0,Augsburg,Europe/Berlin,Augsburg
+LETO,40.48,-3.45,587.0,Madrid / Torrejon,Europe/Madrid,Madrid / Torrejon
+EGHI,50.9,-1.4,9.0,Southampton / Weather Centre,Europe/London,Southampton / Weather Centre
+11240,47.0,15.43,335.0,GRAZ-THALERHOF-FLUGHAFEN,Europe/Vienna,GRAZ-THALERHOF-FLUGHAFEN
+11241,47.2,15.47,1080.0,SCHOECKL,Europe/Vienna,SCHOECKL
+11290,47.08,15.45,370.0,GRAZ UNIVERSITAET,Europe/Vienna,GRAZ UNIVERSITAET
+LOWG,47.0,15.43,335.0,Graz-Thalerhof-Flughafen,Europe/Vienna,Graz-Thalerhof-Flughafen
+02763,61.47,23.75,86.0,TAMPERE HÄRMÄLÄ,Europe/Helsinki,TAMPERE HÄRMÄLÄ
+EFTP,61.42,23.58,124.0,Tampere / Pirkkala,Europe/Helsinki,Tampere / Pirkkala
+02986,60.2913,24.5679,90.0,Espoo Nuuksio,Europe/Helsinki,Espoo Nuuksio
+07130,48.07,-1.73,36.0,RENNES-SAINT JACQUES,Europe/Paris,RENNES-SAINT JACQUES
+LFRN,48.07,-1.73,36.0,Rennes,Europe/Paris,Rennes
+EGTC,52.07,-0.62,77.0,Cranfield,Europe/London,Cranfield
+EDDG,52.13,7.7,49.0,Muenster / Osnabrueck,Europe/Berlin,Muenster / Osnabrueck
+LJLJ,46.22,14.48,353.0,Ljubljana / Brnik,Europe/Ljubljana,Ljubljana / Brnik
+06370,51.45,5.42,20.0,EINDHOVEN AP,Europe/Amsterdam,Eindhoven Airport
+EHEH,51.45,5.42,20.0,Eindhoven,Europe/Amsterdam,Eindhoven
+06631,46.98,7.47,555.0,BERN-LIEBEFELD,Europe/Zurich,BERN-LIEBEFELD
+06636,46.98,7.28,549.0,MUEHLEBERG,Europe/Zurich,MUEHLEBERG
+LSZB,46.92,7.5,577.0,Bern / Belp,Europe/Zurich,Bern / Belp
+EGUB,51.62,-1.08,89.0,Benson,Europe/London,Benson
+EGAA,54.65,-6.22,77.0,Belfast / Aldergrove Airport,Europe/London,Belfast / Aldergrove Airport
+EGAC,54.6,-5.88,25.0,Belfast / Harbour,Europe/London,Belfast / Harbour
+ELLX,49.62,6.22,340.0,Luxembourg / Luxembourg,Europe/Luxembourg,Luxembourg / Luxembourg
+06708,46.57,6.87,786.0,ORON,Europe/Zurich,ORON
+06710,46.55,6.62,617.0,LAUSANNE,Europe/Zurich,LAUSANNE
+06711,46.52,6.67,599.0,PULLY,Europe/Zurich,PULLY
+03344,53.82,-1.87,194.0,BINGLEY NO.2,Europe/London,BINGLEY NO.2
+07643,43.58,3.97,1.0,MONTPELLIER,Europe/Paris,MONTPELLIER
+LFMT,43.58,3.97,1.0,Montpellier,Europe/Paris,Montpellier
+EBLG,50.65,5.45,188.0,Bierset,Europe/Brussels,Bierset
+03740,51.5,-1.98,85.0,LYNEHAM,Europe/London,LYNEHAM
+EGVA,51.68,-1.78,76.0,Fairford Royal Air Force Base,Europe/London,Fairford Royal Air Force Base
+08025,43.3,-2.9,36.0,BILBAO/SONDICA,Europe/Madrid,BILBAO/SONDICA
+08035,43.2,-3.1,208.0,"GÜEÑES,IBERDROLA",Europe/Madrid,"GÜEÑES,IBERDROLA"
+08059,43.38,-3.02,90.0,PUNTA GALEA GOLF,Europe/Madrid,PUNTA GALEA GOLF
+LEBB,43.3,-2.93,8.0,Bilbao / Sondica,Europe/Madrid,Bilbao / Sondica
+ETSI,48.72,11.53,362.0,Ingolstadt,Europe/Berlin,Ingolstadt
+ETSN,48.72,11.22,378.0,Neuburg / Donau,Europe/Berlin,Neuburg / Donau
+03238,55.02,-1.87,116.0,ALBEMARLE,Europe/London,ALBEMARLE
+EGNT,55.03,-1.7,85.0,Newcastle,Europe/London,Newcastle
+07157,49.02,2.53,115.0,PARIS-AEROPORT ROISSY,Europe/Paris,PARIS-AEROPORT ROISSY
+LFPG,49.02,2.53,115.0,Paris-Aeroport Charles De Gaulle,Europe/Paris,Paris-Aeroport Charles De Gaulle
+EPSC,53.4,14.62,1.0,Szczecin,Europe/Warsaw,Szczecin
+07487,45.22,5.85,224.0,GRENOBLE-LVD,Europe/Paris,GGrenoble-Le Versoud Airport
+06257,52.5,4.6,1.0,WIJK AAN ZEE,Europe/Amsterdam,WIJK AAN ZEE
+EDHK,54.38,10.17,31.0,Kiel / Holtenau Civilian,Europe/Berlin,Kiel / Holtenau Civilian
+KQDG,37.0,35.43,73.0,Adana,Europe/Istanbul,Adana
+EQYK,37.0,35.43,73.0,[unknown],Europe/Istanbul,[unknown]
+LTAF,36.98,35.3,11.0,Adana / Sakirpasa,Europe/Istanbul,Adana / Sakirpasa
+LTAG,37.0,35.42,55.0,Adana / Incirlik,Europe/Istanbul,Adana / Incirlik
+EPBY,53.1,17.98,72.0,Bydgoszcz Ignacy Jan Paderewski Airport,Europe/Warsaw,Bydgoszcz Ignacy Jan Paderewski Airport
+11150,47.8,13.0,423.0,SALZBURG-FLUGHAFEN,Europe/Vienna,SALZBURG-FLUGHAFEN
+11350,47.78,13.05,418.0,SALZBURG/FREISAAL,Europe/Vienna,SALZBURG/FREISAAL
+LOWS,47.8,13.0,423.0,Salzburg-Flughafen,Europe/Vienna,Salzburg-Flughafen
+EBCI,50.47,4.45,175.0,Charleroi / Gosselies,Europe/Brussels,Charleroi / Gosselies
+EPRZ,50.1,22.05,194.0,Rzeszow-Jasionka,Europe/Warsaw,Rzeszow-Jasionka
+LEGR,37.18,-3.78,583.0,Granada / Aeropuerto,Europe/Madrid,Granada / Aeropuerto
+LEGA,37.13,-3.64,682.0,Granada / Armilla,Europe/Madrid,Granada / Armilla
+EDVK,51.4,9.38,291.0,Kassel / Calden,Europe/Berlin,Kassel / Calden
+EDVE,52.3,10.45,77.0,Braunschweig,Europe/Berlin,Braunschweig
+60029,28.1,-15.41,55.0,"LAS PALMAS G.C.,SAN CRISTÓBAL",Atlantic/Canary,"LAS PALMAS G.C.,SAN CRISTÓBAL"
+60032,28.11306,-15.42139,15.0,LAS PALMAS DE GRAN CANARIA-PLAZA DE LA FERIA,Atlantic/Canary,Plaza de la Feria
+60030,27.93,-15.38,136.0,LAS PALMAS DE GRAN CANARIA/GANDO,Atlantic/Canary,LAS PALMAS DE GRAN CANARIA/GANDO
+GCLP,27.93,-15.38,136.0,Gran Canaria - Canary Islands,Atlantic/Canary,Gran Canaria - Canary Islands
+EGKB,51.32,0.03,153.0,Biggin Hill,Europe/London,Biggin Hill
+08430,38.0,-1.17,31.0,MURCIA,Europe/Madrid,MURCIA
+LERI,37.95,-1.23,44.0,Murcia / Alcantarilla,Europe/Madrid,Murcia / Alcantarilla
+EGNJ,53.58,-0.35,49.0,Humberside,Europe/London,Humberside
+EGXV,53.87,-0.43,2.0,Leconfield,Europe/London,Leconfield
+02458,59.9,17.6,12.0,UPPSALA,Europe/Stockholm,UPPSALA
+02462,59.87,17.63,13.0,UPPSALA UNIVERSITY,Europe/Stockholm,UPPSALA UNIVERSITY
+ESCM,59.88,17.6,7.0,Uppsala,Europe/Stockholm,Uppsala
+08359,38.37,-0.5,66.0,ALICANTE,Europe/Madrid,ALICANTE
+08360,38.28,-0.55,12.0,ALICANTE/EL ALTET,Europe/Madrid,ALICANTE/EL ALTET
+LEAL,38.28,-0.55,12.0,Alicante / El Altet,Europe/Madrid,Alicante / El Altet
+03330,53.13,-1.98,318.0,LEEK THORNCLIFFE,Europe/London,Thorncliffe
+01311,60.29,5.23,40.0,BERGEN/FLESLAND,Europe/Oslo,BERGEN/FLESLAND
+01317,60.38,5.33,7.0,BERGEN/FLORIDA,Europe/Oslo,BERGEN/FLORIDA
+ENBR,60.28,5.23,40.0,Bergen / Flesland,Europe/Oslo,Bergen / Flesland
+EGKA,50.83,-0.28,2.0,Shoreham Airport,Europe/London,Shoreham Airport
+EDDR,49.22,7.12,323.0,Saarbruecken / Ensheim,Europe/Berlin,Saarbruecken / Ensheim
+15120,46.77,23.57,333.0,CLUJ-NAPOCA,Europe/Bucharest,CLUJ-NAPOCA
+LRCL,46.78,23.57,362.0,Cluj-Napoca,Europe/Bucharest,Cluj-Napoca
+LTFJ,40.9,29.31,78.0,Istanbul / Sabiha Gokcen,Europe/Istanbul,Istanbul / Sabiha Gokcen
+EGSH,52.63,1.3,9.0,Norwich Weather Centre,Europe/London,Norwich Weather Centre
+07145,48.77,2.02,164.0,TRAPPES,Europe/Paris,TRAPPES
+07146,48.75,2.12,153.0,TOUSSUS LE NOBLE,Europe/Paris,TOUSSUS LE NOBLE
+LFPN,48.75056,2.11361,152.0,Toussus Le Noble,Europe/Paris,Toussus Le Noble
+65250,4.85,7.02,463.0,PORT HARCOURT,Africa/Lagos,PORT HARCOURT
+DNPO,4.85,7.02,463.0,Port Harcourt,Africa/Lagos,Port Harcourt
+68368,-26.15,28.23,1705.0,JOHANNESBURG INTNL. AIRPORT,Africa/Johannesburg,JOHANNESBURG INTNL. AIRPORT
+FAIR,-25.92,28.22,1460.0,Pretoria Irene,Africa/Johannesburg,Pretoria Irene
+FAVV,-26.57,27.96,1471.0,Vereeniging,Africa/Johannesburg,Vereeniging
+FASI,-26.25,28.4,1626.0,Springs,Africa/Johannesburg,Springs
+FAJB,-26.15,28.0,1626.0,G,Africa/Johannesburg,G
+FALA,-25.93,27.93,1326.0,Lanseria,Africa/Johannesburg,Lanseria
+FAOR,-26.11667000000001,28.21667,738.0,Olifants River Bridge Landing Strip Airport,Africa/Johannesburg,Olifants River Bridge Landing Strip Airport
+FAGM,-26.25,28.0,1771.0,Rand,Africa/Johannesburg,Rand
+68816,-33.97,18.6,49.0,CAPE TOWN INTNL. AIRPORT,Africa/Johannesburg,CAPE TOWN INTNL. AIRPORT
+FACT,-33.98,18.6,47.0,"Cape Town, Cape Town International Airport",Africa/Johannesburg,"Cape Town, Cape Town International Airport"
+DNMM,6.58,3.33,40.0,Lagos / Ikeja,Africa/Lagos,Lagos / Ikeja
+HKNW,-1.32,36.82,1739.0,Nairobi / Wilson,Africa/Nairobi,Nairobi / Wilson
+HKJK,-1.32,36.92,1621.0,Nairobi/Jomo Kenyatta Airport TWR/APP/NOF/Civil Airlines,Africa/Nairobi,Nairobi/Jomo Kenyatta Airport TWR/APP/NOF/Civil Airlines
+65472,5.6,-0.17,76.0,ACCRA,Africa/Accra,ACCRA
+DGAA,5.6,-0.17,76.0,Accra,Africa/Accra,Accra
+FALE,-29.61,31.12,72.0,King Shaka International Airport,Africa/Johannesburg,King Shaka International Airport
+FAWB,-25.65,28.22,1243.0,Wonderboom / Pretoria,Africa/Johannesburg,Wonderboom / Pretoria
+DNAA,9.01,7.26,342.0,Nnamdi Azikiwe International Airport,Africa/Lagos,Nnamdi Azikiwe International Airport
+HAAB,8.98,38.8,2234.0,Addis Ababa,Africa/Addis_Ababa,Addis Ababa
+GOOY,14.73,-17.5,60.0,Dakar / Yoff,Africa/Dakar,Dakar / Yoff
+FNLU,-8.85,13.23,5.0,Luanda,Africa/Luanda,Luanda
+63894,-6.87,39.2,34.0,DAR ES SALAAM INT,Africa/Dar_es_Salaam,DAR ES SALAAM INT
+HTDA,-6.87,39.2,34.0,Dar Es Salaam Airport,Africa/Dar_es_Salaam,Dar Es Salaam Airport
+HUEN,0.05,32.45,1133.0,Entebbe Airport,Africa/Kampala,Entebbe Airport
+DIAP,5.25,-3.93,84.0,Abidjan,Africa/Abidjan,Abidjan
+FAPE,-33.98,25.6,63.0,"Port Elizabeth, Port E Apt",Africa/Johannesburg,"Port Elizabeth, Port E Apt"
+FAEL,-33.03,27.83,138.0,"East London, East London Airport",Africa/Johannesburg,"East London, East London Airport"
+FABL,-29.1,26.3,1348.0,"Bloemfontein, Bloemfontein Airport",Africa/Johannesburg,"Bloemfontein, Bloemfontein Airport"
+FAPP,-23.85,29.46,1242.0,Polokwane International Airport,Africa/Johannesburg,Polokwane International Airport
+67575,-13.63,29.43,1362.0,MKUSHI,Africa/Lusaka,MKUSHI
+63260,2.03,45.35,1.0,MOGADISCIO,Africa/Mogadishu,MOGADISCIO
+63887,-7.67,35.75,1483.0,IRINGA,Africa/Dar_es_Salaam,IRINGA
+FMEP,-21.33,55.48,52.0,Saint-Pierre,Indian/Reunion,Saint-Pierre
+67297,-19.8,34.9,24.0,BEIRA,Africa/Maputo,BEIRA
+63870,-6.22,39.22,7.0,ZANZIBAR/KISAUNI,Africa/Dar_es_Salaam,ZANZIBAR/KISAUNI
+FALW,-32.97,18.17,47.0,Langebaanweg,Africa/Johannesburg,Langebaanweg
+68994,-46.88,37.87,1.0,MARION ISLAND,Africa/Johannesburg,MARION ISLAND
+FBSK,-24.55,25.91667,981.0,Seretse Khama International Airport,Africa/Gaborone,Seretse Khama International Airport
+61980,-20.9,55.53,151.0,SAINT-DENIS/GILLOT (REUNION),Indian/Reunion,SAINT-DENIS/GILLOT (REUNION)
+FMNA,-12.35,49.3,143.0,Diego-Suarez,Indian/Antananarivo,Diego-Suarez
+63695,0.08,37.65,1564.0,MERU,Africa/Nairobi,MERU
+DIBK,7.73,-5.07,315.0,Bouake,Africa/Abidjan,Bouake
+GOSP,16.65,-14.97,12.0,Podor,Africa/Dakar,Podor
+HTMP,-6.35,31.08,1073.0,Mpanda Airport,Africa/Dar_es_Salaam,Mpanda Airport
+DFOO,11.17,-4.32,456.0,Bobo-Dioulasso,Africa/Ouagadougou,Bobo-Dioulasso
+FQQL,-17.88,36.88,1.0,Quelimane,Africa/Maputo,Quelimane
+FKKR,9.33,13.38,239.0,Garoua,Africa/Douala,Garoua
+GVSV,16.83,-25.06,20.0,São Pedro Airport,Atlantic/Cape_Verde,São Pedro Airport
+FYKT,-26.53,18.12,1067.0,Keetmanshoop,Africa/Windhoek,Keetmanshoop
+HTMT,-10.27,40.18,6.0,Mtwara,Africa/Dar_es_Salaam,Mtwara
+GOGG,12.55,-16.27,35.0,Ziguinchor,Africa/Dakar,Ziguinchor
+FNCA,-5.55,12.18,1.0,Cabinda,Africa/Luanda,Cabinda
+GGOV,11.88,-15.65,50.0,Bissau Aeroport,Africa/Bissau,Bissau Aeroport
+FWCL,-15.68,34.97,794.0,Chileka,Africa/Blantyre,Chileka
+DNIL,8.48,4.58,309.0,Ilorin,Africa/Lagos,Ilorin
+FYWW,-22.57,17.1,1663.0,"Windhoek, Town MET",Africa/Windhoek,"Windhoek, Town MET"
+61701,13.2,-16.63,26.0,BANJUL/YUNDUM,Africa/Banjul,BANJUL/YUNDUM
+67197,-25.03,46.95,95.0,TAOLAGNARO,Indian/Antananarivo,TAOLAGNARO
+FOGM,-1.87,11.02,157.0,Mouila,Africa/Libreville,Mouila
+GVBA,16.14,-22.89,21.0,Rabil Airport,Atlantic/Cape_Verde,Rabil Airport
+65459,6.08,-0.25,239.0,KOFORIDUA,Africa/Accra,KOFORIDUA
+FKKD,4.0,9.73,1.0,Douala Obs.,Africa/Douala,Douala Obs.
+HKMO,-4.03,39.62,8.0,Mombasa,Africa/Nairobi,Mombasa
+65125,9.25,7.0,254.0,ABUJA,Africa/Lagos,ABUJA
+DNKA,10.6,7.45,635.0,Kaduna,Africa/Lagos,Kaduna
+FMSD,-25.03,46.95,95.0,Fort-Dauphin,Indian/Antananarivo,Fort-Dauphin
+FAMM,-25.78,25.53,1262.0,Mafikeng Intl. Ad,Africa/Johannesburg,Mafikeng Intl. Ad
+67027,-15.67,46.35,114.0,MAHAJANGA,Indian/Antananarivo,MAHAJANGA
+FAOB,-34.6,20.28,10.0,Overberg,Africa/Johannesburg,Overberg
+FWKI,-13.78,33.77,1217.0,Lilongwe International Airport,Africa/Blantyre,Lilongwe International Airport
+63471,9.6,41.85,1180.0,DIREDAWA,Africa/Addis_Ababa,DIREDAWA
+64387,-1.97,30.12,1433.0,KIGALI,Africa/Kigali,KIGALI
+HTMG,-6.83,37.65,542.0,Morogoro,Africa/Dar_es_Salaam,Morogoro
+65229,6.32,5.6,77.0,BENIN CITY,Africa/Lagos,BENIN CITY
+FEFT,4.25,15.8,612.0,Berberati,Africa/Bangui,Berberati
+FQBR,-19.8,34.9,24.0,Beira,Africa/Maputo,Beira
+HTSY,-3.5,33.0,1173.0,Shinyanga,Africa/Dar_es_Salaam,Shinyanga
+KQRH,11.55,43.15,19.0,CAMP LEMONIER,Africa/Djibouti,CAMP LEMONIER
+FNUG,-7.6,15.03,829.0,Uige Airport,Africa/Luanda,Uige Airport
+64380,-2.47,28.92,1590.0,KAMEMBE,Africa/Kigali,KAMEMBE
+66325,-12.38,16.95,1602.0,BIE (SILVA PORTO),Africa/Luanda,BIE (SILVA PORTO)
+FIMP,-20.43,57.67,150.0,Plaisance Mauritius,Indian/Mauritius,Plaisance Mauritius
+HTAR,-3.33,36.62,1464.0,Arusha,Africa/Dar_es_Salaam,Arusha
+63962,-10.68,35.58,1069.0,SONGEA,Africa/Dar_es_Salaam,SONGEA
+FZRF,-5.88,29.18,819.0,KALEMIE,Africa/Lubumbashi,KALEMIE
+FYOA,-17.88,15.95,1081.0,Ondangwa,Africa/Windhoek,Ondangwa
+FBSP,-22.06,27.82,902.0,Selebi Phikwe,Africa/Gaborone,Selebi Phikwe
+HKML,-3.23,40.1,3.0,Malindi,Africa/Nairobi,Malindi
+67260,-16.1,35.7667,678.0,MILANGE,Africa/Maputo,MILANGE
+DNMN,9.65,6.46,254.0,Minna Airport,Africa/Lagos,Minna Airport
+FQPB,-12.98,40.53,3.0,Pemba,Africa/Maputo,Pemba
+FMMI,-18.8,47.48,1381.0,Antananarivo / Ivato,Indian/Antananarivo,Antananarivo / Ivato
+FZAA,-4.38,15.43,309.0,Kinshasa / N'Djili,Africa/Kinshasa,Kinshasa / N'Djili
+FACV,-31.47,19.77,996.0,Calvinia,Africa/Johannesburg,Calvinia
+FBMN,-19.98,23.42,929.0,Maun,Africa/Gaborone,Maun
+FGBT,1.91,9.81,4.0,Bata Airport,Africa/Malabo,Bata Airport
+FNSO,-6.14,12.37,5.0,Soyo Airport,Africa/Luanda,Soyo Airport
+FBKE,-17.82,25.15,709.0,Kasane,Africa/Gaborone,Kasane
+UGTB,41.67,44.95,495.0,TBILISI,Asia/Tbilisi,TBILISI
+UTTT,41.27,69.27,426.0,Tashkent,Asia/Tashkent,Tashkent
+UAAA,43.35,77.0333,867.0,Almaty,Asia/Almaty,Almaty
+UACC,51.02222,71.46694000000002,360.0,Nur-Sultan,Asia/Almaty,Nur-Sultan
+ZMUB,47.84306,106.76664,1307.0,Ulan-Bator,Asia/Ulaanbaatar,Ulan-Bator
+UUMO,55.51,37.51,173.0,Ostafyevo International Airport,Europe/Moscow,Ostafyevo International Airport
+ULLI,59.8,30.26,5.0,St. Peterburg,Europe/Moscow,St. Peterburg
+UIBB,56.37,101.7,486.0,Bratsk / Irkutsk,Asia/Irkutsk,Bratsk / Irkutsk
+24684,63.33,141.73,777.0,AGAYAKAN,Asia/Ust-Nera,AGAYAKAN
+22951,60.9853,40.2575,226.0,KONOSHA,Europe/Moscow,KONOSHA
+37801,40.35,45.13,1954.0,GAVAR,Asia/Yerevan,GAVAR
+USPP,57.91,56.02,153.0,Perm'/Bolshoe Savino,Asia/Yekaterinburg,Perm'/Bolshoe Savino
+24966,60.38,134.45,170.0,UST'-MAJYA,Asia/Khandyga,UST'-MAJYA
+UHMM,59.91099000000001,150.72044,1.0,Magadan,Asia/Magadan,Magadan
+32594,51.48,156.48,28.0,OZERNAJA,Asia/Kamchatka,OZERNAJA
+22383,66.7394,47.7197,12.0,NIZHNYAYA PESHA,Europe/Moscow,NIZHNYAYA PESHA
+UTNU,41.58,60.65,84.0,Urgench,Asia/Samarkand,Urgench
+UTSA,40.12,65.17,337.0,Navoi Airport,Asia/Samarkand,Navoi Airport
+29481,56.85,95.22,188.0,DZERZHINSKOE,Asia/Krasnoyarsk,DZERZHINSKOE
+UAKK,49.67083,73.33444,531.0,Karaganda,Asia/Almaty,Karaganda
+UUBP,53.21419,34.17645,208.0,Brjansk,Europe/Moscow,Brjansk
+UUEE,55.9726,37.4146,176.0,Moscow / Sheremet'Ye,Europe/Moscow,Moscow / Sheremet'Ye
+37163,43.83,46.72,-5.0,KIZLJAR,Europe/Moscow,KIZLJAR
+25400,65.73,150.9,43.0,ZYRYANKA,Asia/Magadan,ZYRYANKA
+URMN,43.51,43.64,429.0,Nalchik,Europe/Moscow,Nalchik
+ULAA,64.5,40.73,6.0,Arhangel'Sk,Europe/Moscow,Arhangel'Sk
+UUYY,61.65,50.85,83.0,Syktyvkar,Europe/Moscow,Syktyvkar
+31004,58.62,125.37,679.0,ALDAN,Asia/Yakutsk,ALDAN
+35026,52.22,57.4,521.0,ZILAIR,Asia/Yekaterinburg,ZILAIR
+38846,38.3667,69.9833,1468.0,KHOVALING,Asia/Dushanbe,KHOVALING
+UAII,42.32,69.7,612.0,Shymkent,Asia/Almaty,Shymkent
+URSS,43.43,39.9,16.0,Adler,Europe/Moscow,Adler
+21824,71.58,128.92,7.0,TIKSI,Asia/Yakutsk,TIKSI
+UNKL,56.16667,92.48333,167.0,KRASNOYARSK,Asia/Krasnoyarsk,KRASNOYARSK
+UOOO,69.33,88.1,175.0,NORILSK/FIR,Asia/Krasnoyarsk,NORILSK/FIR
+UERR,62.53,114.03,343.0,Mirny,Asia/Yakutsk,Mirny
+UAAH,46.9,75.0,425.0,BALKHASH,Asia/Almaty,BALKHASH
+UUBW,55.55,38.15,115.0,VYAZMA,Europe/Moscow,VYAZMA
+USHH,61.02,69.03,41.0,Hanty-Mansijsk,Asia/Yekaterinburg,Hanty-Mansijsk
+ULMM,68.78,32.76,1.0,Murmansk,Europe/Moscow,Murmansk
+UADD,42.85361,71.30360999999998,604.0,DZHAMBUL,Asia/Almaty,DZHAMBUL
+UTNN,42.48,59.63,65.0,Nukus / Karakalpakstan,Asia/Samarkand,Nukus / Karakalpakstan
+UAOO,44.709,65.59100000000001,0.0,Kzyl-Orda,Asia/Qyzylorda,Kzyl-Orda
+38611,40.98,71.58,455.0,NAMANGAN,Asia/Tashkent,NAMANGAN
+UTDK,37.99,69.81,699.0,Kulob Airport,Asia/Dushanbe,Kulob Airport
+23242,67.68,72.88,12.0,NOVYJ PORT,Asia/Yekaterinburg,NOVYJ PORT
+27252,58.35,43.38,150.0,NIKOLO-POLOMA,Europe/Moscow,NIKOLO-POLOMA
+32408,56.22,162.72,27.0,UST'-KAMCHATSK,Asia/Kamchatka,UST'-KAMCHATSK
+UGSB,41.61,41.6,32.0,Batumi International Airport,Asia/Tbilisi,Batumi International Airport
+UAAT,45.12,78.43,591.0,[unknown],Asia/Almaty,[unknown]
+38403,41.75,62.47,102.0,BUZAUBAJ,Asia/Samarkand,BUZAUBAJ
+URMO,43.21,44.61,510.0,VLADIKAVKAZ,Europe/Moscow,VLADIKAVKAZ
+27066,59.53,45.47,143.0,NIKOL'SK,Europe/Moscow,NIKOL'SK
+38345,42.52,72.22,1242.0,TALAS,Asia/Bishkek,TALAS
+38954,37.5,71.5,2086.0,KHOROG,Asia/Dushanbe,KHOROG
+UTAA,37.98681,58.36097,216.0,Ashgabat,Asia/Ashgabat,Ashgabat
+25551,64.68,170.42,26.0,MARKOVO,Asia/Anadyr,MARKOVO
+36982,41.88,78.23,4200.0,TIAN-SHAN',Asia/Bishkek,TIAN-SHAN'
+UNBB,53.43,83.52,161.0,Barnaul,Asia/Barnaul,Barnaul
+38836,38.55,68.78,782.0,DUSHANBE,Asia/Dushanbe,DUSHANBE
+UHHH,48.52,135.17,64.0,Habarovsk,Asia/Vladivostok,Habarovsk
+34438,48.93,40.38,155.0,MILLEROVO,Europe/Moscow,MILLEROVO
+USCC,55.3,61.5,220.0,Chelyabinsk-Balandino,Asia/Yekaterinburg,Chelyabinsk-Balandino
+UMKK,54.89,20.59,27.0,Kaliningrad/Khrabrovo Airport,Europe/Kaliningrad,Kaliningrad/Khrabrovo Airport
+URMT,45.11667,42.08333,327.0,Stavropol / Shpakovskoye,Europe/Moscow,Stavropol / Shpakovskoye
+UATT,50.28,57.15,230.0,Aktjubinsk,Asia/Aqtobe,Aktjubinsk
+UASS,50.35,80.25,198.0,SEMIPALATINSK,Asia/Almaty,SEMIPALATINSK
+31137,56.28,131.13,850.0,TOKO,Asia/Yakutsk,TOKO
+37717,40.57,45.0,1875.0,SEVAN OZERO,Asia/Yerevan,SEVAN OZERO
+UACP,54.77,69.18,138.0,Petropavlosk South Airport,Asia/Almaty,Petropavlosk South Airport
+ULWC,59.27,38.02,115.0,Botovo Cherepovets Borisovo,Europe/Moscow,Botovo Cherepovets Borisovo
+38812,38.8,65.72,351.0,KARSHI,Asia/Samarkand,KARSHI
+UUDD,55.4,37.9,157.0,Moscow / Domodedovo,Europe/Moscow,Moscow / Domodedovo
+URML,42.8167,47.65,248.0,MAHACKALA,Europe/Moscow,MAHACKALA
+38774,38.43,57.42,166.0,BAKHERDEN,Asia/Ashgabat,BAKHERDEN
+38725,39.4333,69.6667,2234.0,MADRUSHKAT,Asia/Dushanbe,MADRUSHKAT
+UUOK,51.75,36.3,209.0,KURSK,Europe/Moscow,KURSK
+30714,52.1,102.7,755.0,DABADY,Asia/Irkutsk,DABADY
+UBEE,40.63,47.14,15.0,Yevlakh Airport,Asia/Baku,Yevlakh Airport
+USNN,60.93,76.48,47.0,Nizhnevartovsk,Asia/Yekaterinburg,Nizhnevartovsk
+URMM,44.23,43.07,326.0,Mineral'Nye Vody,Europe/Moscow,Mineral'Nye Vody
+UHPP,53.16789,158.45367,128.0,Petropavlovsk-Kamchatskij,Asia/Kamchatka,Petropavlovsk-Kamchatskij
+UASP,52.195,77.07389,119.0,PAVLODAR,Asia/Almaty,PAVLODAR
+UUBC,54.55,36.37,200.0,Grabtsevo Airport,Europe/Moscow,Grabtsevo Airport
+UNTT,56.38,85.21,182.0,TOMSK,Asia/Tomsk,TOMSK
+31062,59.7667,137.6667,380.0,YUGORENOK,Asia/Khandyga,YUGORENOK
+29059,59.4347,89.2861,102.0,ALEKSANDROVSKIJ SHLYUZ,Asia/Krasnoyarsk,ALEKSANDROVSKIJ SHLYUZ
+USRR,61.25,73.5,34.0,Surgut,Asia/Yekaterinburg,Surgut
+34123,51.7,39.22,149.0,VORONEZ,Europe/Moscow,VORONEZ
+27215,58.0333,37.1,166.0,KRASNYJ HOLM,Europe/Moscow,KRASNYJ HOLM
+36061,52.27,87.17,327.0,TUROCAK,Asia/Barnaul,TUROCAK
+UNAA,53.75,91.4,258.0,Abakan,Asia/Krasnoyarsk,Abakan
+24923,60.72,114.88,234.0,LENSK,Asia/Yakutsk,LENSK
+UTAT,41.76,59.83,83.0,Daşoguz Airport,Asia/Ashgabat,Daşoguz Airport
+34858,45.92,43.35,87.0,DIVNOE,Europe/Moscow,DIVNOE
+24807,61.3278,100.4764,330.0,MUTORAJ,Asia/Krasnoyarsk,MUTORAJ
+UATG,47.1167,51.8167,-23.0,GURYEV,Asia/Aqtobe,GURYEV
+UAUU,53.21,63.55,182.0,Kostanay,Asia/Qostanay,Kostanay
+UBBL,38.75,48.82,9.0,LANKARAN,Asia/Baku,LANKARAN
+27930,52.7,39.52,177.0,LIPECK,Europe/Moscow,LIPECK
+60230,31.62,-8.03,457.0,MARRAKECH,Africa/Casablanca,MARRAKECH
+GMMX,31.62,-8.03,457.0,Marrakech,Africa/Casablanca,Marrakech
+OERK,24.93,46.72,624.0,King Khaled International Airport,Asia/Riyadh,King Khaled International Airport
+LLBG,32.0,34.9,42.0,Ben-Gurion International Airport,Asia/Jerusalem,Ben-Gurion International Airport
+OOMS,23.58,58.28,22.0,"Seeb, International Airport",Asia/Muscat,"Seeb, International Airport"
+OTBD,25.25,51.57,4.0,Doha International Airport,Asia/Qatar,Doha International Airport
+OTBH,25.12,51.31,40.0,Al Udeid Air Base,Asia/Qatar,Al Udeid Air Base
+OTHH,25.27,51.61,7.0,Hamad International Airport,Asia/Qatar,Hamad International Airport
+OMDB,25.25,55.33,11.0,Dubai International Airport,Asia/Dubai,Dubai International Airport
+OMSJ,25.33,55.52,24.0,Sharjah International Airport,Asia/Dubai,Sharjah International Airport
+OMAA,24.43,54.65,26.0,Abu Dhabi International Airport,Asia/Dubai,Abu Dhabi International Airport
+OMAD,24.43,54.47,5.0,Abu Dhabi Bateen Airport,Asia/Dubai,Abu Dhabi Bateen Airport
+KQGX,24.25,54.55,23.0,Al Dhafra,Asia/Dubai,Al Dhafra
+HECA,30.13,31.4,46.0,Cairo Airport,Africa/Cairo,Cairo Airport
+OMDW,24.9,55.16,52.0,Al Maktoum International Airport,Asia/Dubai,Al Maktoum International Airport
+OIII,35.68,51.35,1162.0,Tehran-Mehrabad,Asia/Tehran,Tehran-Mehrabad
+OIIE,35.42,51.15,1007.0,Imam Khomeini International Airport,Asia/Tehran,Imam Khomeini International Airport
+OEJN,21.7,39.18,20.0,Jeddah King Abdul Aziz International Airport,Asia/Riyadh,Jeddah King Abdul Aziz International Airport
+60155,33.57,-7.67,49.0,CASABLANCA,Africa/Casablanca,CASABLANCA
+GMMC,33.57,-7.67,49.0,Casablanca,Africa/Casablanca,Casablanca
+GMMN,33.37,-7.58,186.0,Nouasseur,Africa/Casablanca,Nouasseur
+GMMB,33.66,-7.22,191.0,Ben Slimane Airport,Africa/Casablanca,Ben Slimane Airport
+DTTA,36.83,10.23,1.0,Tunis-Carthage,Africa/Tunis,Tunis-Carthage
+OEDR,26.27,50.15,9.0,Dhahran,Asia/Riyadh,Dhahran
+OEDF,26.47,49.78,17.0,Dammam-King Fahd International Airport,Asia/Riyadh,Dammam-King Fahd International Airport
+OIBS,25.91,54.54,17.0,Sirri Island / Sirri,Asia/Tehran,Sirri Island / Sirri
+OIBA,25.88,55.03,7.0,Abumusa Island / Abumusa,Asia/Tehran,Abumusa Island / Abumusa
+OJAI,31.67,35.97,704.0,Queen Alia Airport,Asia/Amman,Queen Alia Airport
+OJAM,31.98,35.98,792.0,Amman Airport,Asia/Amman,Amman Airport
+60135,34.05,-6.77,83.0,RABAT-SALE,Africa/Casablanca,RABAT-SALE
+GMME,34.05,-6.77,83.0,Rabat-Sale,Africa/Casablanca,Rabat-Sale
+40650,33.23,44.23,39.0,BAGHDAD,Asia/Baghdad,BAGHDAD
+KQTZ,33.25,44.22,34.0,BAGHDAD     ORBI,Asia/Baghdad,BAGHDAD     ORBI
+ORBI,33.26,44.23,35.0,Baghdad International Airport,Asia/Baghdad,Baghdad International Airport
+DAAG,36.72,3.25,30.0,Dar-El-Beida,Africa/Algiers,Dar-El-Beida
+OIFM,32.750840000000004,51.86127000000001,2056.0,Esfahan,Asia/Tehran,Esfahan
+OKBK,29.22,47.98,39.0,Kuwait Internationalairport,Asia/Kuwait,Kuwait Internationalairport
+OKAS,29.35,47.52,144.0,Ali Al Salem Air Base,Asia/Kuwait,Ali Al Salem Air Base
+OIMM,36.27,59.63,997.0,Mashhad,Asia/Tehran,Mashhad
+60387,36.92,3.95,8.0,DELLYS,Africa/Algiers,DELLYS
+OEBA,20.3,41.63,1665.0,Al Baha,Asia/Riyadh,Al Baha
+DAON,35.02,-1.47,204.0,Tlemcen Zenata,Africa/Algiers,Tlemcen Zenata
+DTTD,32.32,10.4,289.0,Remada,Africa/Tunis,Remada
+HEAX,31.2,29.95,3.0,Alexandria / Nouzha,Africa/Cairo,Alexandria / Nouzha
+DRZA,16.97,7.98,526.0,Agadez,Africa/Niamey,Agadez
+OAKB,34.56585,69.21233000000001,1766.0,Kabul Airport,Asia/Kabul,Kabul Airport
+GMTN,35.58,-5.33,1.0,Tetuan / Sania Ramel,Africa/Casablanca,Tetuan / Sania Ramel
+ORER,36.24,43.96,409.0,Erbil International Airport,Asia/Baghdad,Erbil International Airport
+OIBL,26.532,54.82485,26.0,Bandar Lengeh,Asia/Tehran,Bandar Lengeh
+OIKQ,26.76,55.9,21.0,Gheshm Island / Dayrestan,Asia/Tehran,Gheshm Island / Dayrestan
+OIBJ,27.82,52.35,662.0,Jam Airport,Asia/Tehran,Jam Airport
+GMFF,33.93,-4.98,582.0,Fes-Sais,Africa/Casablanca,Fes-Sais
+OITT,38.08,46.28,1385.0,Tabriz,Asia/Tehran,Tabriz
+HEIS,30.58,32.25,3.0,[unknown],Africa/Cairo,[unknown]
+GMMZ,30.93,-6.9,1131.0,Ouarzazate,Africa/Casablanca,Ouarzazate
+GMTT,35.73,-5.9,14.0,Tanger Aerodrome,Africa/Casablanca,Tanger Aerodrome
+DABS,35.48,8.13,999.0,Tebessa,Africa/Algiers,Tebessa
+OIMD,34.35,58.68,1104.0,Gonabad Airport,Asia/Tehran,Gonabad Airport
+OAHR,34.22,62.22,984.0,Herat,Asia/Kabul,Herat
+DAUE,30.57,2.87,422.0,El Golea,Africa/Algiers,El Golea
+DAAV,36.8,5.88,10.0,Jijel Achouat,Africa/Algiers,Jijel Achouat
+DABT,35.75,6.316669999999999,1033.0,Batna,Africa/Algiers,Batna
+OEAB,18.23,42.65,2124.0,Abha,Asia/Riyadh,Abha
+DTTN,36.48,8.8,143.0,Jendouba,Africa/Tunis,Jendouba
+OERF,29.62,43.48,443.0,Rafha,Asia/Riyadh,Rafha
+DAUG,32.38,3.82,429.0,Ghardaia,Africa/Algiers,Ghardaia
+60285,28.45,-11.15,111.0,TAN-TAN,Africa/Casablanca,TAN-TAN
+OIKK,30.25,56.97,1748.0,Kerman,Asia/Tehran,Kerman
+OIHH,34.87,48.55,1759.0,Hamadan,Asia/Tehran,Hamadan
+60195,32.68,-4.73,1470.0,MIDELT,Africa/Casablanca,MIDELT
+OEDM,24.45,44.12,922.0,Prince Salman Bin Abdulaziz Airport,Asia/Riyadh,Prince Salman Bin Abdulaziz Airport
+61080,13.47,7.08,358.0,MARADI,Africa/Niamey,MARADI
+DAAY,33.53585,-0.24235,825.0,Mecheria,Africa/Algiers,Mecheria
+KQTI,36.28,42.4,300.0,Tal Afar Airport,Asia/Baghdad,Tal Afar Airport
+DTTK,35.67,10.1,67.0,Kairouan,Africa/Tunis,Kairouan
+HESC,28.69,34.06,1331.0,St Catherine International Airport,Africa/Cairo,St Catherine International Airport
+OICI,33.59,46.41,1379.0,Ilam,Asia/Tehran,Ilam
+GMMD,32.37,-6.38,476.0,BENI-MELLAL,Africa/Casablanca,BENI-MELLAL
+OING,36.90938,54.40134000000001,238.0,Gorgan,Asia/Tehran,Gorgan
+HEBA,30.91767,29.69641,53.0,Alexandria Borg El Arab,Africa/Cairo,Alexandria Borg El Arab
+DTTX,34.72,10.68,26.0,Sfax El-Maou,Africa/Tunis,Sfax El-Maou
+60210,31.93,-4.4,1024.0,ERRACHIDIA,Africa/Casablanca,ERRACHIDIA
+DTMB,35.77,10.75,1.0,Habib Bourguiba,Africa/Tunis,Habib Bourguiba
+40400,26.2,36.48,24.0,AL-WEJH,Asia/Riyadh,AL-WEJH
+OIAA,30.37,48.25,12.0,Abadan,Asia/Tehran,Abadan
+HEPS,31.27,32.3,3.0,Port Said,Africa/Cairo,Port Said
+OENG,17.62,44.42,1191.0,Najran,Asia/Riyadh,Najran
+OIMS,36.22,57.67,1017.0,Sabzevar,Asia/Tehran,Sabzevar
+DAAD,35.33,4.2,433.0,Bou-Saada,Africa/Algiers,Bou-Saada
+40007,36.18,37.2,379.0,ALEPPO INT. AEROPORT,Asia/Damascus,ALEPPO INT. AEROPORT
+40025,35.4,35.93,12.0,BASEL ASSAD INT.  AIRPORT,Asia/Damascus,BASEL ASSAD INT.  AIRPORT
+HESG,26.34,31.74,83.0,Sohag International Airport,Africa/Cairo,Sohag International Airport
+DABC,36.28,6.62,698.0,Constantine,Africa/Algiers,Constantine
+60060,29.37,-10.18,61.0,SIDI IFNI,Africa/Casablanca,SIDI IFNI
+DAOB,35.34114,1.46315,1070.0,Tiaret,Africa/Algiers,Tiaret
+OMRK,25.62,55.93,22.0,Ras Al Khaimah International Airport,Asia/Dubai,Ras Al Khaimah International Airport
+40603,36.3667,42.4833,373.0,TEL-AFER,Asia/Baghdad,TEL-AFER
+DAUZ,28.05,9.63,545.0,In Amenas,Africa/Algiers,In Amenas
+DAUH,31.67,6.15,165.0,Hassi-Messaoud,Africa/Algiers,Hassi-Messaoud
+GABS,12.53,-7.95,371.0,Bamako / Senou,Africa/Bamako,Bamako / Senou
+VOBG,12.95,77.67,887.0,Bangalore / Hindustan,Asia/Kolkata,Bangalore / Hindustan
+VOBL,13.2,77.71,905.0,Bengaluru International Airport,Asia/Kolkata,Bengaluru International Airport
+VIDP,28.57,77.12,228.0,New Delhi / Palam,Asia/Kolkata,New Delhi / Palam
+48698,1.37,103.98,1.0,SINGAPORE/CHANGI AIRPORT,Asia/Singapore,SINGAPORE/CHANGI AIRPORT
+WSAP,1.37,103.92,1.0,Singapore / Paya Lebar,Asia/Singapore,Singapore / Paya Lebar
+WSSS,1.37,103.98,1.0,Singapore / Changi Airport,Asia/Singapore,Singapore / Changi Airport
+WSSL,1.42,103.87,11.0,Seletar Airport,Asia/Singapore,Seletar Airport
+VABB,19.12,72.85,15.0,Bombay / Santacruz,Asia/Kolkata,Bombay / Santacruz
+VAJJ,19.1,72.83,4.0,Juhu Aerodrome,Asia/Kolkata,Juhu Aerodrome
+VOHY,17.45,78.47,526.0,Hyderabad Airport,Asia/Kolkata,Hyderabad Airport
+VOHS,17.23,78.43,617.0,"Rajiv Gandhi International Airport, Shamshabad",Asia/Kolkata,"Rajiv Gandhi International Airport, Shamshabad"
+VOMM,13.0,80.18,15.0,Madras / Minambakkam,Asia/Kolkata,Madras / Minambakkam
+41923,23.77,90.38,3.0,DHAKA,Asia/Dhaka,DHAKA
+VGHS,23.85,90.4,10.0,DHAKA,Asia/Dhaka,DHAKA
+42811,22.18,88.2,4.0,DIAMOND HARBOUR,Asia/Kolkata,DIAMOND HARBOUR
+VECC,22.65,88.45,12.0,Calcutta / Dum Dum,Asia/Kolkata,Calcutta / Dum Dum
+VIJP,26.82,75.8,366.0,Jaipur / Sanganer,Asia/Kolkata,Jaipur / Sanganer
+VAAH,23.07,72.63,62.0,Ahmadabad,Asia/Kolkata,Ahmadabad
+VILK,26.75,80.88,124.0,Lucknow / Amausi,Asia/Kolkata,Lucknow / Amausi
+VEPT,25.6,85.1,51.0,Patna,Asia/Kolkata,Patna
+VIAR,31.7,74.8,219.0,Amritsar,Asia/Kolkata,Amritsar
+OPLA,31.52,74.4,208.0,Lahore Airport,Asia/Karachi,Lahore Airport
+41780,24.9,67.13,13.0,KARACHI AIRPORT,Asia/Karachi,KARACHI AIRPORT
+OPKC,24.9,67.13,13.0,Karachi Airport,Asia/Karachi,Karachi Airport
+VABP,23.28,77.35,506.0,Bhopal / Bairagarh,Asia/Kolkata,Bhopal / Bairagarh
+43450,7.17,79.88,10.0,KATUNAYAKE,Asia/Colombo,KATUNAYAKE
+43466,6.9,79.87,12.0,COLOMBO,Asia/Colombo,COLOMBO
+43467,6.82,79.88,5.0,RATMALANA,Asia/Colombo,RATMALANA
+VCBI,7.17,79.88,10.0,Katunayake,Asia/Colombo,Katunayake
+VCCC,6.82,79.88,5.0,Ratmalana,Asia/Colombo,Ratmalana
+VOCI,10.15,76.4,9.0,Cochin International Airport,Asia/Kolkata,Cochin International Airport
+VEBS,20.25,85.83,32.0,Bhubaneswar,Asia/Kolkata,Bhubaneswar
+VAID,22.72,75.8,558.0,Indore,Asia/Kolkata,Indore
+VOCB,11.03,77.05,361.0,Coimbatore / Peelamedu,Asia/Kolkata,Coimbatore / Peelamedu
+VNKT,27.7,85.37,1302.0,Kathmandu Airport,Asia/Kathmandu,Kathmandu Airport
+VANP,21.1,79.05,306.0,Nagpur Sonegaon,Asia/Kolkata,Nagpur Sonegaon
+41571,33.62,73.1,498.0,ISLAMABAD AIRPORT,Asia/Karachi,ISLAMABAD AIRPORT
+VEGT,26.1,91.58,54.0,Gauhati,Asia/Kolkata,Gauhati
+VASU,21.11,72.74,5.0,Surat Airport,Asia/Kolkata,Surat Airport
+42139,29.02,77.63,220.0,MEERUT,Asia/Kolkata,MEERUT
+VABO,22.34,73.23,39.0,Vadodara Airport,Asia/Kolkata,Vadodara Airport
+48097,16.77,96.17,9.0,YANGON,Asia/Rangoon,YANGON
+VYYY,16.9,96.13333,9.0,Yangon,Asia/Rangoon,Yangon
+VOBZ,16.53,80.8,13.0,Vijayawada / Gannavaram,Asia/Kolkata,Vijayawada / Gannavaram
+OPMT,30.2,71.43,122.0,Multan,Asia/Karachi,Multan
+VEIM,24.77,93.9,775.0,Imphal Tulihal,Asia/Kolkata,Imphal Tulihal
+41992,21.43,91.93,4.0,COX'S BAZAR,Asia/Dhaka,COX'S BAZAR
+VOCL,11.14,75.96,104.0,Calicut International Airport,Asia/Kolkata,Calicut International Airport
+43421,8.33,80.42,81.0,ANURADHAPURA,Asia/Colombo,ANURADHAPURA
+43418,8.58,81.25,79.0,TRINCOMALEE,Asia/Colombo,TRINCOMALEE
+43284,12.92,74.88,33.0,BAJPE,Asia/Kolkata,BAJPE
+48033,22.58,95.72,100.0,SHWEBO,Asia/Rangoon,SHWEBO
+VAUD,24.62,73.9,513.0,Maharana Pratap Airport,Asia/Kolkata,Maharana Pratap Airport
+41851,26.09,88.56,54.0,"DIMLA, NILPHAMARI",Asia/Dhaka,"DIMLA, NILPHAMARI"
+43121,17.35,76.85,471.0,GULBARGA,Asia/Kolkata,GULBARGA
+41850,26.3442,88.6072,63.0,"TETULIA, PANCHAGOR",Asia/Dhaka,"TETULIA, PANCHAGOR"
+41951,22.68,90.65,1.0,BHOLA,Asia/Dhaka,BHOLA
+43341,10.2833,77.0,1041.0,VALPARAI,Asia/Kolkata,VALPARAI
+41909,24.25,89.93,12.0,TANGAIL,Asia/Dhaka,TANGAIL
+VGEG,22.27,91.82,4.0,Chittagong Patenga,Asia/Dhaka,Chittagong Patenga
+43441,7.47,80.37,186.0,KURUNEGALA,Asia/Colombo,KURUNEGALA
+41938,23.0131,89.8225,9.0,GOPALGANJ SADAR,Asia/Dhaka,GOPALGANJ SADAR
+41759,25.27,63.48,6.0,PASNI,Asia/Karachi,PASNI
+VOTP,13.63,79.54,107.0,Tirupati Airport,Asia/Kolkata,Tirupati Airport
+VOML,12.92,74.88,33.0,Mangalore / Bajpe,Asia/Kolkata,Mangalore / Bajpe
+VAAU,19.85,75.4,572.0,Aurangabad Chikalthan Aerodrome,Asia/Kolkata,Aurangabad Chikalthan Aerodrome
+VOAT,10.82,72.18,4.0,Agatti Airport,Asia/Kolkata,Agatti Airport
+VISR,33.99,74.77,1655.0,Sheikh ul Alam Airport,Asia/Kolkata,Sheikh ul Alam Airport
+42727,23.73,92.72,1018.0,AIJAL,Asia/Kolkata,AIJAL
+43473,6.97,80.77,2047.0,NUWARA ELIYA,Asia/Colombo,NUWARA ELIYA
+FJDG,-7.3,72.4,1.0,Diego Garcia,Indian/Chagos,Diego Garcia
+VORY,17.11,81.82,46.0,Rajahmundry Airport,Asia/Kolkata,Rajahmundry Airport
+VYMD,21.70216,95.97793,851.0,MANDALAY,Asia/Rangoon,MANDALAY
+48025,23.2,94.3,85.0,KALEWA,Asia/Rangoon,KALEWA
+43424,8.03,79.83,1.0,PUTTALAM,Asia/Colombo,PUTTALAM
+VEJH,21.92,84.08,235.0,Jharsuguda,Asia/Kolkata,Jharsuguda
+VARK,22.3,70.78,134.0,Rajkot,Asia/Kolkata,Rajkot
+41941,23.27,90.7,5.0,CHANDPUR,Asia/Dhaka,CHANDPUR
+41863,25.65,88.68,34.0,DINAJPUR,Asia/Dhaka,DINAJPUR
+42503,25.03,88.13,26.0,MALDA,Asia/Kolkata,MALDA
+42935,20.11,77.13,565.0,WASHIM,Asia/Kolkata,WASHIM
+VEJS,22.82,86.18,128.0,Jamshedpur,Asia/Kolkata,Jamshedpur
+48085,17.5833,94.5833,3.0,GWA,Asia/Rangoon,GWA
+41989,21.82,91.85,3.0,KUTUBDIA,Asia/Dhaka,KUTUBDIA
+VELP,23.84,92.62,426.0,Lengpui Airport,Asia/Kolkata,Lengpui Airport
+43413,8.98,79.92,2.0,MANNAR,Asia/Colombo,MANNAR
+VAPR,21.65,69.66,7.0,Porbandar Airport,Asia/Kolkata,Porbandar Airport
+41858,25.75,88.92,35.0,SAIDPUR,Asia/Dhaka,SAIDPUR
+41859,25.73,89.23,32.0,RANGPUR,Asia/Dhaka,RANGPUR
+43348,10.33,79.38,1.0,ATIRAMAPATTINAM,Asia/Kolkata,ATIRAMAPATTINAM
+43476,6.83,80.98,1314.0,DIYATALAWA,Asia/Colombo,DIYATALAWA
+41978,22.27,91.82,6.0,CHITTAGONG (PATENGA),Asia/Dhaka,CHITTAGONG (PATENGA)
+41939,23.17,90.18,13.0,MADARIPUR,Asia/Dhaka,MADARIPUR
+VABV,21.75,72.2,7.0,Bhaunagar,Asia/Kolkata,Bhaunagar
+VEMR,25.88,93.77,148.0,Dimapur Airport,Asia/Kolkata,Dimapur Airport
+VOTR,10.77,78.72,81.0,Tiruchchirapalli,Asia/Kolkata,Tiruchchirapalli
+43479,6.98,81.05,774.0,BADULLA,Asia/Colombo,BADULLA
+43415,8.75,80.5,89.0,VAVUNIYA,Asia/Colombo,VAVUNIYA
+41927,23.52,89.1464,12.0,"KUMARKHALI, KUSHTIA",Asia/Dhaka,"KUMARKHALI, KUSHTIA"
+VQPR,27.4,89.42,2235.0,Paro Airport,Asia/Thimphu,Paro Airport
