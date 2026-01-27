@@ -96,6 +96,19 @@ def scrape_nowcast_single_city(
         driver.get(f"https://www.google.com/search?q={q}&hl=en&gl=us")
         time.sleep(3)
         
+        # Save HTML page
+        try:
+            html_content = driver.page_source
+            folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
+            html_dir = base_dir / "GoogleNowcastHTML" 
+            html_dir.mkdir(parents=True, exist_ok=True)
+            html_filename = f"{city}_{folder_date}.html"
+            html_path = html_dir / html_filename
+            html_path.write_text(html_content, encoding="utf-8")
+            print(f"Saved HTML: {html_filename}")
+        except Exception as e:
+            print(f"Warning: Could not save HTML: {e}")
+        
         # Check for reCAPTCHA robot verification
         check_robot_js = """
         const pageText = document.body.innerText;
@@ -281,8 +294,8 @@ def scrape_nowcast_single_city(
 
 def main():
     # Default values
-    city = "Burbank, Burbank-Glendale-Pasadena Airport"
-    city_id = "KBUR"
+    city = "HELSINKI, KAISANIEMI"
+    city_id = "02978"
     
     # Accept command line arguments: city_name city_id
     if len(sys.argv) > 1:

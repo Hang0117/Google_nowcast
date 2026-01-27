@@ -22,19 +22,38 @@ class AzureWrapper(object):
                 # perhaps we should download chunk-by-chunk, but this is fine for now
                 fp.write(download_stream.readall())
 
-    def upload_file(self, local_path, container_path):
-        """Upload a local file to Azure Blob storage"""
-        with contextlib.closing(self.get_blob_client(blob=container_path)) as blob_client:
+    def upload_file(self, local_path, container_path, filename_suffix=""):
+        """Upload a local file to Azure Blob storage
+        
+        Args:
+            local_path: Path to local file
+            container_path: Destination path in container
+            filename_suffix: Optional suffix to append before file extension (e.g., "_blob")
+        """
+        # Apply optional suffix to the filename portion of the blob path
+        def _apply_suffix(blob_path: str, suffix: str) -> str:
+            if not suffix:
+                return blob_path
+            normalized = blob_path.replace("\\", "/")
+            parts = normalized.split("/")
+            fname = parts[-1]
+            base, ext = os.path.splitext(fname)
+            parts[-1] = f"{base}{suffix}{ext}"
+            return "/".join(parts)
+
+        final_blob_path = _apply_suffix(container_path, filename_suffix)
+        with contextlib.closing(self.get_blob_client(blob=final_blob_path)) as blob_client:
             with open(local_path, "rb") as fp:
                 blob_client.upload_blob(fp, overwrite=True)
 
-    def upload_folder(self, local_folder, container_prefix="", show_progress=True):
+    def upload_folder(self, local_folder, container_prefix="", show_progress=True, filename_suffix=""):
         """Upload all files in a local folder to Azure Blob storage
         
         Args:
             local_folder: Path to local folder to upload
             container_prefix: Prefix path in container (e.g., "data/folder")
             show_progress: Whether to print progress messages
+            filename_suffix: Optional suffix to append before file extension for each uploaded blob
         
         Returns:
             Tuple of (success_count, total_count)
@@ -65,7 +84,7 @@ class AzureWrapper(object):
                 blob_path = str(relative_path).replace("\\", "/")
             
             try:
-                self.upload_file(str(file_path), blob_path)
+                self.upload_file(str(file_path), blob_path, filename_suffix=filename_suffix)
                 success_count += 1
                 if show_progress:
                     print(f"[{idx}/{total_count}] ✓ {blob_path}")
@@ -80,10 +99,29 @@ class AzureWrapper(object):
 
 
 def get_sas_token(name):
+    """Resolve SAS token from env or fallback file.
+    
+    Looks for the environment variable first. If missing, checks for a
+    companion env variable pointing to a file path: f"{name}_file" or
+    "AZURE_SAS_FILE". If the file exists, reads its content and returns the
+    token string.
+    """
     token = os.getenv(name)
-    if token is None:
-        raise ValueError(f"The SAS token environment variable '{name}' is not set.")
-    return token
+    if token:
+        return token
+
+    # Fallback: file path from env
+    file_path = os.getenv(f"{name}_file") or os.getenv("AZURE_SAS_FILE")
+    if file_path and os.path.isfile(file_path):
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read().strip()
+                if content:
+                    return content
+        except Exception:
+            pass
+
+    raise ValueError(f"The SAS token environment variable '{name}' is not set.")
 
 
 def get_wxforecasting_azure_wrapper():

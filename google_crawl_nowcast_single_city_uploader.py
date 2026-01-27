@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""Concurrent Google nowcast scraper with multi-threading.
+"""Single-city Google nowcast scraper with immediate execution and Azure upload.
 
-Uses ThreadPoolExecutor to scrape multiple cities in parallel.
+Run once for a single city, no scheduling. Scrapes data and uploads to Azure immediately.
+Usage: python google_crawl_nowcast_single_city_uploader.py "City Name" CITY_ID
+Example: python google_crawl_nowcast_single_city_uploader.py "Fairfax, California, United States" KFAX
 """
 import os
 import sys
@@ -11,8 +13,74 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import json
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+import logging
 import threading
+import random
+import uuid
+import socket
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
+# Reduce noisy Azure HTTP request logs
+for _logger_name in [
+    "azure.core.pipeline.policies.http_logging_policy",
+    "azure.storage",
+    "azure"
+]:
+    logging.getLogger(_logger_name).setLevel(logging.WARNING)
+
+# 统一日志时间为 UTC，并在前缀标注 UTC
+import time as _time
+for _h in logging.getLogger().handlers:
+    _fmt = logging.Formatter('%(asctime)s UTC - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    _fmt.converter = _time.gmtime
+    _h.setFormatter(_fmt)
+
+
+def _get_local_ip():
+    """获取本机 IP 地址"""
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        try:
+            return socket.gethostbyname(socket.gethostname())
+        except Exception:
+            return "无法获取"
+
+
+def _get_public_ip():
+    """获取公网 IP 地址（Google 看到的 IP）"""
+    try:
+        import requests
+        services = [
+            "https://api.ipify.org?format=json",
+            "https://checkip.amazonaws.com",
+            "https://icanhazip.com",
+        ]
+        for service in services:
+            try:
+                if "ipify" in service:
+                    response = requests.get(service, timeout=3)
+                    return response.json().get("ip", "查询失败")
+                else:
+                    response = requests.get(service, timeout=3)
+                    return response.text.strip()
+            except Exception:
+                continue
+        return "无网络连接"
+    except ImportError:
+        return "requests 模块未安装"
+    except Exception:
+        return "查询失败"
 
 
 def _install_dependencies():
@@ -20,65 +88,60 @@ def _install_dependencies():
     system = platform.system()
     
     if system != "Linux":
-        # Skip on non-Linux systems (Windows, macOS)
         try:
             import selenium
             import pandas
             from apscheduler.schedulers.background import BackgroundScheduler
         except ImportError:
-            print("⚠️  Warning: Some Python packages not installed. Please install manually:")
-            print("   pip install selenium webdriver-manager pandas apscheduler pytz")
+            logging.info("⚠️  Warning: Some Python packages not installed. Please install manually:")
+            logging.info("   pip install selenium webdriver-manager pandas apscheduler pytz")
         return
     
-    # Linux: Install Chrome and Python dependencies
-    print("🔧 Checking and installing dependencies on Linux...")
+    logging.info("🔧 Checking and installing dependencies on Linux...")
     
-    # Check if Chrome is installed
     chrome_check = subprocess.run(
         ["which", "google-chrome"], 
         capture_output=True
     )
     
     if chrome_check.returncode != 0:
-        print("📦 Installing Google Chrome...")
+        logging.info("📦 Installing Google Chrome...")
         try:
-            subprocess.run(["sudo", "apt-get", "update"], check=True, capture_output=True)
+            subprocess.run(["apt-get", "update"], check=True, capture_output=True, timeout=60)
             subprocess.run(
-                ["sudo", "bash", "-c", 
+                ["bash", "-c", 
                  "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && "
                  "echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list"],
-                check=True, capture_output=True
+                check=True, capture_output=True, timeout=30
             )
-            subprocess.run(["sudo", "apt-get", "update"], check=True, capture_output=True)
+            subprocess.run(["apt-get", "update"], check=True, capture_output=True, timeout=60)
             subprocess.run(
-                ["sudo", "apt-get", "install", "-y", "google-chrome-stable"],
-                check=True, capture_output=True
+                ["apt-get", "install", "-y", "google-chrome-stable"],
+                check=True, capture_output=True, timeout=120
             )
-            print("✅ Google Chrome installed")
+            logging.info("✅ Google Chrome installed successfully")
         except subprocess.CalledProcessError as e:
-            print(f"⚠️  Could not install Chrome: {e}")
-            print("   Please install manually: sudo apt-get install -y google-chrome-stable")
+            logging.info(f"⚠️  Could not install Chrome: {e}")
+        except subprocess.TimeoutExpired:
+            logging.info(f"⚠️  Chrome installation timed out")
     else:
-        print("✅ Google Chrome already installed")
+        logging.info("✅ Google Chrome already installed")
     
-    # Install Python packages
-    print("📦 Installing Python packages...")
-    packages = ["selenium", "webdriver-manager", "pandas", "apscheduler", "pytz"]
+    logging.info("📦 Installing Python packages...")
+    packages = ["selenium", "webdriver-manager", "pandas", "apscheduler", "pytz", "requests"]
     try:
         subprocess.run(
             ["pip", "install", "-q"] + packages,
             check=True
         )
-        print("✅ Python packages installed")
+        logging.info("✅ Python packages installed")
     except subprocess.CalledProcessError as e:
-        print(f"⚠️  Could not install Python packages: {e}")
+        logging.info(f"⚠️  Could not install Python packages: {e}")
         raise
 
 
-# Auto-install dependencies when imported
 _install_dependencies()
 
-# Now import the required packages
 from apscheduler.schedulers.background import BackgroundScheduler
 import pandas as pd
 
@@ -98,10 +161,20 @@ def _chrome_driver(headless: bool = True):
     options.add_experimental_option("useAutomationExtension", False)
     mobile_emulation = {"deviceName": "Nexus 5"}
     options.add_experimental_option("mobileEmulation", mobile_emulation)
-    options.add_argument(
-        "user-agent=Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
-    )
+    
+    user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15",
+        "Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+    ]
+    ua = random.choice(user_agents)
+    options.add_argument(f"user-agent={ua}")
 
+    import tempfile
+    tmp_dir = tempfile.gettempdir()
+    profile_dir = os.path.join(tmp_dir, f"chrome_profile_{uuid.uuid4()}")
+    options.add_argument(f"--user-data-dir={profile_dir}")
     service = Service(ChromeDriverManager().install())
     return webdriver.Chrome(service=service, options=options)
 
@@ -135,13 +208,13 @@ def scrape_nowcast_svg(
     output_dir: str | Path | None = None,
     first_scrape_date: str | None = None,
 ):
-    """Scrape rect heights from the SVG whose viewBox includes 1440 and 48."""
+    """爬取单个城市的气象数据"""
     try:
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
     except Exception as e:
-        print(f"ERR [{city}]: selenium not available:", e)
+        logging.info(f"ERR [{city}]: selenium not available: {e}")
         return None
 
     base_dir = Path(output_dir) if output_dir else Path(__file__).parent
@@ -165,21 +238,21 @@ def scrape_nowcast_svg(
         driver.get(f"https://www.google.com/search?q={q}&hl=en&gl=us")
 
         time.sleep(3)
-        
+
         # Save HTML page
         try:
             html_content = driver.page_source
             folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
-            file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
             html_dir = base_dir / "GoogleNowcastHTML" / folder_date
             html_dir.mkdir(parents=True, exist_ok=True)
+            file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
             html_filename = f"{city_id}_{file_timestamp}.html"
             html_path = html_dir / html_filename
             html_path.write_text(html_content, encoding="utf-8")
-            print(f"[{city}] Saved HTML: {html_filename}")
+            logging.info(f"[{city}] Saved HTML: {html_filename}")
         except Exception as e:
-            print(f"[{city}] Warning: Could not save HTML: {e}")
-        
+            logging.info(f"[{city}] Warning: Could not save HTML: {e}")
+
         # Check for reCAPTCHA robot verification
         check_robot_js = """
         const pageText = document.body.innerText;
@@ -188,7 +261,7 @@ def scrape_nowcast_svg(
         """
         is_robot_check = driver.execute_script(check_robot_js)
         if is_robot_check:
-            print("⚠ reCAPTCHA verification detected: 'I'm not a robot'")
+            logging.info("⚠ reCAPTCHA verification detected: 'I'm not a robot'")
             out["type"] = "robot"
             if save_json:
                 folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
@@ -197,7 +270,7 @@ def scrape_nowcast_svg(
                 outdir.mkdir(parents=True, exist_ok=True)
                 fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
                 fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-                print("Saved:", fname)
+                logging.info(f"Saved: {fname}")
             return out
 
         js = """
@@ -235,7 +308,7 @@ def scrape_nowcast_svg(
 
         result = driver.execute_script(js)
         if not result or not result.get("found"):
-            print(f"[{city}] No target SVG found. Trying fallback div...")
+            logging.info(f"[{city}] No target SVG found. Trying fallback div...")
             fallback_js = """
             const div = document.querySelector('div[jsname="Kt2ahd"].XhUg9e');
             if (!div) return {found: false, reason: 'no_kt2ahd_div'};
@@ -251,13 +324,21 @@ def scrape_nowcast_svg(
             
             fallback_result = driver.execute_script(fallback_js)
             if fallback_result and fallback_result.get("found"):
-                print(f"[{city}] Fallback OK: found divs")
+                logging.info(f"[{city}] Fallback OK: found divs")
                 out["fallback_data"] = fallback_result.get("data")
                 out["source"] = "fallback_div"
                 out["type"] = "nowcast"
-                result = {"viewBox": None, "rects": []}
+                if save_json:
+                    folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
+                    file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+                    outdir = base_dir / "Crawled" / folder_date
+                    outdir.mkdir(parents=True, exist_ok=True)
+                    fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
+                    fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+                    logging.info(f"[{city}] Saved: {fname.name}")
+                return out
             else:
-                print(f"[{city}] Fallback div not found. Trying hourly forecast...")
+                logging.info(f"[{city}] Fallback div not found. Trying hourly forecast...")
                 hourly_js = """
                 const container = document.querySelector('[jsname="s2gQvd"].EDblX.HG5ZQb');
                 if (!container) return { found: false, reason: 'no_hourly_container' };
@@ -275,25 +356,20 @@ def scrape_nowcast_svg(
                 
                 hourly_result = driver.execute_script(hourly_js)
                 if hourly_result and hourly_result.get("found"):
-                    print(f"[{city}] Hourly forecast OK: {hourly_result.get('count', 0)} items")
+                    logging.info(f"[{city}] Hourly forecast OK: {hourly_result.get('count', 0)} items")
                     out["hourly_data"] = hourly_result.get("labels", [])
                     out["source"] = "hourly_aria_label"
                     out["type"] = "hourly"
-                    result = {"viewBox": None, "rects": []}
+                    if save_json:
+                        folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
+                        file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+                        outdir = base_dir / "Crawled" / folder_date
+                        outdir.mkdir(parents=True, exist_ok=True)
+                        fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
+                        fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+                        logging.info(f"[{city}] Saved: {fname.name}")
+                    return out
                 else:
-                    html = driver.page_source
-                    dbg = base_dir / f"debug_nowcast_{city.split(',')[0].replace(' ', '_')}.html"
-                    dbg.write_text(html, encoding="utf-8")
-                    reason = hourly_result.get('reason') if hourly_result else 'unknown'
-                    print(f"[{city}] No data found (reason: {reason}). Wrote {dbg.name}")
-                    # Delete debug file after saving
-                    try:
-                        import time as time_module
-                        time_module.sleep(0.5)  # Brief delay to ensure file is written
-                        dbg.unlink()  # Delete the file
-                        print(f"[{city}] Debug file deleted: {dbg.name}")
-                    except Exception as del_err:
-                        print(f"[{city}] Could not delete debug file: {del_err}")
                     out["message"] = "no nowcast data now."
                     if save_json:
                         folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
@@ -311,7 +387,6 @@ def scrape_nowcast_svg(
             out["type"] = "nowcast"
         rows = result.get("rects") or []
         start = datetime.fromisoformat(out["scrape_time"])
-        # If minute is odd, subtract 1 minute to make it even
         if start.minute % 2 == 1:
             start = start - timedelta(minutes=1)
         for row in rows:
@@ -333,7 +408,7 @@ def scrape_nowcast_svg(
             outdir.mkdir(parents=True, exist_ok=True)
             fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
             fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-            print(f"[{city}] Saved: {fname.name}")
+            logging.info(f"[{city}] Saved: {fname.name}")
         elif save_json and out.get("fallback_data"):
             folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
             file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
@@ -341,7 +416,7 @@ def scrape_nowcast_svg(
             outdir.mkdir(parents=True, exist_ok=True)
             fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
             fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-            print(f"[{city}] Saved: {fname.name}")
+            logging.info(f"[{city}] Saved: {fname.name}")
         elif save_json and out.get("hourly_data"):
             folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
             file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
@@ -349,12 +424,12 @@ def scrape_nowcast_svg(
             outdir.mkdir(parents=True, exist_ok=True)
             fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
             fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-            print(f"[{city}] Saved: {fname.name}")
+            logging.info(f"[{city}] Saved: {fname.name}")
 
         return out
 
     except Exception as e:
-        print(f"ERR [{city}]:", e)
+        logging.info(f"ERR [{city}]: {e}")
         return None
     finally:
         try:
@@ -363,120 +438,117 @@ def scrape_nowcast_svg(
             pass
 
 
-# Thread-safe counter for progress tracking
-class ProgressTracker:
-    def __init__(self, total):
-        self.total = total
-        self.completed = 0
-        self.lock = threading.Lock()
-    
-    def increment(self):
-        with self.lock:
-            self.completed += 1
-            return self.completed
-
-
-def scrape_city_wrapper(city, city_id, headless, output_root, tracker, first_scrape_date):
-    """Wrapper function for concurrent scraping."""
-    result = scrape_nowcast_svg(city, city_id=city_id, headless=headless, save_json=True, output_dir=output_root, first_scrape_date=first_scrape_date)
-    completed = tracker.increment()
-    
-    if result and result.get("points"):
-        print(f"[{completed}/{tracker.total}] ✓ {city_id}: {len(result['points'])} points")
-    elif result and result.get("hourly_data"):
-        print(f"[{completed}/{tracker.total}] ✓ {city_id}: {len(result['hourly_data'])} hourly items")
-    elif result and result.get("fallback_data"):
-        print(f"[{completed}/{tracker.total}] ✓ {city_id}: fallback data")
-    else:
-        print(f"[{completed}/{tracker.total}] ✗ {city_id}: No data")
-    
-    return city, result
-
-
-def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v3.csv', max_workers=5):
-    """并发爬取所有城市的气象数据
-    
-    Args:
-        base_dir: 输出目录的基础路径
-        csv_file: CSV 文件路径，默认为 'nowcast_crawl_list_v3.csv'
-        max_workers: 最大并发线程数，默认5个
-    """
-    df = pd.read_csv(csv_file)
-    name_list = df['name'].tolist()
-    id_list = df['id'].tolist()
-    output_root = Path(base_dir)
-    first_scrape_date = datetime.now(timezone.utc).strftime("%Y%m%d%H")
-    
-    print(f"\n{'='*60}")
-    print(f"开始并发爬取任务 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"输出文件夹: {first_scrape_date}")
-    print(f"总城市数: {len(name_list)}, 并发线程数: {max_workers}")
-    print(f"{'='*60}\n")
-    
-    tracker = ProgressTracker(len(name_list))
-    results = {}
-    
-    # Use ThreadPoolExecutor for concurrent scraping
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        # Submit all tasks
-        future_to_city = {
-            executor.submit(scrape_city_wrapper, city, city_id, False, output_root, tracker, first_scrape_date): (city, city_id)
-            for city, city_id in zip(name_list, id_list)
-        }
+def upload_to_azure(base_dir, folder_date, container_prefix="GoogleNowcast", folder_suffix="_blob"):
+    """上传爬取的数据到 Azure Blob 存储"""
+    try:
+        from azure_wrapper import get_wxforecasting_azure_wrapper
         
-        # Process completed tasks
-        for future in as_completed(future_to_city):
-            city, city_id = future_to_city[future]
-            try:
-                city_name, result = future.result()
-                results[city_name] = result
-            except Exception as e:
-                print(f"✗ Exception for {city_id}: {e}")
-                results[city] = None
-    
-    print(f"\n{'='*60}")
-    print(f"爬取任务完成 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"成功: {sum(1 for r in results.values() if r)}/{len(name_list)}")
-    print(f"{'='*60}\n")
-    
-    return results
+        logging.info(f"\n{'='*60}")
+        logging.info("开始上传数据到 Azure Blob 存储...")
+        logging.info(f"Azure 路径前缀: {container_prefix}")
+        logging.info(f"{'='*60}\n")
+        
+        wrapper = get_wxforecasting_azure_wrapper()
+        base_path = Path(base_dir)
+        
+        # 上传 Crawled 文件夹
+        crawled_folder = base_path / "Crawled" / folder_date
+        if crawled_folder.exists():
+            azure_path = f"{container_prefix}/Crawled/{folder_date}{folder_suffix}"
+            logging.info(f"📤 上传 Crawled 文件夹: {crawled_folder}")
+            logging.info(f"   目标路径: {azure_path}")
+            success, total = wrapper.upload_folder(
+                local_folder=str(crawled_folder),
+                container_prefix=azure_path,
+                show_progress=True,
+                filename_suffix=""
+            )
+            logging.info(f"✅ Crawled 上传完成: {success}/{total} 文件")
+        else:
+            logging.info(f"⚠️  Crawled 文件夹不存在: {crawled_folder}")
+        
+        # 上传 GoogleNowcastHTML 文件夹
+        html_folder = base_path / "GoogleNowcastHTML" / folder_date
+        if html_folder.exists():
+            azure_path = f"{container_prefix}/GoogleNowcastHTML/{folder_date}{folder_suffix}"
+            logging.info(f"\n📤 上传 GoogleNowcastHTML 文件夹: {html_folder}")
+            logging.info(f"   目标路径: {azure_path}")
+            success, total = wrapper.upload_folder(
+                local_folder=str(html_folder),
+                container_prefix=azure_path,
+                show_progress=True,
+                filename_suffix=""
+            )
+            logging.info(f"✅ GoogleNowcastHTML 上传完成: {success}/{total} 文件")
+        else:
+            logging.info(f"⚠️  GoogleNowcastHTML 文件夹不存在: {html_folder}")
+        
+        logging.info(f"\n{'='*60}")
+        logging.info("✅ Azure 上传任务完成")
+        logging.info(f"{'='*60}\n")
+        
+    except ImportError as e:
+        logging.info(f"⚠️  Azure 上传跳过: 缺少依赖库 ({e})")
+    except ValueError as e:
+        logging.info(f"⚠️  Azure 上传跳过: {e}")
+    except Exception as e:
+        logging.info(f"❌ Azure 上传失败: {e}")
 
 
 if __name__ == "__main__":
     import pytz
+
+    # 解析命令行参数
+    if len(sys.argv) < 3:
+        print("Usage: python google_crawl_nowcast_single_city_uploader.py \"City Name\" CITY_ID [upload_to_azure]")
+        print("Example: python google_crawl_nowcast_single_city_uploader.py \"Fairfax, California, United States\" KFAX")
+        print("Example with Azure upload: python google_crawl_nowcast_single_city_uploader.py \"Fairfax, California, United States\" KFAX yes")
+        sys.exit(1)
     
-    # 定义配置参数
-    CSV_FILE = 'nowcast_crawl_list_v3.csv'
-    MAX_WORKERS = 3
+    CITY = sys.argv[1]
+    CITY_ID = sys.argv[2]
+    UPLOAD_TO_AZURE = len(sys.argv) > 3 and sys.argv[3].lower() in ['yes', 'true', '1']
+    
     BASE_DIR = Path(__file__).parent
+    AZURE_CONTAINER_PREFIX = "users/v-zhanghang/lib/data/GoogleNowcast"
     
-    # 设置北京时区
     beijing_tz = pytz.timezone('Asia/Shanghai')
+    start_time = datetime.now(timezone.utc)
     
-    # 使用 APScheduler 配置 UTC 时区的定时任务
-    scheduler = BackgroundScheduler(timezone='UTC')
+    logging.info(f"\n{'='*60}")
+    logging.info("✓ 单城市爬虫已启动（立即执行模式）")
+    logging.info(f"✓ 城市: {CITY}")
+    logging.info(f"✓ 城市代码: {CITY_ID}")
+    logging.info(f"✓ 输出目录: {BASE_DIR}")
+    logging.info(f"✓ 程序启动时间: {start_time.strftime('%Y-%m-%d %H:%M:%S')} UTC")
+    logging.info(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
+    logging.info(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
+    logging.info(f"✓ 上传到 Azure: {'是' if UPLOAD_TO_AZURE else '否'}")
+    logging.info(f"{'='*60}\n")
     
-    # 每天 UTC 时间 0点、6点、12点、18点各执行一次
-    # scheduler.add_job(lambda: scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS), 'cron', hour='0,6,12,18')
-    scheduler.add_job(lambda: scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS), 'cron', hour='0')
-    scheduler.start()
+    # 立即执行爬取
+    first_scrape_date = datetime.now(timezone.utc).strftime("%Y%m%d%H")
     
-    print("✓ 定时爬虫已启动（并发模式）")
-    print(f"✓ 输出目录: {BASE_DIR}")
-    print(f"✓ CSV 文件: {CSV_FILE}")
-    print(f"✓ 将在每天 UTC 时间 00:00, 06:00, 12:00, 18:00 执行爬取任务")
-    print(f"✓ 并发线程数: {MAX_WORKERS}")
-    print(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
-    print("✓ 按 Ctrl+C 停止程序\n")
+    logging.info(f"开始爬取 {CITY} ({CITY_ID})...")
+    result = scrape_nowcast_svg(CITY, city_id=CITY_ID, headless=True, save_json=True, output_dir=BASE_DIR, first_scrape_date=first_scrape_date)
     
-    # 立即执行一次（可选）
-    # scrape_all_cities_concurrent(base_dir=BASE_DIR, csv_file=CSV_FILE, max_workers=MAX_WORKERS)
+    if result:
+        if result.get("points"):
+            logging.info(f"✓ 成功: 获取 {len(result['points'])} 个数据点")
+        elif result.get("hourly_data"):
+            logging.info(f"✓ 成功（小时预报）: 获取 {len(result['hourly_data'])} 项")
+        elif result.get("fallback_data"):
+            logging.info(f"✓ 成功（后备数据）")
+        else:
+            logging.info(f"⚠️  部分成功: {result.get('message', '未知')}")
+        
+        # 上传到 Azure（如果指定）
+        if UPLOAD_TO_AZURE:
+            logging.info("\n开始上传到 Azure...")
+            upload_to_azure(BASE_DIR, first_scrape_date, AZURE_CONTAINER_PREFIX)
+    else:
+        logging.info(f"✗ 失败: 无法获取数据")
     
-    # 持续运行调度器
-    try:
-        while True:
-            time.sleep(60)
-    except KeyboardInterrupt:
-        print("\n\n程序已停止")
-        scheduler.shutdown()
+    logging.info(f"\n{'='*60}")
+    logging.info("✓ 爬虫任务完成")
+    logging.info(f"{'='*60}\n")

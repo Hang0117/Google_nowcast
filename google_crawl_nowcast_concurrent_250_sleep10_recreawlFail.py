@@ -101,9 +101,10 @@ def scrape_nowcast_svg(
         try:
             html_content = driver.page_source
             folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
+            file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
             html_dir = base_dir / "GoogleNowcastHTML" / folder_date
             html_dir.mkdir(parents=True, exist_ok=True)
-            html_filename = f"{city_id}_{folder_date}.html"
+            html_filename = f"{city_id}_{file_timestamp}.html"
             html_path = html_dir / html_filename
             html_path.write_text(html_content, encoding="utf-8")
             print(f"[{city}] Saved HTML: {html_filename}")

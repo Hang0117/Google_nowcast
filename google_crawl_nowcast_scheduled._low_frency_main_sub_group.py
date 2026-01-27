@@ -27,21 +27,6 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 
-# Reduce noisy Azure HTTP request logs
-for _logger_name in [
-    "azure.core.pipeline.policies.http_logging_policy",
-    "azure.storage",
-    "azure"
-]:
-    logging.getLogger(_logger_name).setLevel(logging.WARNING)
-
-# 统一日志时间为 UTC，并在前缀标注 UTC
-import time as _time
-for _h in logging.getLogger().handlers:
-    _fmt = logging.Formatter('%(asctime)s UTC - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-    _fmt.converter = _time.gmtime
-    _h.setFormatter(_fmt)
-
 
 def _get_local_ip():
     """获取本机 IP 地址"""
@@ -270,16 +255,8 @@ def scrape_nowcast_svg(
             logging.info(f"[Browser Public IP] {ip_info.get('ip')}")
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
-            # 切回后等待页面完全加载
-            time.sleep(2)
         except Exception as e:
             logging.info(f"[Browser Public IP] 获取失败: {e}")
-            # 确保切回主窗口
-            try:
-                driver.switch_to.window(driver.window_handles[0])
-                time.sleep(2)
-            except:
-                pass
 
         # Save HTML page
         try:
@@ -370,16 +347,7 @@ def scrape_nowcast_svg(
                 out["fallback_data"] = fallback_result.get("data")
                 out["source"] = "fallback_div"
                 out["type"] = "nowcast"
-                # 保存fallback数据
-                if save_json:
-                    folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
-                    file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
-                    outdir = base_dir / "Crawled" / folder_date
-                    outdir.mkdir(parents=True, exist_ok=True)
-                    fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
-                    fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-                    logging.info(f"[{city}] Saved: {fname.name}")
-                return out
+                result = {"viewBox": None, "rects": []}
             else:
                 logging.info(f"[{city}] Fallback div not found. Trying hourly forecast...")
                 hourly_js = """
@@ -403,16 +371,7 @@ def scrape_nowcast_svg(
                     out["hourly_data"] = hourly_result.get("labels", [])
                     out["source"] = "hourly_aria_label"
                     out["type"] = "hourly"
-                    # 保存hourly数据
-                    if save_json:
-                        folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
-                        file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
-                        outdir = base_dir / "Crawled" / folder_date
-                        outdir.mkdir(parents=True, exist_ok=True)
-                        fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
-                        fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-                        logging.info(f"[{city}] Saved: {fname.name}")
-                    return out
+                    result = {"viewBox": None, "rects": []}
                 else:
                     html = driver.page_source
                     dbg = base_dir / f"debug_nowcast_{city.split(',')[0].replace(' ', '_')}.html"
@@ -526,15 +485,17 @@ def scrape_city_wrapper(city, city_id, headless, output_root, tracker, first_scr
     return city, result
 
 
-def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv', max_workers=5, total_duration_hours=12, avg_scrape_time=15):
+def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv', max_workers=5, total_duration_hours=1, avg_scrape_time=15, main_group=None, sub_group=None):
     """并发爬取所有城市的气象数据，在指定时间内分散执行
     
     Args:
         base_dir: 输出目录的基础路径
         csv_file: CSV 文件路径，默认为 'nowcast_crawl_list_v4.csv'
         max_workers: 最大并发线程数，默认5个
-        total_duration_hours: 总执行时长（小时），默认12小时
+        total_duration_hours: 总执行时长（小时），默认1小时
         avg_scrape_time: 每个站点平均爬取时间（秒），默认15秒
+        main_group: 筛选指定主分组（1~7，基于CSV中的random_group列），默认为 None（使用所有）
+        sub_group: 在主分组内的子分组位置（1~4），默认为 None（使用所有）
     """
     # 确保必要的目录存在
     output_root = Path(base_dir)
@@ -556,8 +517,59 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
     
     df = pd.read_csv(csv_file)
     
-    # randomly shuffle the DataFrame
-    df = df.sample(frac=1, random_state=None).reset_index(drop=True)
+    # 基于日期的随机种子
+    date_seed = int(datetime.now(timezone.utc).strftime('%Y%m%d'))
+    logging.info(f"✓ 使用日期种子 {date_seed} 打乱所有站点顺序，共 {len(df)} 个站点")
+    
+    # 第一步：用日期种子打乱所有站点
+    df = df.sample(frac=1, random_state=date_seed).reset_index(drop=True)
+    
+    # 第二步：根据 main_group 参数将打乱后的列表平均分成7个主分组
+    if main_group is not None:
+        main_group_num = int(main_group)
+        if main_group_num < 1 or main_group_num > 7:
+            raise ValueError(f"main_group 参数必须在 1-7 之间，当前值: {main_group_num}")
+        
+        total_stations = len(df)
+        main_size = total_stations // 7
+        remainder = total_stations % 7
+        
+        # 计算当前主分组的起始和结束索引
+        start_idx = (main_group_num - 1) * main_size + min(main_group_num - 1, remainder)
+        end_idx = start_idx + main_size + (1 if main_group_num <= remainder else 0)
+        
+        df = df.iloc[start_idx:end_idx].reset_index(drop=True)
+        logging.info(f"✓ 选择主分组 {main_group_num}，索引范围 [{start_idx}:{end_idx}]，共 {len(df)} 个站点")
+        
+        # 对主分组内的站点再次打乱（基于日期+主分组号）
+        main_seed = int(f"{date_seed}{main_group_num}")
+        df = df.sample(frac=1, random_state=main_seed).reset_index(drop=True)
+        logging.info(f"✓ 使用主分组种子 {main_seed} 对主分组 {main_group_num} 内部进行打乱")
+    
+    # 第三步：在打乱后的列表内再分成4个子组
+    if sub_group is not None:
+        sub_group_num = int(sub_group)
+        if sub_group_num < 1 or sub_group_num > 4:
+            raise ValueError(f"sub_group 参数必须在 1-4 之间，当前值: {sub_group_num}")
+        
+        total_stations = len(df)
+        sub_size = total_stations // 4
+        remainder = total_stations % 4
+        
+        # 计算当前子组的起始和结束索引
+        start_idx = (sub_group_num - 1) * sub_size + min(sub_group_num - 1, remainder)
+        end_idx = start_idx + sub_size + (1 if sub_group_num <= remainder else 0)
+        
+        df = df.iloc[start_idx:end_idx].reset_index(drop=True)
+        logging.info(f"✓ 选择子分组 {sub_group_num}，索引范围 [{start_idx}:{end_idx}]，共 {len(df)} 个站点")
+        
+        # 对子组内的站点再次打乱（基于日期+主分组号+子分组号）
+        if main_group is not None:
+            sub_seed = int(f"{date_seed}{main_group_num}{sub_group_num}")
+        else:
+            sub_seed = int(f"{date_seed}{sub_group_num}")
+        df = df.sample(frac=1, random_state=sub_seed).reset_index(drop=True)
+        logging.info(f"✓ 使用子分组种子 {sub_seed} 对子分组 {sub_group_num} 内部进行打乱")
     
     name_list = df['search_name'].tolist()
     id_list = df['id'].tolist()
@@ -590,7 +602,11 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
         scale_factor = total_interval_time / sum(intervals)
         intervals = [interval * scale_factor for interval in intervals]
     
-    first_scrape_date = datetime.now(timezone.utc).strftime("%Y%m%d%H")
+    # 使用当天 UTC 0 点作为输出子目录（如 20260120 -> 2026012000）
+    first_scrape_date = datetime.now(timezone.utc).strftime("%Y%m%d") + "00"
+    # 确保当天的子目录存在（Crawled 和 GoogleNowcastHTML）
+    (crawled_dir / first_scrape_date).mkdir(parents=True, exist_ok=True)
+    (html_dir / first_scrape_date).mkdir(parents=True, exist_ok=True)
     
     logging.info(f"\n{'='*60}")
     logging.info(f"开始分散爬取任务 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -605,6 +621,7 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
     
     tracker = ProgressTracker(total_cities)
     results = {}
+    failed_stations = []  # 记录初次失败的站点
     start_time = time.time()
     
     # Use ThreadPoolExecutor for concurrent scraping
@@ -617,9 +634,12 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
             try:
                 city_name, result = future.result()  # 等待任务完成（浏览器关闭）
                 results[city_name] = result
+                if not result or not (result.get("points") or result.get("hourly_data") or result.get("fallback_data")):
+                    failed_stations.append((city_name, city_id))
             except Exception as e:
                 logging.info(f"✗ Exception for {city_id}: {e}")
                 results[city] = None
+                failed_stations.append((city, city_id))
             
             # 任务完成后，在提交下一个任务前等待随机间隔（最后一个任务不需要等待）
             if idx < total_cities - 1:
@@ -639,122 +659,60 @@ def scrape_all_cities_concurrent(base_dir, csv_file='nowcast_crawl_list_v4.csv',
     logging.info(f"实际用时: {elapsed_time/3600:.2f} 小时 ({elapsed_time:.0f} 秒)")
     logging.info(f"成功: {sum(1 for r in results.values() if r)}/{total_cities}")
     logging.info(f"{'='*60}\n")
-    
-    return results, first_scrape_date
 
+    # 对失败站点再爬一遍，仅保留最新结果（删除旧文件后重试一次）
+    if failed_stations:
+        retry_failed = []
+        logging.info(f"重试失败站点，共 {len(failed_stations)} 个，开始单轮重试...")
+        for city_name, city_id in failed_stations:
+            # 删除旧json/html文件，确保只保留最新结果
+            try:
+                folder_date = first_scrape_date
+                for f in (output_root / "Crawled" / folder_date).glob(f"nowcast_{city_id}_*.json"):
+                    f.unlink()
+                for f in (output_root / "GoogleNowcastHTML" / folder_date).glob(f"{city_id}_{folder_date}.html"):
+                    f.unlink()
+            except Exception as del_err:
+                logging.info(f"[重试] 删除旧文件失败 {city_id}: {del_err}")
 
-def upload_to_azure(base_dir, folder_date, container_prefix="GoogleNowcast", folder_suffix="_devbox"):
-    """上传爬取的数据到 Azure Blob 存储
-    
-    Args:
-        base_dir: 基础目录路径
-        folder_date: 文件夹日期标识（如 2026012202）
-        container_prefix: Azure Blob 容器中的路径前缀，默认为 "GoogleNowcast"
-    """
-    try:
-        # 动态导入，避免没有配置环境变量时启动失败
-        from azure_wrapper import get_wxforecasting_azure_wrapper
-        
-        logging.info(f"\n{'='*60}")
-        logging.info("开始上传数据到 Azure Blob 存储...")
-        logging.info(f"Azure 路径前缀: {container_prefix}")
-        logging.info(f"{'='*60}\n")
-        
-        wrapper = get_wxforecasting_azure_wrapper()
-        base_path = Path(base_dir)
-        
-        # 上传 Crawled 文件夹（仅在文件夹名上添加后缀，不改文件名）
-        crawled_folder = base_path / "Crawled" / folder_date
-        if crawled_folder.exists():
-            azure_path = f"{container_prefix}/Crawled/{folder_date}{folder_suffix}"
-            logging.info(f"📤 上传 Crawled 文件夹: {crawled_folder}")
-            logging.info(f"   目标路径: {azure_path}")
-            success, total = wrapper.upload_folder(
-                local_folder=str(crawled_folder),
-                container_prefix=azure_path,
-                show_progress=True,
-                filename_suffix=""
-            )
-            logging.info(f"✅ Crawled 上传完成: {success}/{total} 文件")
-        else:
-            logging.info(f"⚠️  Crawled 文件夹不存在: {crawled_folder}")
-        
-        # 上传 GoogleNowcastHTML 文件夹（仅在文件夹名上添加后缀，不改文件名）
-        html_folder = base_path / "GoogleNowcastHTML" / folder_date
-        if html_folder.exists():
-            azure_path = f"{container_prefix}/GoogleNowcastHTML/{folder_date}{folder_suffix}"
-            logging.info(f"\n📤 上传 GoogleNowcastHTML 文件夹: {html_folder}")
-            logging.info(f"   目标路径: {azure_path}")
-            success, total = wrapper.upload_folder(
-                local_folder=str(html_folder),
-                container_prefix=azure_path,
-                show_progress=True,
-                filename_suffix=""
-            )
-            logging.info(f"✅ GoogleNowcastHTML 上传完成: {success}/{total} 文件")
-        else:
-            logging.info(f"⚠️  GoogleNowcastHTML 文件夹不存在: {html_folder}")
-        
-        logging.info(f"\n{'='*60}")
-        logging.info("✅ Azure 上传任务完成")
-        logging.info(f"{'='*60}\n")
-        
-    except ImportError as e:
-        logging.info(f"⚠️  Azure 上传跳过: 缺少依赖库 ({e})")
-    except ValueError as e:
-        logging.info(f"⚠️  Azure 上传跳过: {e}")
-    except Exception as e:
-        logging.info(f"❌ Azure 上传失败: {e}")
+            try:
+                _, result = scrape_city_wrapper(city_name, city_id, True, output_root, tracker, first_scrape_date)
+                results[city_name] = result
+                if result and (result.get("points") or result.get("hourly_data") or result.get("fallback_data")):
+                    logging.info(f"[重试] ✓ {city_name}: ok")
+                else:
+                    logging.info(f"[重试] ✗ {city_name}: No data")
+                    retry_failed.append((city_name, city_id))
+            except Exception as e:
+                logging.info(f"[重试] ✗ {city_name}: Exception {e}")
+                retry_failed.append((city_name, city_id))
+
+        if retry_failed:
+            logging.info(f"重试后仍失败 {len(retry_failed)} 个: {[c for c, _ in retry_failed]}")
+
+    return results
 
 
 if __name__ == "__main__":
     import pytz
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--main_group', type=str, required=True, help='主分组编号（1~7，基于CSV中的random_group列）')
+    parser.add_argument('--sub_group', type=str, required=True, help='子分组编号（1~4），表示在主分组内的位置')
+    parser.add_argument("--out_path", type=str, required=True, help="Root output directory for segments")
+    parser.add_argument("--station_list", type=str, required=True, help="Path to the station list CSV file")
+    # 定义配置参数
+    args = parser.parse_args()
+    CSV_FILE = args.station_list
+    BASE_DIR = Path(args.out_path)
+
     # settings parameters
-    CSV_FILE = 'Q:\\Code\\Google_nowcast\\nowcast_crawl_list_v6_devbox.csv'
     MAX_WORKERS = 1
-    BASE_DIR = Path(__file__).parent
-    TOTAL_DURATION_HOURS = 12  # 每次爬取任务在12小时内完成
+    TOTAL_DURATION_HOURS = 20 / 60  # 每次爬取任务在20分钟内完成
     AVG_SCRAPE_TIME = 15  # 每个站点平均爬取时间（秒）
-    AZURE_CONTAINER_PREFIX = "GoogleNowcast"  # Azure Blob 容器中的路径前缀
 
     # 设置时区
     beijing_tz = pytz.timezone('Asia/Shanghai')
-    start_time = datetime.now(timezone.utc)
-
-    # 定义调度任务函数
-    def scheduled_task():
-        """定时任务：爬取数据并上传到 Azure"""
-        results, folder_date = scrape_all_cities_concurrent(
-            base_dir=BASE_DIR,
-            csv_file=CSV_FILE,
-            max_workers=MAX_WORKERS,
-            total_duration_hours=TOTAL_DURATION_HOURS,
-            avg_scrape_time=AVG_SCRAPE_TIME,
-        )
-        # 爬取完成后上传到 Azure
-        upload_to_azure(BASE_DIR, folder_date, AZURE_CONTAINER_PREFIX)
-    
-    # 使用 APScheduler 配置 UTC 时区的定时任务，每天 UTC 00:00 触发
-    scheduler = BackgroundScheduler(timezone='UTC')
-    scheduler.add_job(
-        scheduled_task,
-        'cron',
-        hour=0,
-        minute=0,
-        id="daily_nowcast_scrape",
-        replace_existing=True,
-        misfire_grace_time=3600,  # 允许 1 小时内的误差（单位：秒）
-        coalesce=True,  # 合并多个错过的执行为一次
-    )
-    
-    # 添加事件监听器，监控 MISSED/ERROR 事件
-    from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_MISSED
-    def _job_listener(event):
-        logging.info(f"[APScheduler Event] {event}")
-    scheduler.add_listener(_job_listener, EVENT_JOB_ERROR | EVENT_JOB_MISSED)
-    
-    scheduler.start()
 
     local_ip = _get_local_ip()
     public_ip = _get_public_ip()
@@ -766,53 +724,25 @@ if __name__ == "__main__":
     logging.info(f"✓ 并发线程数: {MAX_WORKERS}")
     logging.info(f"✓ 每次任务时长: {TOTAL_DURATION_HOURS} 小时")
     logging.info(f"✓ 平均爬取时间: {AVG_SCRAPE_TIME} 秒/站点")
-    logging.info("✓ 计划任务: 每天 UTC 00:00 自动执行一次")
-    logging.info(f"✓ Azure 上传路径: {AZURE_CONTAINER_PREFIX}")
-    logging.info(f"✓ 程序启动时间: {start_time.strftime('%Y-%m-%d %H:%M:%S')} UTC")
     logging.info(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
     logging.info(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
-    
-    # 打印已注册的定时任务及下次执行时间
-    logging.info("\n" + "="*60)
-    logging.info("已注册的定时任务:")
-    for job in scheduler.get_jobs():
-        logging.info(f"  • Job ID: {job.id}")
-        logging.info(f"    下次执行时间: {job.next_run_time}")
-    logging.info("="*60 + "\n")
-    
-    logging.info("✓ 程序将持续运行，按 Ctrl+C 停止\n")
+    logging.info("✓ 按 Ctrl+C 停止程序\n")
 
-    # 在后台线程中执行首次爬取，不阻塞调度器
-    def run_first_scrape():
-        try:
-            results, folder_date = scrape_all_cities_concurrent(
-                base_dir=BASE_DIR,
-                csv_file=CSV_FILE,
-                max_workers=MAX_WORKERS,
-                total_duration_hours=TOTAL_DURATION_HOURS,
-                avg_scrape_time=AVG_SCRAPE_TIME,
-            )
-            logging.info("\n✓ 首次爬虫任务完成")
-            
-            # 上传到 Azure
-            upload_to_azure(BASE_DIR, folder_date, AZURE_CONTAINER_PREFIX)
-        except Exception as e:
-            logging.info(f"\n✗ 首次爬虫任务失败: {e}")
-    
-    import threading
-    first_thread = threading.Thread(target=run_first_scrape, daemon=True)
-    first_thread.start()
-
-    # 保持调度器运行，每10分钟打印心跳确认进程存活
-    heartbeat_counter = 0
+    # 立即执行一次（无定时调度，无循环重试），结束后直接退出
     try:
-        while True:
-            time.sleep(60)
-            heartbeat_counter += 1
-            if heartbeat_counter % 10 == 0:  # 每10分钟打印一次心跳
-                logging.info(f"[Heartbeat] 进程运行中 | UTC: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} | 下次任务: {scheduler.get_jobs()[0].next_run_time if scheduler.get_jobs() else 'N/A'}")
+        scrape_all_cities_concurrent(
+            base_dir=BASE_DIR,
+            csv_file=CSV_FILE,
+            max_workers=MAX_WORKERS,
+            total_duration_hours=TOTAL_DURATION_HOURS,
+            avg_scrape_time=AVG_SCRAPE_TIME,
+            main_group=args.main_group,
+            sub_group=args.sub_group,
+        )
+        logging.info("\n✓ 爬虫任务完成，程序结束")
     except KeyboardInterrupt:
-        logging.info("\n收到停止信号，正在关闭调度器...")
-    finally:
-        scheduler.shutdown(wait=False)
-        logging.info("程序已停止")
+        logging.info("\n收到停止信号，程序即将退出")
+    except Exception as e:
+        logging.info(f"\n✗ 爬虫任务失败: {e}")
+        raise
+    logging.info("程序已停止")
