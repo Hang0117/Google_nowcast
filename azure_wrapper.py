@@ -127,6 +127,9 @@ def get_sas_token(name):
 def get_wxforecasting_azure_wrapper():
     return AzureWrapper(
         account_url="https://wxforecasting.blob.core.windows.net",
-        sas_token=get_sas_token('wxforecasting_sas'),
+        # sas_token=get_sas_token('wxforecasting_sas'),
+        sas_token=sas_token,
         container_name="wxforecasting"
     )
+
+sas_token=""

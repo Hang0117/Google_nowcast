@@ -9,7 +9,7 @@ from azure_wrapper import get_wxforecasting_azure_wrapper
 
 if __name__ == "__main__":
     # 本地文件夹
-    local_folder = Path(__file__).parent / "Crawled" / "2026012202"
+    local_folder = Path(__file__).parent / "GoogleNowcastHTML" / "2026012701"
     
     if not local_folder.exists():
         print(f"❌ 文件夹不存在: {local_folder}")
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     # 上传整个文件夹
     success, total = wrapper.upload_folder(
         local_folder=str(local_folder),
-        container_prefix="GoogleNowcast/Crawled/2026012202",
+        container_prefix="GoogleNowcast/GoogleNowcastHTML/2026012701_devbox",
         show_progress=True
     )
     

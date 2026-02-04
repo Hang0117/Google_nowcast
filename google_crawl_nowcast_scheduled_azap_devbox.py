@@ -9,10 +9,10 @@ Two execution modes:
 
 Usage:
   # DevBox mode (scheduled with Azure upload)
-  python google_crawl_nowcast_scheduled._low_frency.py --mode devbox
+  python google_crawl_nowcast_scheduled_azap_devbox.py --mode devbox
 
   # Main/Sub group mode (one-time execution)
-  python google_crawl_nowcast_scheduled._low_frency.py --mode main_sub_group \
+  python google_crawl_nowcast_scheduled_azap_devbox.py --mode main_sub_group \
     --main_group 1 --sub_group 2 --out_path ./output --station_list ./stations.csv
 """
 import os
@@ -252,7 +252,7 @@ def scrape_nowcast_svg(
     out = {
         "city": city,
         "city_id": city_id,
-        "scrape_time": datetime.now(timezone.utc).isoformat(),
+        "scrape_time": None,  # 将在保存 HTML 时设置
         "type": None,
         "viewBox": None,
         "points": []
@@ -292,11 +292,14 @@ def scrape_nowcast_svg(
             except:
                 pass
 
-        # Save HTML page
+        # Save HTML page - 在此时获取统一时间戳
         try:
             html_content = driver.page_source
-            folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
-            file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+            # 统一时间戳：在保存 HTML 时获取，用于 scrape_time、HTML 文件名、JSON 文件名
+            scrape_time_obj = datetime.now(timezone.utc)
+            out["scrape_time"] = scrape_time_obj.isoformat()  # 更新 scrape_time
+            folder_date = first_scrape_date if first_scrape_date else scrape_time_obj.strftime("%Y%m%d%H")
+            file_timestamp = scrape_time_obj.strftime("%Y%m%d%H%M%S")
             html_dir = base_dir / "GoogleNowcastHTML" / folder_date
             html_dir.mkdir(parents=True, exist_ok=True)
             html_filename = f"{city_id}_{file_timestamp}.html"
@@ -317,8 +320,8 @@ def scrape_nowcast_svg(
             logging.info("⚠ reCAPTCHA verification detected: 'I'm not a robot'")
             out["type"] = "robot"
             if save_json:
-                folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
-                file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+                folder_date = first_scrape_date if first_scrape_date else scrape_time_obj.strftime("%Y%m%d%H")
+                file_timestamp = scrape_time_obj.strftime("%Y%m%d_%H%M%S")
                 outdir = base_dir / "Crawled" / folder_date
                 outdir.mkdir(parents=True, exist_ok=True)
                 fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
@@ -328,35 +331,62 @@ def scrape_nowcast_svg(
 
         js = """
         const all = document.querySelectorAll('svg');
-        const candidates = Array.from(all).filter(svg => {
-            const vb = svg.getAttribute('viewBox');
-            return vb && vb.includes('1440') && vb.includes('48');
-        });
-        if (candidates.length === 0) return null;
-        const svg = candidates[0];
-        const rects = svg.querySelectorAll('rect');
-        return {
-            viewBox: svg.getAttribute('viewBox'),
-            rects: Array.from(rects).map(r => ({
-                time: r.getAttribute('data-time'),
-                height: r.getAttribute('height'),
-                fill: r.getAttribute('fill'),
-                x: r.getAttribute('x'),
-                y: r.getAttribute('y'),
-                width: r.getAttribute('width')
-            }))
-        };
+        const withRects = [];
+        for (const svg of all) {
+            const rects = svg.querySelectorAll('rect');
+            if (rects.length) {
+                withRects.push({svg, viewBox: svg.getAttribute('viewBox'), rectCount: rects.length});
+            }
+        }
+        let target = null;
+        for (const info of withRects) {
+            const vb = (info.viewBox || "");
+            if (vb.includes('1440') && vb.includes('48')) { target = info; break; }
+        }
+        if (!target) {
+            return {found:false, sample: withRects.slice(0, 10)};
+        }
+        const rects = target.svg.querySelectorAll('rect');
+        const rows = [];
+        for (let i=0;i<rects.length;i++){
+            const r = rects[i];
+            rows.push({
+                idx:i,
+                height: r.getAttribute('height')||'',
+                fill: r.getAttribute('fill')||'',
+                x: r.getAttribute('x')||'',
+                y: r.getAttribute('y')||'',
+                width: r.getAttribute('width')||''
+            });
+        }
+        return {found:true, viewBox: target.viewBox, rects: rows};
         """
-        result = driver.execute_script(js)
 
-        if result and result.get("rects"):
-            out["type"] = "svg"
-            out["viewBox"] = result["viewBox"]
-            out["points"] = result["rects"]
+        result = driver.execute_script(js)
+        if not result or not result.get("found"):
+            logging.info(f"[{city}] No target SVG found. Trying fallback div...")
+        else:
+            # SVG found successfully - process with time alignment
+            out["viewBox"] = result.get("viewBox")
+            if result.get("source"):
+                out["source"] = result.get("source")
+            if not out["type"]:
+                out["type"] = "nowcast"
+            rows = result.get("rects") or []
+            start = datetime.fromisoformat(out["scrape_time"])
+            # If minute is odd, subtract 1 minute to make it even
+            if start.minute % 2 == 1:
+                start = start - timedelta(minutes=1)
+            for row in rows:
+                idx = row.get("idx", 0)
+                offset_min = idx * 10
+                ts = start + timedelta(minutes=offset_min)
+                row["time"] = ts.isoformat()
+            out["points"] = rows
             logging.info(f"✓ SVG extraction successful for {city}")
             if save_json:
-                folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
-                file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+                folder_date = first_scrape_date if first_scrape_date else scrape_time_obj.strftime("%Y%m%d%H")
+                file_timestamp = scrape_time_obj.strftime("%Y%m%d_%H%M%S")
                 outdir = base_dir / "Crawled" / folder_date
                 outdir.mkdir(parents=True, exist_ok=True)
                 fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
@@ -364,66 +394,92 @@ def scrape_nowcast_svg(
                 logging.info(f"Saved: {fname}")
             return out
 
-        # Fallback 1: Try jsname="Kt2ahd" div
-        js2 = """
-        const container = document.querySelector('div[jsname="Kt2ahd"]');
-        if (!container) return null;
-        const rects = container.querySelectorAll('rect');
-        if (rects.length === 0) return null;
-        return {
-            viewBox: null,
-            rects: Array.from(rects).map(r => ({
-                time: r.getAttribute('data-time'),
-                height: r.getAttribute('height'),
-                fill: r.getAttribute('fill'),
-                x: r.getAttribute('x'),
-                y: r.getAttribute('y'),
-                width: r.getAttribute('width')
-            }))
+        # Fallback 1: Try enhanced jsname="Kt2ahd" div with specific classes
+        fallback_js = """
+        const div = document.querySelector('div[jsname="Kt2ahd"].XhUg9e');
+        if (!div) return {found: false, reason: 'no_kt2ahd_div'};
+        const div1 = div.querySelector('.SnOHQb.tNxQIb');
+        const div2 = div.querySelector('.jz8NAf.ApHyTb');
+        if (!div1 && !div2) return {found: false, reason: 'no_target_divs'};
+        const data = {
+            div1_text: div1 ? div1.textContent.trim() : null,
+            div2_text: div2 ? div2.textContent.trim() : null
         };
+        return {found: true, source: 'fallback_div', data: data};
         """
-        result2 = driver.execute_script(js2)
-        if result2 and result2.get("rects"):
-            out["type"] = "div_fallback"
-            out["viewBox"] = result2.get("viewBox")
-            out["points"] = result2["rects"]
-            logging.info(f"✓ Fallback div extraction successful for {city}")
+        
+        fallback_result = driver.execute_script(fallback_js)
+        if fallback_result and fallback_result.get("found"):
+            logging.info(f"[{city}] Fallback OK: found divs")
+            out["fallback_data"] = fallback_result.get("data")
+            out["source"] = "fallback_div"
+            out["type"] = "nowcast"
             if save_json:
-                folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
-                file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+                folder_date = first_scrape_date if first_scrape_date else scrape_time_obj.strftime("%Y%m%d%H")
+                file_timestamp = scrape_time_obj.strftime("%Y%m%d%H%M%S")
                 outdir = base_dir / "Crawled" / folder_date
                 outdir.mkdir(parents=True, exist_ok=True)
                 fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
                 fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-                logging.info(f"Saved: {fname}")
+                logging.info(f"[{city}] Saved: {fname.name}")
             return out
+        else:
+            logging.info(f"[{city}] Fallback div not found. Trying hourly forecast...")
 
-        # Fallback 2: hourly forecast with aria-label
-        js3 = """
-        const hourlyList = document.querySelector('div[jsname="s2gQvd"]');
-        if (!hourlyList) return null;
-        const items = hourlyList.querySelectorAll('div.EDblX.HG5ZQb[role="listitem"]');
-        if (items.length === 0) return null;
-        const data = Array.from(items).map(item => {
-            const label = item.getAttribute('aria-label');
-            return label;
-        }).filter(Boolean);
-        return data.length > 0 ? data : null;
+        # Fallback 2: Enhanced hourly forecast with strict selector (limit to 6 items)
+        hourly_js = """
+        const container = document.querySelector('[jsname="s2gQvd"].EDblX.HG5ZQb');
+        if (!container) return { found: false, reason: 'no_hourly_container' };
+        const items = container.querySelectorAll('[role="listitem"][aria-label]');
+        if (!items || items.length === 0) {
+            return { found: false, reason: 'no_hourly_items' };
+        }
+        const labels = [];
+        for (let i = 0; i < Math.min(6, items.length); i++) {
+            const ariaLabel = items[i].getAttribute('aria-label');
+            if (ariaLabel) labels.push(ariaLabel);
+        }
+        return { found: labels.length > 0, count: labels.length, labels: labels };
         """
-        result3 = driver.execute_script(js3)
-        if result3:
-            out["type"] = "hourly"
-            out["hourly_data"] = result3
+        
+        hourly_result = driver.execute_script(hourly_js)
+        if hourly_result and hourly_result.get("found"):
+            logging.info(f"[{city}] Hourly forecast OK: {hourly_result.get('count', 0)} items")
+            out["hourly_data"] = hourly_result.get("labels", [])
             out["source"] = "hourly_aria_label"
-            logging.info(f"✓ Hourly forecast extraction successful for {city}")
+            out["type"] = "hourly"
             if save_json:
-                folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
-                file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+                folder_date = first_scrape_date if first_scrape_date else scrape_time_obj.strftime("%Y%m%d%H")
+                file_timestamp = scrape_time_obj.strftime("%Y%m%d%H%M%S")
                 outdir = base_dir / "Crawled" / folder_date
                 outdir.mkdir(parents=True, exist_ok=True)
                 fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
                 fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-                logging.info(f"Saved: {fname}")
+                logging.info(f"[{city}] Saved: {fname.name}")
+            return out
+        else:
+            # No data found - save debug HTML and delete
+            html = driver.page_source
+            dbg = base_dir / f"debug_nowcast_{city.split(',')[0].replace(' ', '_')}.html"
+            dbg.write_text(html, encoding="utf-8")
+            reason = hourly_result.get('reason') if hourly_result else 'unknown'
+            logging.info(f"[{city}] No data found (reason: {reason}). Wrote {dbg.name}")
+            # Delete debug file after saving
+            try:
+                import time as time_module
+                time_module.sleep(0.5)  # Brief delay to ensure file is written
+                dbg.unlink()  # Delete the file
+                logging.info(f"[{city}] Debug file deleted: {dbg.name}")
+            except Exception as del_err:
+                logging.info(f"[{city}] Could not delete debug file: {del_err}")
+            out["message"] = "no nowcast data now."
+            if save_json:
+                folder_date = first_scrape_date if first_scrape_date else scrape_time_obj.strftime("%Y%m%d%H")
+                file_timestamp = scrape_time_obj.strftime("%Y%m%d%H%M%S")
+                outdir = base_dir / "Crawled" / folder_date
+                outdir.mkdir(parents=True, exist_ok=True)
+                fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
+                fname.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
             return out
 
         # Fallback 3: Try alternative hourly selectors
@@ -448,8 +504,8 @@ def scrape_nowcast_svg(
                     out["source"] = f"alternative_{selector}"
                     logging.info(f"✓ Alternative hourly extraction successful for {city} using {selector}")
                     if save_json:
-                        folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
-                        file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+                        folder_date = first_scrape_date if first_scrape_date else scrape_time_obj.strftime("%Y%m%d%H")
+                        file_timestamp = scrape_time_obj.strftime("%Y%m%d%H%M%S")
                         outdir = base_dir / "Crawled" / folder_date
                         outdir.mkdir(parents=True, exist_ok=True)
                         fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
@@ -463,8 +519,8 @@ def scrape_nowcast_svg(
         logging.info(f"✗ No nowcast data found for {city}")
         out["message"] = "no nowcast data now."
         if save_json:
-            folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
-            file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+            folder_date = first_scrape_date if first_scrape_date else scrape_time_obj.strftime("%Y%m%d%H")
+            file_timestamp = scrape_time_obj.strftime("%Y%m%d%H%M%S")
             outdir = base_dir / "Crawled" / folder_date
             outdir.mkdir(parents=True, exist_ok=True)
             fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
@@ -477,8 +533,8 @@ def scrape_nowcast_svg(
         logging.info(f"ERR [{city}]: {e}")
         out["error"] = str(e)
         if save_json:
-            folder_date = first_scrape_date if first_scrape_date else datetime.now(timezone.utc).strftime("%Y%m%d%H")
-            file_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+            folder_date = first_scrape_date if first_scrape_date else scrape_time_obj.strftime("%Y%m%d%H")
+            file_timestamp = scrape_time_obj.strftime("%Y%m%d_%H%M%S")
             outdir = base_dir / "Crawled" / folder_date
             outdir.mkdir(parents=True, exist_ok=True)
             fname = outdir / f"nowcast_{city_id}_{file_timestamp}.json"
@@ -736,12 +792,11 @@ def upload_to_azure(base_dir, folder_date, container_prefix="GoogleNowcast", fol
 
 
 def run_devbox_mode():
-    """DevBox mode: Scheduled execution with Azure upload"""
+    """DevBox mode: Execute once and exit"""
     import pytz
-    from apscheduler.schedulers.background import BackgroundScheduler
 
     # settings parameters
-    CSV_FILE = 'Q:\\Code\\Google_nowcast\\nowcast_crawl_list_v6_devbox.csv'
+    CSV_FILE = 'Q:\\Code\\Google_nowcast\\nowcast_crawl_list_v7_devbox.csv'
     MAX_WORKERS = 1
     BASE_DIR = Path(__file__).parent
     TOTAL_DURATION_HOURS = 12  # 每次爬取任务在12小时内完成
@@ -752,9 +807,22 @@ def run_devbox_mode():
     beijing_tz = pytz.timezone('Asia/Shanghai')
     start_time = datetime.now(timezone.utc)
 
-    # 定义调度任务函数
-    def scheduled_task():
-        """定时任务：爬取数据并上传到 Azure"""
+    local_ip = _get_local_ip()
+    public_ip = _get_public_ip()
+    logging.info("✓ 爬虫已启动（DevBox 模式 - 执行一次后退出）")
+    logging.info(f"✓ 本机 IP (内网): {local_ip}")
+    logging.info(f"✓ 公网 IP (Google看到): {public_ip}")
+    logging.info(f"✓ 输出目录: {BASE_DIR}")
+    logging.info(f"✓ CSV 文件: {CSV_FILE}")
+    logging.info(f"✓ 并发线程数: {MAX_WORKERS}")
+    logging.info(f"✓ 每次任务时长: {TOTAL_DURATION_HOURS} 小时")
+    logging.info(f"✓ 平均爬取时间: {AVG_SCRAPE_TIME} 秒/站点")
+    logging.info(f"✓ Azure 上传路径: {AZURE_CONTAINER_PREFIX}")
+    logging.info(f"✓ 程序启动时间: {start_time.strftime('%Y-%m-%d %H:%M:%S')} UTC")
+    logging.info(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
+    logging.info(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}\n")
+
+    try:
         results, folder_date = scrape_all_cities_concurrent(
             base_dir=BASE_DIR,
             csv_file=CSV_FILE,
@@ -763,90 +831,16 @@ def run_devbox_mode():
             avg_scrape_time=AVG_SCRAPE_TIME,
             stagger_submissions=True,
         )
+        logging.info("\n✓ 爬虫任务完成")
+        
         # 爬取完成后上传到 Azure
         upload_to_azure(BASE_DIR, folder_date, AZURE_CONTAINER_PREFIX)
-    
-    # 使用 APScheduler 配置 UTC 时区的定时任务，每天 UTC 00:00 触发
-    scheduler = BackgroundScheduler(timezone='UTC')
-    scheduler.add_job(
-        scheduled_task,
-        'cron',
-        hour=0,
-        minute=0,
-        id="daily_nowcast_scrape",
-        replace_existing=True,
-        misfire_grace_time=3600,  # 允许 1 小时内的误差（单位：秒）
-        coalesce=True,  # 合并多个错过的执行为一次
-    )
-    
-    # 添加事件监听器，监控 MISSED/ERROR 事件
-    from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_MISSED
-    def _job_listener(event):
-        logging.info(f"[APScheduler Event] {event}")
-    scheduler.add_listener(_job_listener, EVENT_JOB_ERROR | EVENT_JOB_MISSED)
-    
-    scheduler.start()
-
-    local_ip = _get_local_ip()
-    public_ip = _get_public_ip()
-    logging.info("✓ 定时爬虫已启动（DevBox 模式）")
-    logging.info(f"✓ 本机 IP (内网): {local_ip}")
-    logging.info(f"✓ 公网 IP (Google看到): {public_ip}")
-    logging.info(f"✓ 输出目录: {BASE_DIR}")
-    logging.info(f"✓ CSV 文件: {CSV_FILE}")
-    logging.info(f"✓ 并发线程数: {MAX_WORKERS}")
-    logging.info(f"✓ 每次任务时长: {TOTAL_DURATION_HOURS} 小时")
-    logging.info(f"✓ 平均爬取时间: {AVG_SCRAPE_TIME} 秒/站点")
-    logging.info("✓ 计划任务: 每天 UTC 00:00 自动执行一次")
-    logging.info(f"✓ Azure 上传路径: {AZURE_CONTAINER_PREFIX}")
-    logging.info(f"✓ 程序启动时间: {start_time.strftime('%Y-%m-%d %H:%M:%S')} UTC")
-    logging.info(f"✓ 当前北京时间: {datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')}")
-    logging.info(f"✓ 当前 UTC 时间: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}")
-    
-    # 打印已注册的定时任务及下次执行时间
-    logging.info("\n" + "="*60)
-    logging.info("已注册的定时任务:")
-    for job in scheduler.get_jobs():
-        logging.info(f"  • Job ID: {job.id}")
-        logging.info(f"    下次执行时间: {job.next_run_time}")
-    logging.info("="*60 + "\n")
-    
-    logging.info("✓ 程序将持续运行，按 Ctrl+C 停止\n")
-
-    # 在后台线程中执行首次爬取，不阻塞调度器
-    def run_first_scrape():
-        try:
-            results, folder_date = scrape_all_cities_concurrent(
-                base_dir=BASE_DIR,
-                csv_file=CSV_FILE,
-                max_workers=MAX_WORKERS,
-                total_duration_hours=TOTAL_DURATION_HOURS,
-                avg_scrape_time=AVG_SCRAPE_TIME,
-                stagger_submissions=True,
-            )
-            logging.info("\n✓ 首次爬虫任务完成")
-            
-            # 上传到 Azure
-            upload_to_azure(BASE_DIR, folder_date, AZURE_CONTAINER_PREFIX)
-        except Exception as e:
-            logging.info(f"\n✗ 首次爬虫任务失败: {e}")
-    
-    first_thread = threading.Thread(target=run_first_scrape, daemon=True)
-    first_thread.start()
-
-    # 保持调度器运行，每10分钟打印心跳确认进程存活
-    heartbeat_counter = 0
-    try:
-        while True:
-            time.sleep(60)
-            heartbeat_counter += 1
-            if heartbeat_counter % 10 == 0:  # 每10分钟打印一次心跳
-                logging.info(f"[Heartbeat] 进程运行中 | UTC: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} | 下次任务: {scheduler.get_jobs()[0].next_run_time if scheduler.get_jobs() else 'N/A'}")
+        logging.info("✓ 程序结束")
     except KeyboardInterrupt:
-        logging.info("\n收到停止信号，正在关闭调度器...")
-    finally:
-        scheduler.shutdown(wait=False)
-        logging.info("程序已停止")
+        logging.info("\n收到停止信号，程序即将退出")
+    except Exception as e:
+        logging.info(f"\n✗ 爬虫任务失败: {e}")
+        raise
 
 
 def run_main_sub_group_mode(args):

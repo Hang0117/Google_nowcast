@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 # 使用相对路径，自动定位到脚本所在目录
-folder = Path(__file__).parent / "Crawled" / "2026011600"
+folder = Path(__file__).parent / "Crawled" / "2026011300"
 # folder_path = Path(__file__).parent / "Crawled" 
 # date_folders = sorted([d for d in folder_path.glob('[0-9]*') if d.is_dir()])
 # folder = date_folders[-1]
@@ -17,14 +17,14 @@ json_files = [f for f in os.listdir(folder) if f.endswith('.json')]
 file_data = []
 for filename in json_files:
     # 只处理包含真实日期 20260111 的文件
-    if '20260116' not in filename:
+    if '20260113' not in filename:
         continue
     
     # 找出20260111后面的6位数字
-    match = re.search(r'20260116[_]?(\d{6})', filename)
+    match = re.search(r'20260113[_]?(\d{6})', filename)
     if match:
         time_str = match.group(1)
-        timestamp_str = f"20260116{time_str}"
+        timestamp_str = f"20260113{time_str}"
         try:
             timestamp = datetime.strptime(timestamp_str, "%Y%m%d%H%M%S")
             file_data.append((filename, timestamp))
