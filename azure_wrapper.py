@@ -132,4 +132,4 @@ def get_wxforecasting_azure_wrapper():
         container_name="wxforecasting"
     )
 
-sas_token=""
+sas_token="?sv=2025-07-05&spr=https&st=2026-02-03T09%3A18%3A48Z&se=2026-02-10T09%3A18%3A00Z&skoid=d5712fa3-c8c5-4a5c-9197-294dadf5b3e8&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2026-02-03T09%3A18%3A48Z&ske=2026-02-10T09%3A18%3A00Z&sks=b&skv=2025-07-05&sr=c&sp=rwl&sig=wIXXzEfvmOn0xc5cRRitzR0mWKrGuWFqzj%2BnYR3tCO0%3D"
