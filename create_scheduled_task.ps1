@@ -1,53 +1,22 @@
-# Windows 任务计划程序配置脚本
-# 每天 UTC 00:00 (北京时间 08:00) 自动执行爬虫任务
+$ErrorActionPreference = 'Stop'
 
-$TaskName = "GoogleNowcastDailyCrawler"
-$ScriptPath = "Q:\Code\Google_nowcast\google_crawl_nowcast_scheduled._low_frency_devbox.py"
-$PythonExe = "C:\Users\v-hangzhang\AppData\Local\Programs\Python\Python313\python.exe"
-$LogPath = "Q:\Code\Google_nowcast\scheduler.log"
+$python = (Get-Command python -ErrorAction Stop).Source
+$taskScript = 'Q:\Code\Google_nowcast\google_crawl_nowcast_scheduled_azap_devbox.py'
 
-# 删除已存在的任务
-Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false -ErrorAction SilentlyContinue
+# Compute local times that correspond to UTC 00:00 and 12:00
+$utcBase = [DateTime]::SpecifyKind((Get-Date).Date, [DateTimeKind]::Utc)
+$utc00 = [TimeZoneInfo]::ConvertTimeFromUtc($utcBase, [TimeZoneInfo]::Local).ToString('HH:mm')
+$utc12 = [TimeZoneInfo]::ConvertTimeFromUtc($utcBase.AddHours(12), [TimeZoneInfo]::Local).ToString('HH:mm')
 
-# 创建触发器：每天 UTC 00:00
-$Trigger = New-ScheduledTaskTrigger -Daily -At "00:00"
+$tr = '"{0}" "{1}" --mode devbox' -f $python, $taskScript
+$user = "$env:USERDOMAIN\$env:USERNAME"
 
-# 创建启动脚本，在运行 Python 前设置环境变量
-$WrapperScript = "Q:\Code\Google_nowcast\run_scheduled_task.ps1"
-@"
-# 设置环境变量（二选一）
-# 方式1：直接设置 token（不推荐，明文存储）
-# `$env:wxforecasting_sas = 'YOUR_SAS_TOKEN_HERE'
+$action = New-ScheduledTaskAction -Execute $python -Argument "$taskScript --mode devbox" -WorkingDirectory "Q:\Code\Google_nowcast"
+$trigger1 = New-ScheduledTaskTrigger -Daily -At $utc00
+$trigger2 = New-ScheduledTaskTrigger -Daily -At $utc12
+$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+$principal = New-ScheduledTaskPrincipal -UserId $user -LogonType Interactive -RunLevel Limited
 
-# 方式2：从文件读取 token（推荐）
-`$env:wxforecasting_sas_file = 'Q:\Code\Google_nowcast\.azure_sas_token'
+Register-ScheduledTask -TaskName 'GoogleNowcast DevBox' -Action $action -Trigger @($trigger1, $trigger2) -Principal $principal -Settings $settings -Force
 
-# 启动 Python 脚本
-Set-Location 'Q:\Code\Google_nowcast'
-& '$PythonExe' '$ScriptPath'
-"@ | Out-File -FilePath $WrapperScript -Encoding UTF8 -Force
-
-# 创建操作：运行包装脚本
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" `
-    -Argument "-ExecutionPolicy Bypass -File `"$WrapperScript`"" `
-    -WorkingDirectory "Q:\Code\Google_nowcast"
-
-# 创建任务设置
-$Settings = New-ScheduledTaskSettingsSet `
-    -AllowStartIfOnBatteries `
-    -DontStopIfGoingOnBatteries `
-    -StartWhenAvailable `
-    -RunOnlyIfNetworkAvailable
-
-# 注册任务（使用当前用户权限运行）
-Register-ScheduledTask `
-    -TaskName $TaskName `
-    -Trigger $Trigger `
-    -Action $Action `
-    -Settings $Settings `
-    -Description "每天 UTC 00:00 自动爬取 Google Nowcast 数据并上传到 Azure"
-
-Write-Host "✅ 定时任务创建成功！" -ForegroundColor Green
-Write-Host "任务名称: $TaskName" -ForegroundColor Cyan
-Write-Host "执行时间: 每天 00:00 UTC (北京时间 08:00)" -ForegroundColor Cyan
-Write-Host "查看任务: taskschd.msc 或 Get-ScheduledTask -TaskName '$TaskName'" -ForegroundColor Yellow
+Write-Host "Created single task 'GoogleNowcast DevBox' at local times $utc00 and $utc12 for UTC 00:00/12:00"
