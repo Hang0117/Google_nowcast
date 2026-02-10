@@ -791,12 +791,12 @@ def upload_to_azure(base_dir, folder_date, container_prefix="GoogleNowcast", fol
         logging.info(f"❌ Azure 上传失败: {e}")
 
 
-def run_devbox_mode():
+def run_devbox_mode(csv_file=None):
     """DevBox mode: Run continuously, execute daily at UTC 00:00"""
     import pytz
 
     # settings parameters
-    CSV_FILE = 'Q:\\Code\\Google_nowcast\\nowcast_crawl_list_v7_devbox.csv'
+    CSV_FILE = csv_file or 'Q:\\Code\\Google_nowcast\\nowcast_crawl_list_v7_devbox.csv'
     MAX_WORKERS = 1
     BASE_DIR = Path(__file__).parent
     TOTAL_DURATION_HOURS = 12  # 每次爬取任务在12小时内完成
@@ -1009,8 +1009,11 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
     Examples:
-    # DevBox mode (scheduled with Azure upload)
+    # DevBox mode (scheduled with Azure upload, use default CSV)
     python %(prog)s --mode devbox
+    
+    # DevBox mode (with custom CSV file)
+    python %(prog)s --mode devbox --csv_file Q:\\Code\\path\\to\\stations.csv
 
     # Main/Sub group mode (one-time execution)
     python %(prog)s --mode main_sub_group --main_group 1 --sub_group 2 \\
@@ -1021,6 +1024,10 @@ if __name__ == "__main__":
     parser.add_argument('--mode', type=str, required=True, 
                        choices=['devbox', 'main_sub_group'],
                        help='Execution mode: devbox (scheduled) or main_sub_group (one-time)')
+    
+    # Common arguments
+    parser.add_argument('--csv_file', type=str,
+                       help='Path to the station list CSV file [devbox and main_sub_group mode]')
     
     # Main/Sub group mode arguments
     parser.add_argument('--main_group', type=str,
@@ -1035,7 +1042,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     if args.mode == 'devbox':
-        run_devbox_mode()
+        run_devbox_mode(csv_file=args.csv_file)
     elif args.mode == 'main_sub_group':
         # Validate required arguments for main_sub_group mode
         if not all([args.main_group, args.sub_group, args.out_path, args.station_list]):

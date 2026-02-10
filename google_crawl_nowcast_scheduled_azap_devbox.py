@@ -31,11 +31,27 @@ import uuid
 import socket
 import argparse
 
-# Configure logging
+# Configure logging (both console and file)
+import sys
+from datetime import datetime, timezone
+log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Log')
+os.makedirs(log_dir, exist_ok=True)
+log_filename = datetime.now(timezone.utc).strftime('%Y%m%d%H') + '.log'
+log_file = os.path.join(log_dir, log_filename)
+
+# 设置控制台输出为UTF-8编码
+import codecs
+sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
+    datefmt='%Y-%m-%d %H:%M:%S',
+    handlers=[
+        logging.FileHandler(log_file, encoding='utf-8'),
+        logging.StreamHandler()
+    ]
 )
 
 # Reduce noisy Azure HTTP request logs
@@ -791,12 +807,12 @@ def upload_to_azure(base_dir, folder_date, container_prefix="GoogleNowcast", fol
         logging.info(f"❌ Azure 上传失败: {e}")
 
 
-def run_devbox_mode():
+def run_devbox_mode(csv_file=None):
     """DevBox mode: Execute once and exit"""
     import pytz
 
     # settings parameters
-    CSV_FILE = 'Q:\\Code\\Google_nowcast\\nowcast_crawl_list_v7_devbox.csv'
+    CSV_FILE = csv_file or 'Q:\\Code\\Google_nowcast\\nowcast_crawl_list_v7_devbox.csv'
     MAX_WORKERS = 1
     BASE_DIR = Path(__file__).parent
     TOTAL_DURATION_HOURS = 12  # 每次爬取任务在12小时内完成
@@ -901,8 +917,11 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
     Examples:
-    # DevBox mode (scheduled with Azure upload)
+    # DevBox mode (scheduled with Azure upload, use default CSV)
     python %(prog)s --mode devbox
+    
+    # DevBox mode (with custom CSV file)
+    python %(prog)s --mode devbox --csv_file Q:\\Code\\path\\to\\stations.csv
 
     # Main/Sub group mode (one-time execution)
     python %(prog)s --mode main_sub_group --main_group 1 --sub_group 2 \\
@@ -913,6 +932,10 @@ if __name__ == "__main__":
     parser.add_argument('--mode', type=str, required=True, 
                        choices=['devbox', 'main_sub_group'],
                        help='Execution mode: devbox (scheduled) or main_sub_group (one-time)')
+    
+    # Common arguments
+    parser.add_argument('--csv_file', type=str,
+                       help='Path to the station list CSV file [devbox and main_sub_group mode]')
     
     # Main/Sub group mode arguments
     parser.add_argument('--main_group', type=str,
@@ -927,7 +950,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     if args.mode == 'devbox':
-        run_devbox_mode()
+        run_devbox_mode(csv_file=args.csv_file)
     elif args.mode == 'main_sub_group':
         # Validate required arguments for main_sub_group mode
         if not all([args.main_group, args.sub_group, args.out_path, args.station_list]):
