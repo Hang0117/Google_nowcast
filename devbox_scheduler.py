@@ -45,11 +45,11 @@ def run_devbox(csv_file=None):
         work_dir = os.path.dirname(os.path.abspath(__file__))
         
         if platform.system() == 'Windows':
-            # Windows: 在新窗口中打开
-            process = subprocess.Popen(cmd, cwd=work_dir, creationflags=subprocess.CREATE_NEW_CONSOLE)
+            # Windows: 完全独立进程，关闭调度器也继续运行
+            process = subprocess.Popen(cmd, cwd=work_dir, creationflags=subprocess.DETACHED_PROCESS)
         else:
-            # Linux/Mac: 在新终端中打开
-            process = subprocess.Popen(['xterm', '-e'] + cmd, cwd=work_dir)
+            # Linux/Mac: 后台运行
+            process = subprocess.Popen(cmd, cwd=work_dir, start_new_session=True)
         
         logging.info("✓ devbox.py 已在新窗口启动\n")
         return process
